@@ -1,0 +1,2 @@
+call mvn
+call deploy

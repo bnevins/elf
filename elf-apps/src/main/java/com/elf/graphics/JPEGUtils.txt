@@ -1,0 +1,41 @@
+JPEG Utilities.
+
+There are several utilities in this package.  To run them, you need to use this commandline:
+
+java com.elf.graphics.UTILITY_NAME arguments
+
+You also need to have elf.jar in your classpath.  E.g. if you put the jar file in C:\MyClasses, your CLASSPATH can be set like so:
+
+set CLASSPATH=C:\MyClasses\elf.jar	(add this line to c:\autoexec.bat)
+
+------------------
+
+To make it a little esier, I've enclose some batch files:
+
+elfg.bat --> this handles the "java com.elf.graphics." part of the commandline.
+EXAMPLES:
+
+elfg JPEGCleaner c:\bad_art c:\fixed_art
+elfg JPEGInfo c:\porn\eating_shit\robs_favorite_feces.jpg
+
+---------------------------------------------
+JClean -- this will clean-up all the jpeg and gif files in the current directory, and place the fixed copies in a new subdirectory called fixed
+the actual commandline is "java com.elf.graphics.JPEGCleaner . fixed"
+
+===================================================
+
+UTILITIES:
+
+JPEGCleaner
+JPEGInfo
+JPEGResizer
+
+just run any of them with no arguments to get help on using them 
+
+e.g.   
+
+elfg JPEGResizer 
+
+=============================================
+
+If you like it and use them a lot, I'll dick around and add a GUI to make it easier to use them!

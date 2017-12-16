@@ -1,0 +1,1 @@
+asadmin enable-secure-admin

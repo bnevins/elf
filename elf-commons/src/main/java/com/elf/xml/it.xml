@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"-->
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "itunes.dtd">
+<plist version="1.0">
+<dict>
+	<key>Major Version</key><integer>1</integer>
+	<key>Minor Version</key><integer>1</integer>
+	<key>Application Version</key><string>9.0.2</string>
+	<key>Features</key><integer>5</integer>
+	<key>Show Content Ratings</key><true/>
+	<key>Music Folder</key><string>file://localhost/E:/Audio/spoken/</string>
+	<key>Library Persistent ID</key><string>0BC4252E6C5E2AD7</string>
+	<key>Tracks</key>
+	<dict>
+		<key>2989</key>
+		<dict>
+			<key>Track ID</key><integer>2989playl</integer>
+			<key>Name</key><string>Breathe (2AM)</string>
+			<key>Artist</key><string>Anna Nalick</string>
+			<key>Album Artist</key><string>Anna Nalick</string>
+			<key>Album</key><string>Wreck Of The Day</string>
+			<key>Grouping</key><string>5</string>
+			<key>Genre</key><string>Singer-Songwriter</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>6142809</integer>
+			<key>Total Time</key><integer>255242</integer>
+			<key>Track Number</key><integer>1</integer>
+			<key>Track Count</key><integer>11</integer>
+			<key>Year</key><integer>2005</integer>
+			<key>Date Modified</key><date>2010-01-22T07:25:47Z</date>
+			<key>Date Added</key><date>2010-01-14T10:24:19Z</date>
+			<key>Bit Rate</key><integer>192</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Comments</key><string>R=5
+
+Cleaned by TuneUp!</string>
+			<key>Rating</key><integer>100</integer>
+			<key>Album Rating</key><integer>100</integer>
+			<key>Album Rating Computed</key><true/>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>14C09E294E503E4C</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file://localhost/E:/Audio/Anna%20Nalick/Top%20Hits%20T772/01%20Breathe.mp3</string>
+			<key>File Folder Count</key><integer>3</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>2991</key>
+		<dict>
+			<key>Track ID</key><integer>2991</integer>
+			<key>Name</key><string>Hey, Mr. DJ</string>
+			<key>Artist</key><string>Backstreet Boys</string>
+			<key>Album Artist</key><string>Backstreet Boys</string>
+			<key>Album</key><string>Backstreet Boys</string>
+			<key>Genre</key><string>Teen Pop</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>10684471</integer>
+			<key>Total Time</key><integer>265848</integer>
+			<key>Track Number</key><integer>18</integer>
+			<key>Track Count</key><integer>19</integer>
+			<key>Year</key><integer>1997</integer>
+			<key>Date Modified</key><date>2010-01-22T07:26:15Z</date>
+			<key>Date Added</key><date>2010-01-14T10:25:44Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Comments</key><string>Cleaned by TuneUp!</string>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>352CF833826D6367</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file://localhost/E:/Audio/Backstreet%20Boys/Backstreet%20Boys/18%20Hey%20Mr%20DJ.mp3</string>
+			<key>File Folder Count</key><integer>3</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+	</dict>
+	<key>Playlists</key>
+	<array>
+		<dict>
+			<key>Name</key><string>DE</string>
+			<key>Playlist ID</key><integer>122704</integer>
+			<key>Playlist Persistent ID</key><string>970512BD1088A266</string>
+			<key>All Items</key><true/>
+			<key>Playlist Items</key>
+			<array>
+				<dict>
+					<key>Track ID</key><integer>2989</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>2991</integer>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

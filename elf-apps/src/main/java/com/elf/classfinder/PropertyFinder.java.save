@@ -1,0 +1,224 @@
+/*
+ * PropertyFinder.java
+ *
+ * Created on October 28, 2004, 3:36 AM
+ */
+
+package com.elf.classfinder;
+
+import com.elf.io.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import com.elf.util.Console;
+
+/**
+ *
+ * @author  bnevins
+ */
+public class PropertyFinder extends FileExtFinder implements Serializable
+{
+	public PropertyFinder()
+	{
+		setExtensions(new String[] { ".properties" });
+	}
+	
+	///////////////////////////////////////////////////////////////////////////
+
+	public PropertyFinder(String rootdir)
+	{
+		super(rootdir, ".properties");
+		//createDB();
+		//dumpDB();
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////
+	
+	private void createDB(String rootDir)
+	{
+		setRoot(rootDir);
+		createDB();
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	
+	private void createDB()
+	{
+		try
+		{
+			List l = getFiles();
+
+			for(Iterator it = l.iterator(); it.hasNext(); )
+			{
+				File f = (File)it.next();
+				System.out.println("Processing: " + f);
+				createOne(f);
+				//System.out.println(f);
+				//dumpProps(f);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	private void createOne(File f)
+	{
+		try
+		{  
+			// load the properties from disk
+			Properties props = new Properties();
+			InputStream in = new FileInputStream(f);
+			props.load(in);
+			in.close();
+			
+			// fetch the properties
+			Set propset = props.entrySet();
+			
+			for(Iterator it = propset.iterator(); it.hasNext(); )
+			{
+				Map.Entry	entry	= (Map.Entry)it.next();
+				String		key		= (String)entry.getKey();
+				String		value	= (String)entry.getValue();
+				
+				// add it to the db
+				db.add(new PropertyFile(f, key, value));
+			}
+		}
+		catch(IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	
+	private void dumpDB()
+	{
+		for(Iterator it = db.iterator(); it.hasNext(); )
+		{
+			PropertyFile pf = (PropertyFile)it.next();
+			System.out.println(pf.toString());
+		}
+	}
+	
+	///////////////////////////////////////////////////////////////////////////
+
+	private void serialize(String filename) throws IOException, ClassNotFoundException
+	{
+		File f = new File(filename);
+		File parent = f.getParentFile();
+
+		if(parent != null && !parent.exists())
+			parent.mkdirs();
+
+		FileOutputStream out = new FileOutputStream(f);
+		ObjectOutputStream s = new ObjectOutputStream(out);
+		s.writeObject(db);
+		s.flush();
+		s.close();
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	private void unSerialize() throws IOException, ClassNotFoundException
+	{
+		Class				clazz = getClass();
+		InputStream			in = clazz.getResourceAsStream("/pf.ser");
+		ObjectInputStream	s	= new ObjectInputStream(in);
+		db	= (TreeSet)s.readObject();
+		s.close();
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	private void unSerialize(String filename) throws IOException, ClassNotFoundException
+	{
+		FileInputStream		in	= new FileInputStream(filename);
+		ObjectInputStream	s	= new ObjectInputStream(in);
+		db	= (TreeSet)s.readObject();
+		s.close();
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	private List matches(String s)
+	{
+		List list = new ArrayList();
+		for(Iterator it = db.iterator(); it.hasNext(); )
+		{
+			PropertyFile pf = (PropertyFile)it.next();
+			
+			if(pf.matches(s))
+				list.add(pf);
+		}
+		return list;
+	}
+
+	public static void main(String[] args)
+	{
+		if(args.length > 0 && args[0].equals("create"))
+		{
+			try
+			{
+				PropertyFinder pf = new PropertyFinder(args[1]);
+				pf.createDB();
+				pf.serialize(args[2]);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			try
+			{
+				PropertyFinder pf = new PropertyFinder();
+				System.out.println("Reading Properties DB...");
+				pf.unSerialize();
+				System.out.println("" + pf.db.size() + " Properties in DB");
+				
+				while(true)
+				{
+					String s = Console.readLine("Key or Value substring: ");
+					if(s.length() <= 0)
+					{
+						System.out.println("bye");
+						break;
+					}
+
+					List list = pf.matches(s);
+					
+					if(list.size() <= 0)
+						System.out.println("No Matches");
+					else
+					{
+						System.out.println("" + list.size() + " Matches:");
+
+						for(Iterator it = list.iterator(); it.hasNext(); )
+						{
+							System.out.println(it.next().toString());
+						}
+						System.out.println("\n\n");
+					}
+				}
+				//pf.dumpDB();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	
+	private TreeSet db = new TreeSet();
+	
+}

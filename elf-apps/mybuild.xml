@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="elf-apps" basedir="." default="all">
+
+<!-- **********************************************************************  -->
+<!-- ******************     init    ***************************************  -->
+<!-- **********************************************************************  -->
+    <target name="init">
+        <property name="all.done" 				value="${ant.project.name} built successfully"/>
+        <property name="classes.dir" 			value="build/classes"/>
+        <property name="jar.dir" 				value="dist/"/>
+        <property name="jar.name" 				value ="${ant.project.name}.jar"/>
+        <property name="javadoc.dir" 			value="doc/api"/>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************    everything  ************************************  -->
+<!-- **********************************************************************  -->
+
+    <target depends="clean, init,jar,javadoc" description="Build everything." name="everything">
+        <echo message="${all.done}"/>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************     compile   *************************************  -->
+<!-- **********************************************************************  -->
+	<target name="compile" depends="init, createdirs" >
+        <javac  debug="true" 
+                deprecation="true" 
+                source="1.5" 
+                destdir="${classes.dir}" 
+                srcdir="." 
+                nowarn="on"
+				classpath="../elf-commons/build/classes;c:/dev/jars/javaee.jar;c:/dev/jars/swing-layout-1.0.1.jar"
+        >
+        </javac>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************     jar       *************************************  -->
+<!-- **********************************************************************  -->
+    <target name="jar" depends="init,compile" >
+        <!-- To make a standalone app: -->
+        <!-- 1. Create a elf.mf manifest somewhere. -->
+        <!-- 2. Put in it two lines: -->
+        <!-- Manifest-Version: 1.0 -->
+        <!-- Main-Class: com.foo.Main -->
+        <!-- 3. Pass to <jar>: manifest="elf.mf" -->
+        <jar basedir="${classes.dir}" compress="true" jarfile="${jar.dir}/${jar.name}">
+	<!--
+            <exclude name="**/*.java"/>
+            <exclude name="**/*.form"/>
+            <exclude name="elf.mf"/>
+            <exclude name="${jar.name}"/>
+            <exclude name="${javadoc.dir}"/>
+	-->
+        </jar>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************        all     ************************************  -->
+<!-- **********************************************************************  -->
+
+    <target depends="init,jar" description="Build everything." name="all">
+        <echo message="${all.done}!"/>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************      test      ************************************  -->
+<!-- **********************************************************************  -->
+    <target depends="init,all" description="Try running it." name="test">
+        <java classname="com.foo.Main" failonerror="true" fork="true">
+            <classpath>
+                <pathelement location="."/>
+            </classpath>
+            <!-- Pass some args, perhaps: -->
+            <arg value="-myfile"/>
+            <!-- Will be given as an absolute path: -->
+            <arg file="myfile.txt"/>
+        </java>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************     javadoc    ************************************  -->
+<!-- **********************************************************************  -->
+    <target name="javadoc" depends="init, createdirs" description="Javadoc for Elf." >
+        <javadoc access="package" destdir="${javadoc.dir}" packagenames="com.elf.*" source="1.5">
+            <sourcepath>
+                <pathelement location="src/"/>
+            </sourcepath>
+        </javadoc>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************      clean     ************************************  -->
+<!-- **********************************************************************  -->
+    <target depends="init" description="Clean all build products." name="clean">
+        <delete dir="${classes.dir}"/>
+        <delete>
+            <fileset dir="${basedir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+        <delete file="${jar.dir}/${jar.name}"/>
+        <delete dir="${javadoc.dir}"/>
+    </target>
+
+<!-- **********************************************************************  -->
+<!-- ******************  createdirs    ************************************  -->
+<!-- **********************************************************************  -->
+
+    <target name="createdirs" depends="init">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${jar.dir}"/>
+        <mkdir dir="${javadoc.dir}"/>
+    </target>
+
+</project>

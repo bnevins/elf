@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE CARS  SYSTEM "/C:/dev/elf/elf-commons/src/java/com/elf/xml/cars.dtd">
+<!--
+    Document   : cars.xml
+    Created on : February 13, 2004, 1:20 AM
+    Author     : bnevins
+    Description:
+        Purpose of the document follows.
+-->
+
+<CARS>
+    <CAR>
+        <NAME>Name Here!</NAME>
+    </CAR>
+    <CAR>
+        <NAME>Name2 Here!</NAME>
+    </CAR>
+</CARS>
