@@ -48,6 +48,7 @@ public class DateTool {
                     System.exit(0);
             }
             
+            
             if(!Character.isDigit(fname.charAt(6)) || 
                 !Character.isDigit(fname.charAt(7)) ) {
                 fname = fname.substring(0,6);
