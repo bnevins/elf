@@ -18,7 +18,8 @@
         <module>AuthAdmin</module>
         <module>WebArt</module>
         <module>Todo</module>
-    <module>Cox</module>
+        <module>Cox</module>
+        <module>JMT</module>
   </modules>
     <repositories>
         <repository>

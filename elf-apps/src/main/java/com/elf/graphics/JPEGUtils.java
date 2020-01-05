@@ -1,5 +1,6 @@
 package com.elf.graphics;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -60,6 +61,29 @@ class JPEGUtils {
         }
         finally {
             new File(orig).delete();
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////
+    
+    static void PNG2JPEG(File png, File jpg) {
+        pr("Converting " + png + " to " + jpg);
+        try {
+            BufferedImage image = ImageIO.read(png);
+            BufferedImage result = new BufferedImage(
+                    image.getWidth(),
+                    image.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+            result.createGraphics().drawImage(image, 0, 0, Color.WHITE, null);
+            ImageIO.write(result, "jpg", jpg);         
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            //new File(orig).delete();
         }
     }
 
