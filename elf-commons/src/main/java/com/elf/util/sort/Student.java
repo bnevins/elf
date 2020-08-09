@@ -19,6 +19,11 @@ public class Student {
     int getKey() {
         return section;
     }
-    String name;
-    int section;
+
+    String getName() {
+        return name;
+    }
+
+    private String name;
+    private int section;
 }
