@@ -19,7 +19,7 @@ public class KeyIndex {
         makeCount(theStudents);
     }
 
-    public void sort() {
+    public void makeKeyIndex() {
         System.out.println("\n\n");
         int num = students.length;
 
@@ -31,21 +31,57 @@ public class KeyIndex {
         }
     }
 
+    public void makeIndices() {
+        debug("Make Indices");
+
+        for (int i = 0; i < numKeys; i++) {
+            count[i + 1] += count[i];
+            dump(count);
+        }
+    }
+
+    public void sort() {
+        dump(students);
+        Student[] aux = new Student[students.length];
+        debug("***** SORT *****");
+        for (int i = 0; i < students.length; i++) {
+            dump(count);
+            int location = count[students[i].getKey()]++;
+            aux[location] = students[i];
+        }
+        for (int i = 0; i < students.length; i++) {
+            students[i] = aux[i];
+        }
+
+        dump(students);
+    }
+
     private void makeCount(Student[] ss) {
         // assume sections 1->???
-        int high = 0;
         for (Student s : ss) {
             int key = s.getKey();
-            if (key > high) {
-                high = key;
+            if (key > numKeys) {
+                numKeys = key;
             }
         }
-        if (high <= 0) {
+        if (numKeys <= 0) {
             throw new RuntimeException("No Keys!!");
         }
 
-        count = new int[high + 2];
+        count = new int[numKeys + 2];
         debug("Created count with " + count.length + " slots.");
+    }
+
+    private void dump(Student[] ss) {
+        if (debug) {
+            debug("XXXXXXXX STUDENTS XXXXXXXXXXX");
+
+            for (Student s : ss) {
+                debug(s.getName() + "\t" + s.getKey());
+            }
+            debug("XXXXXXXXXXXXXXXXX");
+        }
+
     }
 
     private void dump(Student s) {
@@ -56,30 +92,45 @@ public class KeyIndex {
         System.out.println("");
     }
 
+    private void dump(int[] c) {
+        for (int i = 0; i < c.length; i++) {
+            System.out.print(c[i] + "  ");
+        }
+        System.out.println("");
+    }
+
     public static void main(String[] args) {
         Student[] students = new Student[]{
             new Student("AAAA", 1),
-            new Student("BBBB", 1),
+            new Student("BBBB", 3),
             new Student("C", 2),
             new Student("D", 2),
-            new Student("E", 2),
+            new Student("E", 1),
             new Student("F", 3),
-            new Student("G", 3),
+            new Student("G", 4),
             new Student("H", 4),
-            new Student("I", 4),
-            new Student("J", 4),};
+            new Student("I", 2),
+            new Student("J", 4),
+            new Student("K", 1),
+            new Student("L", 2),
+            new Student("M", 4),
+            new Student("N", 5),
+            new Student("O", 5),
+            new Student("P", 3),
+            new Student("Q", 6),
+            new Student("R", 4),
+            new Student("S", 4),
+            new Student("T", 2),
+            new Student("U", 1),
+            new Student("V", 1),
+            new Student("W", 3),
+            new Student("X", 5),
+            new Student("Y", 6)};
 
         KeyIndex ki = new KeyIndex(students);
-
-        if (debug) {
-            debug("XXXXXXXX STUDENTS XXXXXXXXXXX");
-            
-            for (Student s : ki.students) {
-                debug(s.getName() + "\t" + s.getKey());
-            }
-            debug("XXXXXXXXXXXXXXXXX");
-        }
         
+        ki.makeKeyIndex();
+        ki.makeIndices();
         ki.sort();
     }
 
@@ -88,7 +139,9 @@ public class KeyIndex {
             System.out.println(s);
         }
     }
-    Student[] students;
-    int[] count;
+    private Student[] students;
+    private int[] count;
     private static boolean debug = true;
+    private int numKeys = 0;
+
 }
