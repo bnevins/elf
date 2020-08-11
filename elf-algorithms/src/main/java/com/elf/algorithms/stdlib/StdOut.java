@@ -1,3 +1,5 @@
+package com.elf.algorithms.stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdOut.java
  *  Execution:    java StdOut
