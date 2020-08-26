@@ -20,7 +20,7 @@ public class QuickSort  implements SortAlgorithm
     public QuickSort()
     {
     }
-    private void sort(int a[], int lo0, int hi0) throws Exception
+    private void sort(int a[], int lo0, int hi0)
     {
         int lo = lo0;
         int hi = hi0;
@@ -99,7 +99,7 @@ public class QuickSort  implements SortAlgorithm
         sort(a, hi+1, hi0);
     }
     
-    public void sort(int a[]) throws Exception
+    public void sort(int a[])
     {
         numPivots = numSwaps = 0;
         sort(a, 0, a.length-1);
