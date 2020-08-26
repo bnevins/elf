@@ -16,6 +16,10 @@ public class BubbleSort implements SortAlgorithm {
 
     public BubbleSort() {
     }
+    public String getName() {
+        return "Bubble Sort";
+    }
+
 
     public void sort(int a[]) {
         for (int i = a.length; --i >= 0;) {

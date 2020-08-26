@@ -15,5 +15,7 @@ package com.elf.util.sort;
  */
 public interface SortAlgorithm
 {
-    void sort(int[] a)  throws Exception;
+    void sort(int[] a);
+
+    public String getName();
 }

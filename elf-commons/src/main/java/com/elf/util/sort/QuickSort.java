@@ -20,6 +20,10 @@ public class QuickSort  implements SortAlgorithm
     public QuickSort()
     {
     }
+    public String getName() {
+        return "Quick Sort";
+    }
+
     private void sort(int a[], int lo0, int hi0)
     {
         int lo = lo0;
