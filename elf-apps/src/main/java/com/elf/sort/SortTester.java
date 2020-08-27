@@ -7,10 +7,12 @@ package com.elf.sort;
 
 import com.elf.algorithms.stdlib.StdRandom;
 import com.elf.algorithms.stdlib.Stopwatch;
+import com.elf.util.Assertion;
 import com.elf.util.sort.SortAlgorithm;
 import com.elf.util.sort.BubbleSort;
 import com.elf.util.sort.HeapSort;
 import com.elf.util.sort.InsertionSort;
+import com.elf.util.sort.MergeSort;
 import com.elf.util.sort.QuickSort;
 import com.elf.util.sort.SelectionSort;
 import com.elf.util.sort.ShellSort;
@@ -48,17 +50,25 @@ public class SortTester {
         copyArray();
         sort(new ShellSort());
         sort(new ShellSort());
+        copyArray();
+        MergeSort mergeSort = new MergeSort();
+        mergeSort.setBottomUp();
+        sort(mergeSort);
+        copyArray();
+        mergeSort.setTopDown();
+        sort(mergeSort);
 
     }
 
     private void sort(SortAlgorithm sorter) {
         if (sorted.length > 10000 && sorter.isSlow()) {
-                System.out.printf("%s (is too slow to run...\n", sorter.getName());
+            System.out.printf("%s (is too slow to run...\n", sorter.getName());
             return;
         }
         Stopwatch timer = new Stopwatch();
         sorter.sort(sorted);
         double time = timer.elapsedTime();
+        Assertion.check(isSorted(sorted));
         System.out.printf("%s (%.2f seconds)\n", sorter.getName(), time);
     }
 
@@ -78,12 +88,12 @@ public class SortTester {
     }
 
     public static void main(String[] args) {
-        int num = 10 * 1000 * 1000;
+        int num = 100 * 1000 * 1000;
         if (args.length > 0) {
             num = Integer.parseInt(args[0]);
         }
         new SortTester().test(num);
-        System.arraycopy(num, num, num, num, num);
+        //System.arraycopy(num, num, num, num, num);
     }
 
     private static String addCommas(long n) {
@@ -91,6 +101,13 @@ public class SortTester {
         // this will also round numbers, 3 decimal places
         myFormat.setGroupingUsed(true);
         return myFormat.format(n);
+    }
+
+    private static boolean isSorted(int[] sorted) {
+        for(int i = 0; i < sorted.length - 1; i++)
+            if(sorted[i] > sorted[i+1])
+                return false;
+        return true;
     }
 
 }

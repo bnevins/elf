@@ -13,41 +13,72 @@ import com.elf.util.Assertion;
  */
 public class MergeSort implements SortAlgorithm {
 
+    private static boolean debug = true;
     private int[] tmp;
-    private boolean bottomUp = false;
+    private boolean bottomUp = true;
+    private int[] arrayToSort;
+    private int arrayLength;
+
+    @Override
+    public String getName() {
+        return "Merge Sort";
+    }
+
+    @Override
+    public boolean isSlow() {
+        return false;
+    }
+
+    public void setBottomUp() {
+        bottomUp = true;
+    }
+
+    public void setTopDown() {
+        bottomUp = false;
+    }
 
     @Override
     public void sort(int[] a) {
+        arrayToSort = a;
+        arrayLength = arrayToSort.length;
 
-        int N = a.length;
-
-        tmp = new int[N];
-
-        if (!bottomUp) {
-            sort(a, 0, a.length);
+        if (arrayLength == 1) // already sorted!!
+        {
             return;
         }
+        tmp = new int[arrayLength];
 
-        for (int i = 0; i < N; i += 2) {
-            int high = i + 1;
-            if (high >= a.length) {
-                high = i;
-            }
+        if (bottomUp) {
+            sortBottomUp();
 
-            merge(a, i, i, high);
+        } else {
+            sortTopDown(0, arrayLength);
         }
 
     }
 
+    private void sortBottomUp() {
+        for (int width = 1; width < arrayLength; width *= 2) {
+            for (int i = 0; i < arrayLength; i += (width * 2)) {
+                int low = i;
+                int mid = Math.min(i + width, arrayLength);
+                int high = Math.min(i + (2 * width), arrayLength);
+                debug("width: " + width + "  ");
+                merge(low, mid, high);
+            }
+        }
+    }
+
     // top-down (recursive)
-    private void sort(int[] a, int low, int high) {
+    private void sortTopDown(int low, int high) {
         if (high <= low + 1) {
             return;
         }
         int mid = low + (high - low) / 2;
-        sort(a, low, mid);
-        sort(a, mid, high);
-        merge(a, low, mid, high);
+        debug("SORT TOP DOWN: ", low, mid, high);
+        sortTopDown(low, mid);
+        sortTopDown(mid, high);
+        merge(low, mid, high);
     }
 
     /* ======================================================           
@@ -71,80 +102,68 @@ public class MergeSort implements SortAlgorithm {
 
       The SAME portion of the array tmp[ ] is used !!!
       ====================================================== 
-    */
-    
-    private void merge(int arr[], int left, int middle, int right) {
+     */
+    private void merge(int left, int middle, int right) {
+        debug("MERGE", left, middle, right);
         int i = left;
         int j = middle;
         int k = left;
         while (i < middle || j < right) {
             // elements in both sides - sort!
             if (i < middle && j < right) {
-                if (arr[i] < arr[j]) {
-                    tmp[k++] = arr[i++];
+                if (arrayToSort[i] < arrayToSort[j]) {
+                    tmp[k++] = arrayToSort[i++];
                 } else {
-                    tmp[k++] = arr[j++];
+                    tmp[k++] = arrayToSort[j++];
                 }
             } else if (i == middle) {
-                //Assertion.check(j == (right - 1));
-                tmp[k++] = arr[j++];
+                tmp[k++] = arrayToSort[j++];
             } else if (j == right) {
-                //Assertion.check(i == (middle - 1));
-                tmp[k++] = arr[i++];
+                tmp[k++] = arrayToSort[i++];
             }
         }
-        System.arraycopy(tmp, left, arr, left, right - left);
+        System.arraycopy(tmp, left, arrayToSort, left, right - left);
     }
 
-    // Merges two subarrays of arr[].  First subarray is arr[l..m]
-    // Second subarray is arr[m+1..r]
-    private void mergex(int arr[], int left, int mid, int right) {
-        int i = left;
-        int j = mid + 1;
-
-        for (int k = 0; k < right - left + 1; k++) {
-            // right-side emptied.  Draw from left
-            if (j > right) {
-                tmp[k] = arr[i++];
-            } // left-side empty
-            else if (i > mid) {
-                tmp[k] = arr[j++];
-            } else {
-
-                if (arr[i] < arr[j]) {
-                    tmp[k] = arr[i++];
-                } else {
-                    tmp[k] = arr[j++];
-                }
+    private boolean isSorted() {
+        for (int i = 0; i < arrayLength - 1; i++) {
+            if (arrayToSort[i] > arrayToSort[i + 1]) {
+                return false;
             }
         }
-        System.arraycopy(tmp, 0, arr, left, right - left + 1);
-    }
 
-    @Override
-    public String getName() {
-        return "Merge Sort";
-    }
-
-    @Override
-    public boolean isSlow() {
-        return false;
+        return true;
     }
 
     public static void main(String[] args) {
         MergeSort sorter = new MergeSort();
-        int[] test = {88, 33};
-        //int[] test = {88, 33, 24, 11, 90, 60, 70, 80, 100};
-        dump(test);
+        //int[] test = {11,};
+        int[] test = {11, 2, 88, 33, 22, 5, 9, 55, 1};
+        //int[] test = {88, 33, 24, 11, 90, 60, 70, 80, 100, 88,88,88,88};
         sorter.sort(test);
-        dump(test);
+        Assertion.check(sorter.isSorted());
     }
 
-    private static void dump(int[] test) {
+    private void dump(int[] test) {
         System.out.print("{ ");
         for (int i : test) {
             System.out.print(i + " ");
         }
         System.out.println("}");
     }
+
+    private void debug(String s) {
+        if (arrayLength < 50) {
+            System.out.print(s);
+        }
+    }
+
+    private void debug(String s, int low, int mid, int high) {
+        if (arrayLength < 50) {
+            System.out.printf("%s: low=%d, mid=%d, high=%d\n", s, low, mid, high);
+        }
+    }
+//    private static void debug(String s, int low, int high) {
+//        System.out.printf("%s: low=%d, high=%d\n", s, low, high);
+//    }
 }
