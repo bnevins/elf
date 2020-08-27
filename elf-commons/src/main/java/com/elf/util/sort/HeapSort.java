@@ -21,6 +21,10 @@ public class HeapSort implements SortAlgorithm {
     public String getName() {
         return "Heapsort";
     }
+    @Override
+    public boolean isSlow() {
+        return false;
+    }
 
     public static void main(String[] args) {
         int[] i1 = {1, 5, 4, 2, 3, 19, 8, 14, 11};

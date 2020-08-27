@@ -12,6 +12,8 @@ import com.elf.util.sort.BubbleSort;
 import com.elf.util.sort.HeapSort;
 import com.elf.util.sort.InsertionSort;
 import com.elf.util.sort.QuickSort;
+import com.elf.util.sort.SelectionSort;
+import com.elf.util.sort.ShellSort;
 import java.text.NumberFormat;
 
 /**
@@ -33,15 +35,27 @@ public class SortTester {
         sort((SortAlgorithm) new HeapSort());
 
         //it's super slow -- but sorts pre-sorted arrays very fast!
-        copyArray();
+        //copyArray();
         sort(new BubbleSort());
         copyArray();
         sort(new QuickSort());
         copyArray();
         sort(new InsertionSort());
+        sort(new InsertionSort());
+        copyArray();
+        sort(new SelectionSort());
+        sort(new SelectionSort());
+        copyArray();
+        sort(new ShellSort());
+        sort(new ShellSort());
+
     }
 
     private void sort(SortAlgorithm sorter) {
+        if (sorted.length > 10000 && sorter.isSlow()) {
+                System.out.printf("%s (is too slow to run...\n", sorter.getName());
+            return;
+        }
         Stopwatch timer = new Stopwatch();
         sorter.sort(sorted);
         double time = timer.elapsedTime();
@@ -64,43 +78,12 @@ public class SortTester {
     }
 
     public static void main(String[] args) {
-        int num = 4 * 100 * 1000;
+        int num = 10 * 1000 * 1000;
         if (args.length > 0) {
             num = Integer.parseInt(args[0]);
         }
         new SortTester().test(num);
-        /*        
-        Stopwatch timer = new Stopwatch();
-        new BubbleSort().sort(ints);
-        double time = timer.elapsedTime();
-        System.out.printf("BubbleSort (%.2f seconds)\n", time);
-        timer = new Stopwatch();
-        new BubbleSort().sort(ints);
-        time = timer.elapsedTime();
-        System.out.printf("BubbleSort of sorted array(%.2f seconds)\n", time);
-                
-         
-        Stopwatch timer = new Stopwatch();
-        new HeapSort().sort(ints);
-        double time = timer.elapsedTime();
-        System.out.printf("Heapsort(%.2f seconds)\n", time);
-
-        timer = new Stopwatch();
-        new BubbleSort().sort(ints);
-        time = timer.elapsedTime();
-        System.out.printf("BubbleSort of sorted array(%.2f seconds)\n", time);
-
-        System.arraycopy(original_ints, 0, ints, 0, num);
-        timer = new Stopwatch();
-        new QuickSort().sort(ints);
-        time = timer.elapsedTime();
-        System.out.printf("QuickSort of unsorted array(%.2f seconds)\n", time);
-
-        timer = new Stopwatch();
-        new QuickSort().sort(ints);
-        time = timer.elapsedTime();
-        System.out.printf("QuickSort of sorted array(%.2f seconds)\n", time);
-         */
+        System.arraycopy(num, num, num, num, num);
     }
 
     private static String addCommas(long n) {

@@ -19,6 +19,10 @@ public class BubbleSort implements SortAlgorithm {
     public String getName() {
         return "Bubble Sort";
     }
+    @Override
+    public boolean isSlow() {
+        return true;
+    }
 
 
     public void sort(int a[]) {

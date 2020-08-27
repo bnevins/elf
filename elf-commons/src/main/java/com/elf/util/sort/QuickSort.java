@@ -112,4 +112,9 @@ public class QuickSort  implements SortAlgorithm
     
     static int numPivots = 0;
     static int numSwaps = 0;
+
+    @Override
+    public boolean isSlow() {
+        return false;
+    }
 }

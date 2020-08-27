@@ -16,6 +16,6 @@ package com.elf.util.sort;
 public interface SortAlgorithm
 {
     void sort(int[] a);
-
-    public String getName();
+    String getName();
+    boolean isSlow();
 }
