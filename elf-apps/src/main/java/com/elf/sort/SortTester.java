@@ -88,7 +88,7 @@ public class SortTester {
     }
 
     public static void main(String[] args) {
-        int num = 100 * 1000 * 1000;
+        int num = 10 * 1000 * 1000;
         if (args.length > 0) {
             num = Integer.parseInt(args[0]);
         }
@@ -109,5 +109,4 @@ public class SortTester {
                 return false;
         return true;
     }
-
 }

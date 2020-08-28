@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.elf.util.sort;
 
+import com.elf.algorithms.stdlib.StdRandom;
+import com.elf.algorithms.stdlib.Stopwatch;
 import com.elf.util.Assertion;
 
 /**
@@ -138,10 +135,21 @@ public class MergeSort implements SortAlgorithm {
     public static void main(String[] args) {
         MergeSort sorter = new MergeSort();
         //int[] test = {11,};
-        int[] test = {11, 2, 88, 33, 22, 5, 9, 55, 1};
+        //int[] test = {11, 2, 88, 33, 22, 5, 9, 55, 1};
+        final int numInts = 100 * 1000 * 1000;
+        int[] toSort = new int[numInts];
+
+        for (int i = 0; i < numInts; i++) {
+            // random 0-1 billion
+            toSort[i] = StdRandom.uniform(1000 * 1000 * 1000);
+        }
         //int[] test = {88, 33, 24, 11, 90, 60, 70, 80, 100, 88,88,88,88};
-        sorter.sort(test);
+        Stopwatch timer = new Stopwatch();
+        sorter.setTopDown();
+        sorter.sort(toSort);
+        double time = timer.elapsedTime();
         Assertion.check(sorter.isSorted());
+        System.out.printf("%s (%.2f seconds)\n", sorter.getName(), time);
     }
 
     private void dump(int[] test) {
