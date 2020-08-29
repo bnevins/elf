@@ -18,7 +18,6 @@
         <module>elf-commons</module>
         <module>elf-web</module>
         <module>elf-gf</module>
-        <!--module>elf-external</module-->
         <module>elf-algorithms</module>
     </modules>
 
@@ -29,14 +28,15 @@
         <finalName>${project.artifactId}</finalName>
 
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
-            </plugin>
+            </plugin>-->
 			<!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -59,7 +59,7 @@
                 </executions>
             </plugin>
 			-->
-            <plugin>
+            <!--<plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <forkMode>none</forkMode>
@@ -75,7 +75,7 @@
                     <findbugsXmlOutput>true</findbugsXmlOutput>
                     <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
                 </configuration>
-            </plugin>
+            </plugin-->
         </plugins>
     </build>
 
@@ -109,5 +109,7 @@
     </reporting>
 	<properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	 <maven.compiler.source>14</maven.compiler.source>
+	 <maven.compiler.target>14</maven.compiler.target>
+	</properties>
 </project>
