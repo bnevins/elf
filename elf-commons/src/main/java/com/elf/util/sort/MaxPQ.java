@@ -26,9 +26,12 @@ package com.elf.util.sort;
  */
 import com.elf.algorithms.stdlib.StdIn;
 import com.elf.algorithms.stdlib.StdOut;
+import java.io.*;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code MaxPQ} class represents a priority queue of generic keys. It
@@ -327,7 +330,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
         }
     }
 
-    /**
+  /**
      * Unit tests the {@code MaxPQ} data type.
      *
      * @param args the command-line arguments
@@ -350,5 +353,4 @@ public class MaxPQ<Key> implements Iterable<Key> {
             System.out.print(pq.delMax() + " ");
         }
     }
-
 }
