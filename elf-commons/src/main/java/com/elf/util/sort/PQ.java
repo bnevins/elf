@@ -34,8 +34,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The {@code MaxPQ} class represents a priority queue of generic keys. It
- * supports the usual <em>insert</em> and <em>delete-the-maximum</em>
+ * The {@code PQ} class represents a priority queue of generic keys. It supports
+ * the usual <em>insert</em> and <em>delete-the-maximum</em>
  * operations, along with methods for peeking at the maximum key, testing if the
  * priority queue is empty, and iterating through the keys.
  * <p>
@@ -57,18 +57,19 @@ import java.util.logging.Logger;
  *
  * @param <Key> the generic type of key on this priority queue
  */
-public class MaxPQ<Key> implements Iterable<Key> {
+public class PQ<Key> implements Iterable<Key> {
 
     private Key[] pq;                    // store items at indices 1 to n
     private int n;                       // number of items on priority queue
-    private Comparator<Key> comparator;  // optional comparator
+    protected Comparator<Key> comparator;  // optional comparator
+    private boolean maxSort = true;        // set to false for a Minimum PQ
 
     /**
      * Initializes an empty priority queue with the given initial capacity.
      *
      * @param initCapacity the initial capacity of this priority queue
      */
-    public MaxPQ(int initCapacity) {
+    public PQ(int initCapacity) {
         pq = (Key[]) new Object[initCapacity + 1];
         n = 0;
     }
@@ -76,7 +77,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
     /**
      * Initializes an empty priority queue.
      */
-    public MaxPQ() {
+    public PQ() {
         this(1);
     }
 
@@ -87,7 +88,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
      * @param initCapacity the initial capacity of this priority queue
      * @param comparator the order in which to compare the keys
      */
-    public MaxPQ(int initCapacity, Comparator<Key> comparator) {
+    public PQ(int initCapacity, Comparator<Key> comparator) {
         this.comparator = comparator;
         pq = (Key[]) new Object[initCapacity + 1];
         n = 0;
@@ -98,7 +99,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
      *
      * @param comparator the order in which to compare the keys
      */
-    public MaxPQ(Comparator<Key> comparator) {
+    public PQ(Comparator<Key> comparator) {
         this(1, comparator);
     }
 
@@ -108,7 +109,10 @@ public class MaxPQ<Key> implements Iterable<Key> {
      *
      * @param keys the array of keys
      */
-    public MaxPQ(Key[] keys) {
+    public PQ(Key[] keys, boolean max) {
+        if (!max) {
+            setMinimum();
+        }
         n = keys.length;
         pq = (Key[]) new Object[keys.length + 1];
         for (int i = 0; i < n; i++) {
@@ -150,6 +154,10 @@ public class MaxPQ<Key> implements Iterable<Key> {
             throw new NoSuchElementException("Priority queue underflow");
         }
         return pq[1];
+    }
+
+    public final void setMinimum() {
+        maxSort = false;
     }
 
     // helper function to double the size of the heap array
@@ -204,7 +212,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
     /**
      * *************************************************************************
      * Helper functions to restore the heap invariant.
-    **************************************************************************
+     * *************************************************************************
      */
     private void swim(int k) {
         while (k > 1 && less(k / 2, k)) {
@@ -230,13 +238,26 @@ public class MaxPQ<Key> implements Iterable<Key> {
     /**
      * *************************************************************************
      * Helper functions for compares and swaps.
-    **************************************************************************
+     * *************************************************************************
+     * @param i first item
+     * @param j second item
+     * @return returns usual Comparator result
      */
     private boolean less(int i, int j) {
-        if (comparator == null) {
-            return ((Comparable<Key>) pq[i]).compareTo(pq[j]) < 0;
-        } else {
-            return comparator.compare(pq[i], pq[j]) < 0;
+        if (maxSort) {
+            if (comparator == null) {
+                return ((Comparable<Key>) pq[i]).compareTo(pq[j]) < 0;
+            } else {
+                return comparator.compare(pq[i], pq[j]) < 0;
+            }
+        }
+        // minimum PQ
+        else {
+            if (comparator == null) {
+                return ((Comparable<Key>) pq[i]).compareTo(pq[j]) > 0;
+            } else {
+                return comparator.compare(pq[i], pq[j]) > 0;
+            }
         }
     }
 
@@ -283,7 +304,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
     /**
      * *************************************************************************
      * Iterator.
-    **************************************************************************
+     * *************************************************************************
      */
     /**
      * Returns an iterator that iterates over the keys on this priority queue in
@@ -299,15 +320,15 @@ public class MaxPQ<Key> implements Iterable<Key> {
     private class HeapIterator implements Iterator<Key> {
 
         // create a new pq
-        private MaxPQ<Key> copy;
+        private PQ<Key> copy;
 
         // add all items to copy of heap
         // takes linear time since already in heap order so no keys move
         public HeapIterator() {
             if (comparator == null) {
-                copy = new MaxPQ<Key>(size());
+                copy = new PQ<Key>(size());
             } else {
-                copy = new MaxPQ<Key>(size(), comparator);
+                copy = new PQ<Key>(size(), comparator);
             }
             for (int i = 1; i <= n; i++) {
                 copy.insert(pq[i]);
@@ -330,17 +351,17 @@ public class MaxPQ<Key> implements Iterable<Key> {
         }
     }
 
-  /**
-     * Unit tests the {@code MaxPQ} data type.
+    /**
+     * Unit tests the {@code PQ} data type.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        MaxPQ<String> pq = new MaxPQ<String>();
-        String[] input = new String[] {"aaaa", "bbb", "ffff", "eeee", "qqqqq", "oooo", "zzzz", "xxxx"};
-        
-        for(String item : input) {
-        //while (!StdIn.isEmpty()) {
+        PQ<String> pq = new PQ<String>();
+        String[] input = new String[]{"aaaa", "bbb", "ffff", "eeee", "qqqqq", "oooo", "zzzz", "xxxx"};
+
+        for (String item : input) {
+            //while (!StdIn.isEmpty()) {
             //String item = StdIn.readString();
             if (!item.equals("-")) {
                 pq.insert(item);
@@ -349,7 +370,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
             }
         }
         System.out.println("(" + pq.size() + " left on pq)");
-        while(!pq.isEmpty()) {
+        while (!pq.isEmpty()) {
             System.out.print(pq.delMax() + " ");
         }
     }
