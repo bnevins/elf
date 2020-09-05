@@ -59,10 +59,10 @@ import java.util.logging.Logger;
  */
 public class PQ<Key> implements Iterable<Key> {
 
-    private Key[] pq;                    // store items at indices 1 to n
-    private int n;                       // number of items on priority queue
+    Key[] pq;                    // store items at indices 1 to n
+    int n;                       // number of items on priority queue
     protected Comparator<Key> comparator;  // optional comparator
-    private boolean maxSort = true;        // set to false for a Minimum PQ
+    boolean maxSort = true;        // set to false for a Minimum PQ
 
     /**
      * Initializes an empty priority queue with the given initial capacity.
