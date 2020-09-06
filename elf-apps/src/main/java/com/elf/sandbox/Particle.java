@@ -35,8 +35,8 @@ public class Particle {
     private double vx, vy;        // velocity
     private int count;            // number of collisions so far
     private final double radius;  // radius
-    private final double mass;    // mass
-    private final Color color;    // color
+    private double mass;    // mass
+    private  Color color;    // color
 
     /**
      * Initializes a particle with the specified position, velocity, radius,
@@ -71,23 +71,45 @@ public class Particle {
         vx = StdRandom.uniform(-0.005, 0.005);
         vy = StdRandom.uniform(-0.005, 0.005);
         radius = 0.02;
-        mass = 0.5;
-        color = getRandomColor();
+        mass = pickMass();  //0.5;
+        color = pickColor();
     }
-    static final Color[] colors = {BLACK, RED, PINK, BLUE, GREEN, YELLOW, GRAY};
+    static final Color[] colors = {BLACK, RED};
+    //static final Color[] colors = {BLACK, RED, PINK, BLUE, GREEN, YELLOW, GRAY, DARK_GRAY, ORANGE, CYAN, MAGENTA};
+    static final double[] masses = {0.1, 5.0};
+    static int currColorIndex = 0;
+    static int currMassIndex = 0;
 
-    Color getRandomColor() {
-        int i = StdRandom.uniform(0, colors.length);
-        return colors[i];
+//    public void setColor(Color color) {
+//        this.color = color;
+//    }
+    Color pickColor() {
+        return RED;
+//        if (currColorIndex >= colors.length) {
+//            currColorIndex = 0;
+//        }
+//
+//        return colors[currColorIndex++];
     }
 
-    /**
-     * Moves this particle in a straight line (based on its velocity) for the
-     * specified amount of time.
-     *
-     * @param dt the amount of time
-     */
-    public void move(double dt) {
+//    public void setMass(double mass) {
+//        this.mass = mass;
+//    }
+    double pickMass() {
+        return 0.5;
+//        if (currMassIndex >= masses.length) {
+//            currMassIndex = 0;
+//        }
+//
+//        return masses[currMassIndex++];
+    }
+/**
+ * Moves this particle in a straight line (based on its velocity) for the
+ * specified amount of time.
+ *
+ * @param dt the amount of time
+ */
+public void move(double dt) {
         rx += vx * dt;
         ry += vy * dt;
     }
