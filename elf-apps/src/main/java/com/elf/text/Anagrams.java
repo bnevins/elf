@@ -29,7 +29,7 @@ public class Anagrams {
         try {
             String path = System.getProperty("DATA");
             if (path == null) {
-                path = "C:/dev/elf/data";
+                path = "E:/dev/elf/data";
             }
             path += "/words.txt";
             File file = new File(path);    //creates a new file instance  

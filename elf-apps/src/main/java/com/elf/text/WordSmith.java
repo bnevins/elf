@@ -68,7 +68,7 @@ public class WordSmith {
     public void sortByCount() {
         Stopwatch timer = new Stopwatch();
         pq = new PQ<>(totalWords, new IntegerComp());
-        //pq.setMinimum();
+        pq.setMinimum();
         Set<Entry<String, Integer>> set = map.entrySet();
 
         for (Entry<String, Integer> entry : set) {
