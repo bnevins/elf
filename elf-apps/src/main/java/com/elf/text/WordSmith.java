@@ -8,16 +8,9 @@ package com.elf.text;
 import com.elf.algorithms.stdlib.Stopwatch;
 import com.elf.util.StringUtils;
 import com.elf.util.sort.PQ;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +25,7 @@ public class WordSmith {
     private PQ<Map.Entry<String, Integer>> pq;
     private TreeMap<String, Integer> map = new TreeMap<>();
     private int totalWords = 0;
+    private static boolean doDumpToFile = true;
 
     private void add(String word) {
         ++totalWords;
@@ -50,7 +44,8 @@ public class WordSmith {
         File words = new File(System.getenv("DATA") + "/dickens.txt");
         FileReader fr = new FileReader(words);
         BufferedReader br = new BufferedReader(fr);
-        //MaxPQ<String> pq = new PQ<String>();
+
+        //PQ<String> pq = new PQ<String>();
         String line;
         Stopwatch timer = new Stopwatch();
         while ((line = br.readLine()) != null) {
@@ -62,12 +57,15 @@ public class WordSmith {
         elapsedTimeWordSort = timer.elapsedTime();
         fr.close();
         ws.sortByCount();
+        ws.dumpFiles();
         ws.dump();
     }
 
     public void sortByCount() {
         Stopwatch timer = new Stopwatch();
         pq = new PQ<>(totalWords, new IntegerComp());
+
+        // MINIMUM priority queue!!
         pq.setMinimum();
         Set<Entry<String, Integer>> set = map.entrySet();
 
@@ -75,6 +73,35 @@ public class WordSmith {
             pq.insert(entry);
         }
         elapsedTimeFrequencySort = timer.elapsedTime();
+    }
+
+    private void dumpFiles() throws FileNotFoundException, IOException {
+        if (!doDumpToFile) {
+            return;
+        }
+        String uniqueFilename = System.getenv("DATA") + "/dickens_unique_words.txt";
+        String wordsAndCount = System.getenv("DATA") + "/dickens_words_count.txt";
+        PrintWriter unique = new PrintWriter(new BufferedWriter(new FileWriter(uniqueFilename)));
+        PrintWriter count = new PrintWriter(new BufferedWriter(new FileWriter(wordsAndCount)));
+        Set<Entry<String, Integer>> set = map.entrySet();
+
+        for (Entry<String, Integer> entry : set) {
+            unique.printf("%s\n", entry.getKey());
+            // sorted by word                
+            //count.printf("%s:%d\n", entry.getKey(), entry.getValue());
+        }
+        unique.close();
+        sortByCount();
+        while (!pq.isEmpty()) {
+            Map.Entry<String, Integer> entry = pq.delMax();
+
+            if (entry == null) {
+                break;
+            }
+            count.printf("%s:%d\n", entry.getKey(), entry.getValue());
+        }
+        count.flush();
+        count.close();
     }
 
     private void dump() {
@@ -92,12 +119,14 @@ public class WordSmith {
                 }
             }
         }
-        for (int i = 0; i < 100; i++) {
-            Entry<String, Integer> entry = pq.delMax();
-            System.out.println(entry.getKey() + "==>" + entry.getValue());
+        if (!doDumpToFile) {
+            for (int i = 0; i < 100; i++) {
+                Entry<String, Integer> entry = pq.delMax();
+                System.out.println(entry.getKey() + "==>" + entry.getValue());
+            }
         }
         System.out.println("\nElapsed Time Word Sort: " + elapsedTimeWordSort + " seconds");
-        System.out.println("\nElapsed Time Frequency Sort: " + elapsedTimeFrequencySort + " seconds");
+        System.out.println("Elapsed Time Frequency Sort: " + elapsedTimeFrequencySort + " seconds");
         System.out.println("TOTAL WORDS: " + totalWords);
         System.out.println("TOTAL UNIQUE WORDS: " + map.size());
     }

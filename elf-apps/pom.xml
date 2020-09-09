@@ -28,7 +28,7 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
+            <!--plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
                 <executions>
@@ -52,7 +52,7 @@
                     <generateDirectory>${project.build.directory}/generated-sources/xjc</generateDirectory>
                     <verbose>true</verbose>
                 </configuration>
-            </plugin>
+            </plugin-->
         </plugins>
     </build>
     <dependencies>
