@@ -92,9 +92,9 @@ public class Particle {
 //        return colors[currColorIndex++];
     }
 
-//    public void setMass(double mass) {
-//        this.mass = mass;
-//    }
+    public void setMass(double mass) {
+        this.mass = mass;
+    }
     double pickMass() {
         return 0.5;
 //        if (currMassIndex >= masses.length) {
@@ -268,5 +268,9 @@ public void move(double dt) {
      */
     public double kineticEnergy() {
         return 0.5 * mass * (vx * vx + vy * vy);
+    }
+
+    void setColor(Color c) {
+            color = c;
     }
 }

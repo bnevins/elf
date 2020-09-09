@@ -213,7 +213,7 @@ public class CollisionSystem {
         // the array of particles
         Particle[] particles;
 
-        int num = 0;
+        int num = 18;
         // create n random particles
         if (args.length == 1 || num > 0) {
             if (num <= 0) {
@@ -223,8 +223,10 @@ public class CollisionSystem {
             for (int i = 0; i < num; i++) {
                 particles[i] = new Particle();
             }
-
-            //particles[0] = makeHeavyFastParticle();
+            for (int i = 0; i < particles.length / 2; i++) {
+                particles[i].setMass(25);
+                particles[i].setColor(Color.BLACK);
+            }
         } // or read from standard input
         else {
             int n = StdIn.readInt();
@@ -246,7 +248,7 @@ public class CollisionSystem {
 
         // create collision system and simulate
         CollisionSystem system = new CollisionSystem(particles);
-        system.simulate(10000);
+        system.simulate(10000000);
     }
 
     private static Particle makeHeavyFastParticle() {
@@ -257,6 +259,6 @@ public class CollisionSystem {
 //        radius = 0.02;
 //        mass = pickMass();  //0.5;
 //        color = pickColor();
-        return new Particle(0.1, 0.1, .005, .005, .02, 35, Color.BLACK);
+        return new Particle(0.1, 0.1, .005, .005, .02, 5, Color.BLACK);
     }
 }
