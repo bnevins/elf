@@ -213,7 +213,7 @@ public class CollisionSystem {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-
+        String filename = null;
         StdDraw.setCanvasSize(600, 600);
 
         // enable double buffering
@@ -224,10 +224,8 @@ public class CollisionSystem {
 
         int num = 0;
         // create n random particles
-        if (args.length == 1 || num > 0) {
-            if (num <= 0) {
+        if (args.length == 1) {
                 num = Integer.parseInt(args[0]);
-            }
             particles = new Particle[num];
             for (int i = 0; i < num; i++) {
                 particles[i] = new Particle();
@@ -238,7 +236,17 @@ public class CollisionSystem {
             }
         } // or read from standard input
         else {
-            String[] particleDescriptions = readParticleDescriptions();
+            if(args.length == 2) {
+                // just take second arg...
+                filename = args[1];
+            }
+            String[] particleDescriptions;
+            
+            if(filename != null)
+                particleDescriptions = readParticleDescriptions(filename);
+            else // standard input
+                particleDescriptions = readParticleDescriptions();
+            
             particles = new Particle[particleDescriptions.length];
             int particleNum = 0;
             

@@ -352,6 +352,7 @@ public class StringUtils {
     public static boolean ok(String s) {
         return s != null && s.length() > 0;
     }
+
     /**
      *
      * @param line a string with doubles separated by spaces. e.g. "12.3 5.8
@@ -361,11 +362,20 @@ public class StringUtils {
      */
     public static double[] getDoubles(String line) {
         try {
-            String[] ss = line.split(" ");
-            double[] dd = new double[ss.length];
-            int index = 0;
+            String[] ss = line.split(" +");
+            ArrayList<Double> list = new ArrayList<>();
+
             for (String s : ss) {
-                dd[index++] = Double.parseDouble(s);
+                if (s == null || s.length() == 0) {
+                    continue;
+                }
+                list.add(Double.parseDouble(s));
+            }
+
+            double[] dd = new double[list.size()];
+            int index = 0;
+            for (Double dbl : list) {
+                dd[index++] = dbl;
             }
             return dd;
         } catch (NumberFormatException nfe) {

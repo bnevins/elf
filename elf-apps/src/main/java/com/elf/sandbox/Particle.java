@@ -69,7 +69,7 @@ public class Particle {
             return null;
         }
         if (values.length != 9) {
-            return null;
+            throw new IllegalArgumentException(line + "  -->  Length expected: 9, got: " + values.length);
         }
         int index = 0;
         Particle p = new Particle(
