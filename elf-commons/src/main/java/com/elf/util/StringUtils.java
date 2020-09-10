@@ -352,5 +352,26 @@ public class StringUtils {
     public static boolean ok(String s) {
         return s != null && s.length() > 0;
     }
+    /**
+     *
+     * @param line a string with doubles separated by spaces. e.g. "12.3 5.8
+     * 0.00001"
+     * @return a double array or null if line has anything other than numbers
+     * (comment)
+     */
+    public static double[] getDoubles(String line) {
+        try {
+            String[] ss = line.split(" ");
+            double[] dd = new double[ss.length];
+            int index = 0;
+            for (String s : ss) {
+                dd[index++] = Double.parseDouble(s);
+            }
+            return dd;
+        } catch (NumberFormatException nfe) {
+            System.out.println(nfe);
+            return null;
+        }
+    }
 
 }
