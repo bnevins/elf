@@ -27,6 +27,15 @@ import com.elf.algorithms.stdlib.StdDraw;
 import com.elf.algorithms.stdlib.StdIn;
 import com.elf.util.sort.MinPQ;
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code CollisionSystem} class represents a collection of particles moving
@@ -213,7 +222,7 @@ public class CollisionSystem {
         // the array of particles
         Particle[] particles;
 
-        int num = 18;
+        int num = 0;
         // create n random particles
         if (args.length == 1 || num > 0) {
             if (num <= 0) {
@@ -229,26 +238,56 @@ public class CollisionSystem {
             }
         } // or read from standard input
         else {
-            int n = StdIn.readInt();
-            particles = new Particle[n];
-            for (int i = 0; i < n; i++) {
-                double rx = StdIn.readDouble();
-                double ry = StdIn.readDouble();
-                double vx = StdIn.readDouble();
-                double vy = StdIn.readDouble();
-                double radius = StdIn.readDouble();
-                double mass = StdIn.readDouble();
-                int r = StdIn.readInt();
-                int g = StdIn.readInt();
-                int b = StdIn.readInt();
-                Color color = new Color(r, g, b);
-                particles[i] = new Particle(rx, ry, vx, vy, radius, mass, color);
+            String[] particleDescriptions = readParticleDescriptions();
+            particles = new Particle[particleDescriptions.length];
+            int particleNum = 0;
+            
+            for(String desc : particleDescriptions) {
+                Particle p = Particle.makeParticle(desc);
+                if(p == null)
+                    throw new NullPointerException("Bad Input Line");
+                particles[particleNum++] = p;
             }
         }
 
         // create collision system and simulate
         CollisionSystem system = new CollisionSystem(particles);
-        system.simulate(10000000);
+        system.simulate(10000);
+    }
+    public static String[] readParticleDescriptions(String fname) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fname));
+            return readParticleDescriptions(br);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CollisionSystem.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
+    }
+    public static String[] readParticleDescriptions() {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            return readParticleDescriptions(br);
+    }
+    
+    private static String[] readParticleDescriptions(BufferedReader br) {
+        try {
+            ArrayList<String> ss = new ArrayList<>();
+
+            for (String s = br.readLine(); s != null; s = br.readLine()) {
+                if(s.length() < 9)
+                    continue;
+                // comment
+                if(s.contains("/"))
+                    continue;
+                ss.add(s);
+            }
+            String[] values = new String[ss.size()];
+            return ss.toArray(values);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Junk.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     private static Particle makeHeavyFastParticle() {
