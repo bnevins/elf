@@ -10,6 +10,7 @@
 package com.elf.sandbox;
 
 import com.elf.algorithms.stdlib.*;
+import com.elf.util.StringUtils;
 import java.awt.Color;
 import static java.awt.Color.*;
 
@@ -34,9 +35,9 @@ public class Particle {
     private double rx, ry;        // position
     private double vx, vy;        // velocity
     private int count;            // number of collisions so far
-    private final double radius;  // radius
+    private double radius;  // radius
     private double mass;    // mass
-    private  Color color;    // color
+    private Color color;    // color
 
     /**
      * Initializes a particle with the specified position, velocity, radius,
@@ -58,6 +59,24 @@ public class Particle {
         this.radius = radius;
         this.mass = mass;
         this.color = color;
+    }
+
+    public static Particle makeParticle(String line) {
+        // FORMAT: 
+        // rx, ry, vx, vy, radius, mass, red, green, blue
+        double[] values = StringUtils.getDoubles(line);
+        if (values == null) {
+            return null;
+        }
+        if (values.length != 9) {
+            return null;
+        }
+        int index = 0;
+        Particle p = new Particle(
+                values[index++], values[index++], values[index++], 
+                values[index++], values[index++], values[index++],
+                new Color((float) values[index++], (float) values[index++], (float) values[index++]));
+        return p;
     }
 
     /**
@@ -95,6 +114,7 @@ public class Particle {
     public void setMass(double mass) {
         this.mass = mass;
     }
+
     double pickMass() {
         return 0.5;
 //        if (currMassIndex >= masses.length) {
@@ -103,13 +123,14 @@ public class Particle {
 //
 //        return masses[currMassIndex++];
     }
-/**
- * Moves this particle in a straight line (based on its velocity) for the
- * specified amount of time.
- *
- * @param dt the amount of time
- */
-public void move(double dt) {
+
+    /**
+     * Moves this particle in a straight line (based on its velocity) for the
+     * specified amount of time.
+     *
+     * @param dt the amount of time
+     */
+    public void move(double dt) {
         rx += vx * dt;
         ry += vy * dt;
     }
@@ -271,6 +292,6 @@ public void move(double dt) {
     }
 
     void setColor(Color c) {
-            color = c;
+        color = c;
     }
 }
