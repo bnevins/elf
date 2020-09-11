@@ -293,7 +293,7 @@ public class CollisionSystem {
             return ss.toArray(values);
             
         } catch (IOException ex) {
-            Logger.getLogger(Junk.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CollisionSystem.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }

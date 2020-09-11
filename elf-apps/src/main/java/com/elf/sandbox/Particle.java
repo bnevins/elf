@@ -249,6 +249,9 @@ public class Particle {
         double fx = magnitude * dx / dist;
         double fy = magnitude * dy / dist;
 
+        debug("this before: " + this);
+        debug("that before: " + that);
+        debug("");
         // update velocities according to normal force
         this.vx += fx / this.mass;
         this.vy += fy / this.mass;
@@ -258,6 +261,10 @@ public class Particle {
         // update collision counts
         this.count++;
         that.count++;
+        
+        debug("this after: " + this);
+        debug("that after: " + that);
+        debug("\n");
     }
 
     /**
@@ -291,7 +298,23 @@ public class Particle {
         return 0.5 * mass * (vx * vx + vy * vy);
     }
 
+    private final static boolean debug = true;
+    
+    private void debug(String s) {
+        System.out.println(s);
+    }
     void setColor(Color c) {
         color = c;
+    }
+    @Override
+    public String toString() {
+//    private double rx, ry;        // position
+//    private double vx, vy;        // velocity
+//    private int count;            // number of collisions so far
+//    private double radius;  // radius
+//    private double mass;    // mass
+//    private Color color; 
+      return String.format("rx: %f, ry: %f, vx: %f, vy: %f, radius: %f, mass: %f, color: %s, count: %d", rx, ry, vx, vy, radius, mass, color,count);
+        
     }
 }
