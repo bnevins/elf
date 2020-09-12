@@ -252,17 +252,23 @@ public class Particle {
         debug("this before: " + this);
         debug("that before: " + that);
         debug("");
+
+        double[] speeds = calculate2DVelocity(that);
+
         // update velocities according to normal force
         this.vx += fx / this.mass;
         this.vy += fy / this.mass;
         that.vx -= fx / that.mass;
         that.vy -= fy / that.mass;
-
+        
         // update collision counts
         this.count++;
         that.count++;
-        
-        debug("this after: " + this);
+
+        debug("CALCULATED: " + speeds[0] + ", " + speeds[1]);
+        debug("this difference: " + Math.abs(this.vx - speeds[0]));
+        debug("that difference: " + Math.abs(that.vx - speeds[1]));
+        debug("\nthis after: " + this);
         debug("that after: " + that);
         debug("\n");
     }
@@ -298,6 +304,17 @@ public class Particle {
         return 0.5 * mass * (vx * vx + vy * vy);
     }
 
+    private double[] calculate2DVelocity(Particle that) {
+        // this calculations first
+        double part1 = (this.mass - that.mass) / (this.mass + that.mass) * this.vx;
+        double part2 = 2 * that.mass / (this.mass + that.mass) * that.vx;
+        double[] answer = new double[2];
+        answer[0] = part1 + part2;
+        part1 = 2 * this.mass / (this.mass + that.mass) * this.vx;
+        part2 = (that.mass - this.mass) / (this.mass + that.mass) * that.vx;
+        answer[1] = part1 + part2;
+        return answer;
+    }
     private final static boolean debug = true;
     
     private void debug(String s) {
