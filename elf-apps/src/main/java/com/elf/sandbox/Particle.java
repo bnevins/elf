@@ -265,8 +265,8 @@ public class Particle {
         double fx = magnitude * dx / dist;
         double fy = magnitude * dy / dist;
 
-        String saveThisBefore = "this before: " + this + "KE: " + this.kineticEnergy();
-        String saveThatBefore = "that before: " + that + "KE: " + that.kineticEnergy();
+        String saveThisBefore = "this before: " + this + " KE: " + this.kineticEnergy();
+        String saveThatBefore = "that before: " + that + " KE: " + that.kineticEnergy();
         double energyBefore = this.kineticEnergy() + that.kineticEnergy();
         double momentumBefore = this.momentum() + that.momentum();
         double[] speeds = calculate1DVelocity(that);
@@ -286,7 +286,7 @@ public class Particle {
         double momentumAfter = this.momentum() + that.momentum();
         debug("difference between starting and ending energy: " + Math.abs(energyAfter - energyBefore));
         debug("difference between starting and ending momentum: " + Math.abs(momentumAfter - momentumBefore));
-        debug("Total difference in speed from my 2Dcalculation: : " + totaldiff + "");
+        debug("Total difference in speed from my 1Dcalculation: : " + totaldiff + "");
         debug(saveThisBefore);
         debug("this after: " + this + "KE: " + this.kineticEnergy());
         debug(saveThatBefore);
@@ -342,12 +342,17 @@ public class Particle {
         part1 = 2 * this.mass / (this.mass + that.mass) * this.vx;
         part2 = (that.mass - this.mass) / (this.mass + that.mass) * that.vx;
         answer[1] = part1 + part2;
+        debug("This Momemtum - before = " + (this.vx * this.mass) + ", After: "+ (answer[0] * this.mass));
+        debug("That Momemtum - before = " + (that.vx * that.mass) + ", After: "+ (answer[1] * that.mass));
+        debug("Total Momemtum - before = " + ((this.vx * this.mass) +  (that.vx * that.mass)));
+        debug("Total Momemtum - after = " + ((answer[0]* this.mass) +  (answer[1] * that.mass)));
         return answer;
     }
     private final static boolean debug = true;
 
     private void debug(String s) {
-        System.out.println(s);
+        if(debug)
+            System.out.println(s);
     }
 
     void setColor(Color c) {
@@ -356,7 +361,7 @@ public class Particle {
 
     @Override
     public String toString() {
-        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.3f, vy: %5.3f, energy: "
+        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.7f, vy: %5.7f, energy: "
                 + "%.2e, momentum: %.2e, radius: %5.3f, mass: %5.3f, color: %s, count: %d",
                 rx, ry, vx, vy, kineticEnergy(), momentum(), radius, mass, color, count);
 

@@ -51,6 +51,7 @@ public class CollisionSystem {
     private MinPQ<Event> pq;          // the priority queue
     private double t = 0.0;          // simulation clock time
     private Particle[] particles;     // the array of particles
+    private int msecPause = 200;
 
     /**
      * Initializes a system with the specified collection of particles. The
@@ -94,7 +95,7 @@ public class CollisionSystem {
             particles[i].draw();
         }
         StdDraw.show();
-        StdDraw.pause(20);
+        StdDraw.pause(msecPause);
         if (t < limit) {
             pq.insert(new Event(t + 1.0 / HZ, null, null));
         }
