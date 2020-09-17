@@ -2,3 +2,8 @@
 **/target
 q.*
 nbactions.xml
+q*.*
+**/q*.bat
+**/q*.txt
+foo*
+junk*
