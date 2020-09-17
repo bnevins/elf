@@ -72,10 +72,11 @@ public class Particle {
             throw new IllegalArgumentException(line + "  -->  Length expected: 9, got: " + values.length);
         }
         int index = 0;
+
         Particle p = new Particle(
-                values[index++], values[index++], values[index++], 
                 values[index++], values[index++], values[index++],
-                new Color((float) values[index++], (float) values[index++], (float) values[index++]));
+                values[index++], values[index++], values[index++],
+                makeColor(values[index++], values[index++], values[index++]));
         return p;
     }
 
@@ -122,6 +123,21 @@ public class Particle {
 //        }
 //
 //        return masses[currMassIndex++];
+    }
+
+    private static Color makeColor(double r, double g, double b) {
+
+        // not perfect -- 
+        if (r > 1) {
+            r /= 255;
+        }
+        if (b > 1) {
+            b /= 255;
+        }
+        if (g > 1) {
+            g /= 255;
+        }
+        return new Color((float)r, (float)g, (float)b);
     }
 
     /**
@@ -249,28 +265,37 @@ public class Particle {
         double fx = magnitude * dx / dist;
         double fy = magnitude * dy / dist;
 
-        debug("this before: " + this);
-        debug("that before: " + that);
-        debug("");
-
-        double[] speeds = calculate2DVelocity(that);
+        String saveThisBefore = "this before: " + this + "KE: " + this.kineticEnergy();
+        String saveThatBefore = "that before: " + that + "KE: " + that.kineticEnergy();
+        double energyBefore = this.kineticEnergy() + that.kineticEnergy();
+        double momentumBefore = this.momentum() + that.momentum();
+        double[] speeds = calculate1DVelocity(that);
 
         // update velocities according to normal force
         this.vx += fx / this.mass;
         this.vy += fy / this.mass;
         that.vx -= fx / that.mass;
         that.vy -= fy / that.mass;
-        
+
         // update collision counts
         this.count++;
         that.count++;
 
-        debug("CALCULATED: " + speeds[0] + ", " + speeds[1]);
-        debug("this difference: " + Math.abs(this.vx - speeds[0]));
-        debug("that difference: " + Math.abs(that.vx - speeds[1]));
-        debug("\nthis after: " + this);
-        debug("that after: " + that);
-        debug("\n");
+        double totaldiff = Math.abs(this.vx - speeds[0]) + Math.abs(that.vx - speeds[1]);
+        double energyAfter = this.kineticEnergy() + that.kineticEnergy();
+        double momentumAfter = this.momentum() + that.momentum();
+        debug("difference between starting and ending energy: " + Math.abs(energyAfter - energyBefore));
+        debug("difference between starting and ending momentum: " + Math.abs(momentumAfter - momentumBefore));
+        debug("Total difference in speed from my 2Dcalculation: : " + totaldiff + "");
+        debug(saveThisBefore);
+        debug("this after: " + this + "KE: " + this.kineticEnergy());
+        debug(saveThatBefore);
+        debug("that after: " + that + "KE: " + that.kineticEnergy());
+        debug("");
+
+        if (totaldiff > 0.00000001) {
+            throw new RuntimeException("Total Difference too high: " + totaldiff);
+        }
     }
 
     /**
@@ -304,7 +329,11 @@ public class Particle {
         return 0.5 * mass * (vx * vx + vy * vy);
     }
 
-    private double[] calculate2DVelocity(Particle that) {
+    public double momentum() {
+        return mass * Math.sqrt(vx * vx + vy * vy);
+    }
+
+    private double[] calculate1DVelocity(Particle that) {
         // this calculations first
         double part1 = (this.mass - that.mass) / (this.mass + that.mass) * this.vx;
         double part2 = 2 * that.mass / (this.mass + that.mass) * that.vx;
@@ -316,22 +345,20 @@ public class Particle {
         return answer;
     }
     private final static boolean debug = true;
-    
+
     private void debug(String s) {
         System.out.println(s);
     }
+
     void setColor(Color c) {
         color = c;
     }
+
     @Override
     public String toString() {
-//    private double rx, ry;        // position
-//    private double vx, vy;        // velocity
-//    private int count;            // number of collisions so far
-//    private double radius;  // radius
-//    private double mass;    // mass
-//    private Color color; 
-      return String.format("rx: %f, ry: %f, vx: %f, vy: %f, radius: %f, mass: %f, color: %s, count: %d", rx, ry, vx, vy, radius, mass, color,count);
-        
+        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.3f, vy: %5.3f, energy: "
+                + "%.2e, momentum: %.2e, radius: %5.3f, mass: %5.3f, color: %s, count: %d",
+                rx, ry, vx, vy, kineticEnergy(), momentum(), radius, mass, color, count);
+
     }
 }
