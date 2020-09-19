@@ -137,7 +137,7 @@ public class Particle {
         if (g > 1) {
             g /= 255;
         }
-        return new Color((float)r, (float)g, (float)b);
+        return new Color((float) r, (float) g, (float) b);
     }
 
     /**
@@ -265,12 +265,12 @@ public class Particle {
         double fx = magnitude * dx / dist;
         double fy = magnitude * dy / dist;
 
-        String saveThisBefore = "this before: " + this + " KE: " + this.kineticEnergy();
-        String saveThatBefore = "that before: " + that + " KE: " + that.kineticEnergy();
+        String saveThisBefore = "this before: " + this;
+        String saveThatBefore = "that before: " + that;
         double energyBefore = this.kineticEnergy() + that.kineticEnergy();
         double momentumBefore = this.momentum() + that.momentum();
         double[] speeds = calculate1DVelocity(that);
-
+        double[] speeds2 = calculate2DVelocity(that);
         // update velocities according to normal force
         this.vx += fx / this.mass;
         this.vy += fy / this.mass;
@@ -284,15 +284,17 @@ public class Particle {
         double totaldiff = Math.abs(this.vx - speeds[0]) + Math.abs(that.vx - speeds[1]);
         double energyAfter = this.kineticEnergy() + that.kineticEnergy();
         double momentumAfter = this.momentum() + that.momentum();
-        debug("difference between starting and ending energy: " + Math.abs(energyAfter - energyBefore));
-        debug("difference between starting and ending momentum: " + Math.abs(momentumAfter - momentumBefore));
-        debug("Total difference in speed from my 1Dcalculation: : " + totaldiff + "");
+        //debug("difference between starting and ending energy: " + Math.abs(energyAfter - energyBefore));
+        debug("Momentum Before: " + momentumBefore + ", After: " + momentumAfter);
+        debug("Energy Before: " + energyBefore + ", After: " + energyAfter);
+        //debug("Total difference in speed from my 1Dcalculation: : " + totaldiff + "");
         debug(saveThisBefore);
-        debug("this after: " + this + "KE: " + this.kineticEnergy());
+        debug("this after: " + this);
         debug(saveThatBefore);
-        debug("that after: " + that + "KE: " + that.kineticEnergy());
+        debug("that after: " + that);
         debug("");
-
+        debug("Calculated 2D: vx1 = " + speeds2[0] + " vy1 = " + speeds2[1] + 
+                "Calculated 2D: vx2 = " + speeds2[2] + "Calculated 2D: vy2 = " + speeds2[3]);
         if (totaldiff > 0.00000001) {
             throw new RuntimeException("Total Difference too high: " + totaldiff);
         }
@@ -330,29 +332,57 @@ public class Particle {
     }
 
     public double momentum() {
-        return mass * Math.sqrt(vx * vx + vy * vy);
+        return mass * vx; // can be negative
     }
 
     private double[] calculate1DVelocity(Particle that) {
         // this calculations first
-        double part1 = (this.mass - that.mass) / (this.mass + that.mass) * this.vx;
-        double part2 = 2 * that.mass / (this.mass + that.mass) * that.vx;
+        double part1 = (this.mass - that.mass) / (this.mass + that.mass) * (this.vx);
+        double part2 = 2 * that.mass / (this.mass + that.mass) * (that.vx);
         double[] answer = new double[2];
         answer[0] = part1 + part2;
-        part1 = 2 * this.mass / (this.mass + that.mass) * this.vx;
-        part2 = (that.mass - this.mass) / (this.mass + that.mass) * that.vx;
+        part1 = 2 * this.mass / (this.mass + that.mass) * (this.vx);
+        part2 = (that.mass - this.mass) / (this.mass + that.mass) * (that.vx);
         answer[1] = part1 + part2;
-        debug("This Momemtum - before = " + (this.vx * this.mass) + ", After: "+ (answer[0] * this.mass));
-        debug("That Momemtum - before = " + (that.vx * that.mass) + ", After: "+ (answer[1] * that.mass));
-        debug("Total Momemtum - before = " + ((this.vx * this.mass) +  (that.vx * that.mass)));
-        debug("Total Momemtum - after = " + ((answer[0]* this.mass) +  (answer[1] * that.mass)));
+        debug("My 1D calcs: vx1 = " + answer[0] + ", vx2 = " + answer[1]);
+//        debug("This Momemtum - before = " + (this.vx * this.mass) + ", After: "+ (answer[0] * this.mass));
+//        debug("That Momemtum - before = " + (that.vx * that.mass) + ", After: "+ (answer[1] * that.mass));
+//        debug("Total Momemtum - before = " + ((this.vx * this.mass) +  (that.vx * that.mass)));
+//        debug("Total Momemtum - after = " + ((answer[0]* this.mass) +  (answer[1] * that.mass)));
         return answer;
     }
+
+    private double[] calculate2DVelocity(Particle that) {
+
+        double dx = that.rx - this.rx;
+        double dy = that.ry - this.ry;
+        double dvx = that.vx - this.vx;
+        double dvy = that.vy - this.vy;
+        double dvdr = dx * dvx + dy * dvy;             // dv dot dr ?????
+        double dist = this.radius + that.radius;   // distance between particle centers at collison
+
+        // magnitude of normal force
+        double magnitude = 2 * this.mass * that.mass * dvdr / ((this.mass + that.mass) * dist);
+
+        // normal force, and in x and y directions
+        double fx = magnitude * dx / dist;
+        double fy = magnitude * dy / dist;
+
+        double[] speeds = new double[4];
+
+        speeds[0] = this.vx + fx / this.mass;
+        speeds[1] = this.vy + fy / this.mass;
+        speeds[2] = that.vx - fx / that.mass;
+        speeds[3] = that.vy - fy / that.mass;
+        return speeds;
+    }
+
     private final static boolean debug = true;
 
     private void debug(String s) {
-        if(debug)
+        if (debug) {
             System.out.println(s);
+        }
     }
 
     void setColor(Color c) {
@@ -366,4 +396,5 @@ public class Particle {
                 rx, ry, vx, vy, kineticEnergy(), momentum(), radius, mass, color, count);
 
     }
+
 }
