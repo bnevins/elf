@@ -173,19 +173,79 @@ public class Viewer extends javax.swing.JFrame {
         ImageIcon icon = new ImageIcon(image);
         int width = 600;
         int height = 400;
-        // WBN
-        //Image img = icon.getImage(); //Images produced will remain a fixed size, 600 * 400
-        //Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_SMOOTH); //Images produced will remain a fixed size, 600 * 400
-        //Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_DEFAULT); //Images produced will remain a fixed size, 600 * 400
-        Image img = scaleImage(icon, width, height); //Images produced will remain a fixed size, 600 * 400
+        Dimension screen = new Dimension(width, height);
+        Dimension before = new Dimension(image.getWidth(), image.getHeight());
+        Image img = scaleImage(icon, width, height); //Images produced will scale properly (aspect ratio the same)
+        Dimension after = new Dimension(img.getWidth(null), img.getHeight(null));
         ImageIcon newIcon = new ImageIcon(img); //Create a new imageicon from an image object.
         //Now we want to create a caption for the pictures using their file names
         String pictureName = file.getName();
         int pos = pictureName.lastIndexOf(".");        //This removes the extensions 
-        String caption = pictureName.substring(0, pos); //from the file names. e.g .gif, .jpg, .png
+        String caption = makeCaption(file, before, after, screen);
         picLabel.setIcon(newIcon);                   //Set the imageIcon on the Label
         picLabel.setText(caption);                   //Set the caption
         picLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM); //Caption appears below the image
+    }
+
+    private Image scaleImage(ImageIcon icon, int screenWidth, int screenHeight) {
+        Image image = icon.getImage();
+        int picWidth = image.getWidth(null);
+        int picHeight = image.getHeight(null);
+
+        if (picWidth <= 0 || picHeight <= 0) {
+            throw new RuntimeException("add Lazy calculation of image dimensions!");
+        }
+        Dimension d = scaleImage(picWidth, picHeight, screenWidth, screenHeight);
+        return image.getScaledInstance(d.width, d.height, Image.SCALE_DEFAULT);
+    }
+
+    private Dimension scaleImage(int picWidth, int picHeight, int screenWidth, int screenHeight) {
+        double doubleWidth = picWidth;
+        double doubleHeight = picHeight;
+        Dimension dimensions = new Dimension(picWidth, picHeight);
+
+        if (picWidth <= 0 || picHeight <= 0) {
+            throw new RuntimeException("add Lazy calculation of image dimensions!");
+        }
+        double xRatio = (double) screenWidth / doubleWidth;
+        double yRatio = (double) screenHeight / doubleHeight;
+        int scaledWidth;
+        int scaledHeight;
+        // whichever is LESS is the "limiting" dimension
+        if (xRatio >= 1.0 && yRatio > 1.0) {
+            ; // return dimensions;
+        } else if (xRatio <= yRatio) {
+            dimensions.width = (int) (doubleWidth * xRatio);
+            dimensions.height = (int) (doubleHeight * xRatio);
+        } else { // yRatio is smaller
+            dimensions.width = (int) (doubleWidth * yRatio);
+            dimensions.height = (int) (doubleHeight * yRatio);
+        }
+        return dimensions;
+    }
+
+    private String makeCaption(File file, Dimension before, Dimension after, Dimension screen) {
+        String pictureName = file.getName();
+        if (!debug) {
+            return pictureName;
+        }
+        String extra = new String();
+        extra = String.format("\nBefore: %dx%d, Scaled: %dx%d, Screen: %dx%d ",
+                before.width, before.height,
+                after.width, after.height,
+                screen.width, screen.height);
+        return pictureName + extra;
+    }
+
+    private static class Dimension {
+
+        int width;
+        int height;
+
+        Dimension(int w, int h) {
+            width = w;
+            height = h;
+        }
     }
     //Variables declaration
     int position = 0; //Initial position is 0
@@ -195,33 +255,7 @@ public class Viewer extends javax.swing.JFrame {
     private javax.swing.JButton NextButton;
     private javax.swing.JButton PreviousButton;
     private javax.swing.JLabel picLabel;
+    private final static boolean debug = true;
     // End of variables declaration//GEN-END:variables
 
-    private Image scaleImage(ImageIcon icon, int screenWidth, int screenHeight) {
-        Image image = icon.getImage();
-        int y = image.getHeight(null);
-        int x = image.getWidth(null);
-        double doubleX = x;
-        double doubleY = y;
-
-        if (x <= 0 || y <= 0) {
-            throw new RuntimeException("add Lazy calculation of image dimensions!");
-        }
-        double xRatio = (double) screenWidth / doubleX;
-        double yRatio = (double) screenHeight / doubleY;
-        int scaledWidth;
-        int scaledHeight;
-        // whichever is LESS is the "limiting" dimension
-        if (xRatio >= 1.0 && yRatio > 1.0) {
-            scaledWidth = x;
-            scaledHeight = y;
-        } else if (xRatio <= yRatio) {
-            scaledWidth = (int) (doubleX * xRatio);
-            scaledHeight = (int) (doubleY * xRatio);
-        } else { // yRatio is smaller
-            scaledWidth = (int) (doubleX * yRatio);
-            scaledHeight = (int) (doubleY * yRatio);
-        }
-        return image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_DEFAULT);
-    }
 }//End of class
