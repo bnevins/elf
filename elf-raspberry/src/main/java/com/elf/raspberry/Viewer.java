@@ -177,7 +177,7 @@ public class Viewer extends javax.swing.JFrame {
         //Image img = icon.getImage(); //Images produced will remain a fixed size, 600 * 400
         //Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_SMOOTH); //Images produced will remain a fixed size, 600 * 400
         //Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_DEFAULT); //Images produced will remain a fixed size, 600 * 400
-        Image img = scaleImage(image, width, height); //Images produced will remain a fixed size, 600 * 400
+        Image img = scaleImage(icon, width, height); //Images produced will remain a fixed size, 600 * 400
         ImageIcon newIcon = new ImageIcon(img); //Create a new imageicon from an image object.
         //Now we want to create a caption for the pictures using their file names
         String pictureName = file.getName();
@@ -197,8 +197,31 @@ public class Viewer extends javax.swing.JFrame {
     private javax.swing.JLabel picLabel;
     // End of variables declaration//GEN-END:variables
 
-    private Image scaleImage(Image image, int width, int height) {
-        // Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_DEFAULT); //Images produced will remain a fixed size, 600 * 400
-        return null;
+    private Image scaleImage(ImageIcon icon, int screenWidth, int screenHeight) {
+        Image image = icon.getImage();
+        int y = image.getHeight(null);
+        int x = image.getWidth(null);
+        double doubleX = x;
+        double doubleY = y;
+
+        if (x <= 0 || y <= 0) {
+            throw new RuntimeException("add Lazy calculation of image dimensions!");
+        }
+        double xRatio = (double) screenWidth / doubleX;
+        double yRatio = (double) screenHeight / doubleY;
+        int scaledWidth;
+        int scaledHeight;
+        // whichever is LESS is the "limiting" dimension
+        if (xRatio >= 1.0 && yRatio > 1.0) {
+            scaledWidth = x;
+            scaledHeight = y;
+        } else if (xRatio <= yRatio) {
+            scaledWidth = (int) (doubleX * xRatio);
+            scaledHeight = (int) (doubleY * xRatio);
+        } else { // yRatio is smaller
+            scaledWidth = (int) (doubleX * yRatio);
+            scaledHeight = (int) (doubleY * yRatio);
+        }
+        return image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_DEFAULT);
     }
 }//End of class
