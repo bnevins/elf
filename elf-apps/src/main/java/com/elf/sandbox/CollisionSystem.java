@@ -51,7 +51,7 @@ public class CollisionSystem {
     private MinPQ<Event> pq;          // the priority queue
     private double t = 0.0;          // simulation clock time
     private Particle[] particles;     // the array of particles
-    private int msecPause = 200;
+    private int msecPause = 20;
 
     /**
      * Initializes a system with the specified collection of particles. The

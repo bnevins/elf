@@ -295,9 +295,9 @@ public class Particle {
         debug("");
         debug("Calculated 2D: vx1 = " + speeds2[0] + " vy1 = " + speeds2[1] + 
                 "Calculated 2D: vx2 = " + speeds2[2] + "Calculated 2D: vy2 = " + speeds2[3]);
-        if (totaldiff > 0.00000001) {
-            throw new RuntimeException("Total Difference too high: " + totaldiff);
-        }
+//        if (totaldiff > 0.00000001) {
+//            throw new RuntimeException("Total Difference too high: " + totaldiff);
+//        }
     }
 
     /**
