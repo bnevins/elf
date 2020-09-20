@@ -38,6 +38,7 @@ public class Particle {
     private double radius;  // radius
     private double mass;    // mass
     private Color color;    // color
+    private final static boolean debug = false;
 
     /**
      * Initializes a particle with the specified position, velocity, radius,
@@ -377,7 +378,6 @@ public class Particle {
         return speeds;
     }
 
-    private final static boolean debug = true;
 
     private void debug(String s) {
         if (debug) {

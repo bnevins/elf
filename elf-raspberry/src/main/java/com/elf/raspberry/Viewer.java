@@ -168,7 +168,8 @@ package com.elf.raspberry;
         // WBN
         //Image img = icon.getImage(); //Images produced will remain a fixed size, 600 * 400
         //Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_SMOOTH); //Images produced will remain a fixed size, 600 * 400
-        Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_DEFAULT); //Images produced will remain a fixed size, 600 * 400
+        //Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_DEFAULT); //Images produced will remain a fixed size, 600 * 400
+        Image img = scaleImage(image, width, height); //Images produced will remain a fixed size, 600 * 400
         ImageIcon newIcon = new ImageIcon(img); //Create a new imageicon from an image object.
         //Now we want to create a caption for the pictures using their file names
         String pictureName = file.getName();
@@ -187,4 +188,9 @@ package com.elf.raspberry;
         private javax.swing.JButton PreviousButton;
         private javax.swing.JLabel picLabel;
         // End of variables declaration//GEN-END:variables
+
+    private Image scaleImage(Image image, int width, int height) {
+             // Image img = icon.getImage().getScaledInstance(width,height,java.awt.Image.SCALE_DEFAULT); //Images produced will remain a fixed size, 600 * 400
+             return null;
+    }
     }//End of class
