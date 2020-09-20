@@ -6,6 +6,7 @@
 package com.elf.raspberry;
 
 import java.awt.Graphics;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -27,7 +28,7 @@ public class Main extends JFrame {
  
     Image screenImage; // downloaded image  
     int w, h; // Display height and width 
- 
+    Dimension newSize;
  
     // Program entry 
     public static void main(String[] args) throws Exception { 
@@ -77,14 +78,19 @@ public class Main extends JFrame {
             screenImage = Toolkit.getDefaultToolkit().getImage(new URL(source));
         else 
             screenImage = Toolkit.getDefaultToolkit().getImage(source); // otherwise - file 
+        
+        newSize = ImageUtils.scaleImage(screenImage.getWidth(this), screenImage.getHeight(this), getWidth(), getHeight());
+        System.out.println("After processing: " + newSize.width + "X" + newSize.height);
     } 
  
     public void paint (Graphics g) { 
-        System.out.println("screenImage: " + screenImage);
-        if (screenImage != null) // if screenImage is not null (image loaded and ready) 
+        //System.out.println("screenImage: " + screenImage);
+        if (screenImage != null && newSize != null) // if screenImage is not null (image loaded and ready) 
             g.drawImage(screenImage, // draw it  
                         0, //    w/2 - screenImage.getWidth(this) / 2, // at the center  
                         0, // h/2 - screenImage.getHeight(this) / 2, // of screen 
+                        newSize.width,
+                        newSize.height,
                         this);
             // to draw image at the center of screen 
             // we calculate X position as a half of screen width minus half of image width 
@@ -92,7 +98,16 @@ public class Main extends JFrame {
           
     } 
  
- 
+ public void paint2(Graphics g) {
+     // Draw the scaled image
+//        BufferedImage newImage = new BufferedImage(newWidth, newHeight,
+//                imageType);
+//        Graphics2D graphics2D = newImage.createGraphics();
+//        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+//            RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//        graphics2D.drawImage(image, 0, 0, newWidth, newHeight, null);
+
+ }
 } 
  
 

@@ -9,7 +9,7 @@ package com.elf.raspberry;
  *
  * @author Neon Tetras
  */
-import java.awt.Image;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -237,16 +237,7 @@ public class Viewer extends javax.swing.JFrame {
         return pictureName + extra;
     }
 
-    private static class Dimension {
-
-        int width;
-        int height;
-
-        Dimension(int w, int h) {
-            width = w;
-            height = h;
-        }
-    }
+   
     //Variables declaration
     int position = 0; //Initial position is 0
     String[] filenames; //Array to hold the file names
