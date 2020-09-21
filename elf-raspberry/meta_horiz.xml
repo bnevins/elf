@@ -1,0 +1,64 @@
+<!-- Format name: javax_imageio_jpeg_image_1.0
+-->
+<javax_imageio_jpeg_image_1.0>
+    <JPEGvariety>
+        <app0JFIF majorVersion="1" minorVersion="1" resUnits="0" Xdensity="72" Ydensity="72" thumbWidth="0" thumbHeight="0">
+            <app2ICC/>
+        </app0JFIF>
+    </JPEGvariety>
+    <markerSequence>
+        <unknown MarkerTag="225"/>
+        <unknown MarkerTag="237"/>
+        <sof process="0" samplePrecision="8" numLines="2268" samplesPerLine="4032" numFrameComponents="3">
+            <componentSpec componentId="1" HsamplingFactor="2" VsamplingFactor="2" QtableSelector="0"/>
+            <componentSpec componentId="2" HsamplingFactor="1" VsamplingFactor="1" QtableSelector="1"/>
+            <componentSpec componentId="3" HsamplingFactor="1" VsamplingFactor="1" QtableSelector="1"/>
+        </sof>
+        <dht>
+            <dhtable class="0" htableId="0"/>
+        </dht>
+        <dht>
+            <dhtable class="1" htableId="0"/>
+        </dht>
+        <dht>
+            <dhtable class="0" htableId="1"/>
+        </dht>
+        <dht>
+            <dhtable class="1" htableId="1"/>
+        </dht>
+        <dqt>
+            <dqtable elementPrecision="0" qtableId="0"/>
+        </dqt>
+        <dqt>
+            <dqtable elementPrecision="0" qtableId="1"/>
+        </dqt>
+        <dri interval="252"/>
+        <sos numScanComponents="3" startSpectralSelection="0" endSpectralSelection="63" approxHigh="0" approxLow="0">
+            <scanComponentSpec componentSelector="1" dcHuffTable="0" acHuffTable="0"/>
+            <scanComponentSpec componentSelector="2" dcHuffTable="1" acHuffTable="1"/>
+            <scanComponentSpec componentSelector="3" dcHuffTable="1" acHuffTable="1"/>
+        </sos>
+    </markerSequence>
+</javax_imageio_jpeg_image_1.0>
+Format name: javax_imageio_1.0
+<javax_imageio_1.0>
+    <Chroma>
+        <ColorSpaceType name="YCbCr"/>
+        <NumChannels value="3"/>
+    </Chroma>
+    <Compression>
+        <CompressionTypeName value="JPEG"/>
+        <Lossless value="FALSE"/>
+        <NumProgressiveScans value="1"/>
+    </Compression>
+    <Dimension>
+        <PixelAspectRatio value="1.0"/>
+        <ImageOrientation value="normal"/>
+    </Dimension>
+</javax_imageio_1.0>
+------------------------------------------------------------------------
+BUILD SUCCESS
+------------------------------------------------------------------------
+Total time:  02:25 min
+Finished at: 2020-09-21T13:09:16-07:00
+------------------------------------------------------------------------

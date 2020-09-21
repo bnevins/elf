@@ -79,7 +79,7 @@ public class Main extends JFrame {
         else 
             screenImage = Toolkit.getDefaultToolkit().getImage(source); // otherwise - file 
         
-        newSize = ImageUtils.scaleImage(screenImage.getWidth(this), screenImage.getHeight(this), getWidth(), getHeight());
+        //newSize = ImageUtils.scaleImage(screenImage.getWidth(this), screenImage.getHeight(this), getWidth(), getHeight());
         System.out.println("After processing: " + newSize.width + "X" + newSize.height);
     } 
  

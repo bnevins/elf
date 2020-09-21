@@ -1,2 +1,2 @@
-java com.elf.raspberry.Main p:\sample.jpg
+java com.elf.raspberry.Tester2 c:/tmp/sample.jpg
 

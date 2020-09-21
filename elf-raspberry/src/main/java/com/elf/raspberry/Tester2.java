@@ -14,6 +14,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -29,6 +30,7 @@ public class Tester2 extends Window {
     private BufferedImage pic;
     Dimension scaledSize;
     static Dimension screenSize;
+    static Point origin;
 
     public static void main(String[] args) {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -45,7 +47,7 @@ public class Tester2 extends Window {
         }
 
         try {
-            BufferedImage loadedpic = ImageIO.read(new File("p:/sample.jpg"));
+            BufferedImage loadedpic = ImageIO.read(new File(args[0]));
             screen.setFullScreenWindow(new Tester2(loadedpic));
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -56,8 +58,19 @@ public class Tester2 extends Window {
         super(new Frame());
 
         this.pic = pic;
-        this.scaledSize = ImageUtils.scaleImage(pic.getWidth(), pic.getHeight(), screenSize.width, screenSize.height);
+        this.scaledSize = ImageUtils.scaleImage(true, pic.getWidth(), pic.getHeight(), screenSize.width, screenSize.height);
+        this.origin = new Point((screenSize.width - scaledSize.width) /2, 
+                (screenSize.height - scaledSize.height) /2);
+        
 
+        // kludge ==> chop off top
+        // Bay Bridge Hack
+        if(screenSize.height < scaledSize.height)
+            origin.y = screenSize.height - scaledSize.height;
+        
+        
+        
+        System.out.println("Orgin: " + origin);
         System.out.printf("\nBefore: %dx%d, Scaled: %dx%d, Screen: %dx%d ",
                 pic.getWidth(), pic.getHeight(),
                 scaledSize.width, scaledSize.height,
@@ -71,7 +84,6 @@ public class Tester2 extends Window {
     }
 
     public void paint(Graphics g) {
-
-        g.drawImage(pic, 0, 0, scaledSize.width, scaledSize.height, this);
+        g.drawImage(pic, origin.x, origin.y, scaledSize.width, scaledSize.height, this);
     }
 }
