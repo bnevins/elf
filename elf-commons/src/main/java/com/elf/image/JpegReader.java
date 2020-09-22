@@ -15,24 +15,67 @@ import java.util.logging.Logger;
 
 public class JpegReader {
 
-    //private File file;
-    private static boolean isIntelFormat = false;
     private static final int ERR = 1;
+    private static final boolean debug = false;
+    private boolean isIntelFormat;
+    private String timestamp; // 2020:07:02 10:17:00
 
-    private JpegReader() {
+    private JpegReader(File file) {
+        try {
+            read(file);
+        } catch (Exception ex) {
+            Logger.getLogger(JpegReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public static int read(File file) throws IOException {
-        System.out.println("\n\nFilename: " + file.getAbsolutePath());
+    public Calendar getTimestamp() {
+        if (timestamp == null || timestamp.length() != 19) {
+            return null;
+        }
+        String[] strings = timestamp.split("[: \"]");
+        if (strings.length != 6) {
+            return null;
+        }
+        int[] ints = convertDateStringsToInts(strings);
+
+        if (ints == null) {
+            return null;
+        }
+        // e.g. August will be recovered as "08", but Calendar wants zero-based
+        // so we need to subtract 1
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.set(ints[0], ints[1] - 1, ints[2], ints[3], ints[4], ints[5]);
+        return c;
+    }
+
+    public String getFilenameFromTimestamp() {
+        Calendar c = getTimestamp();
+        
+        if(c == null)
+            return null;
+        
+        String fname = String.format("%04d%02d%02d%02d%02d%02d", 
+                c.get(Calendar.YEAR),
+                c.get(Calendar.MONTH)+1,
+                c.get(Calendar.DAY_OF_MONTH),
+                c.get(Calendar.HOUR),
+                c.get(Calendar.MINUTE),
+                c.get(Calendar.SECOND));
+        
+        return fname;
+    }
+    public final void read(File file) throws IOException {
+        timestamp = null;
+        debug("\n\nFilename: " + file.getAbsolutePath());
         RandomAccessFile raf = new RandomAccessFile(file, "r");
 
         // Check if JPEG
         if (raf.readShort() == (short) 0xFFD8) {
-            System.out.println("Looks like a JPEG file");
+            debug("Looks like a JPEG file");
         } else {
-            System.err.println("Not a JPEG file ");
             raf.close();
-            return ERR;
+            throw new RuntimeException("Not a JPEG File");
         }
 
 // Find Exif marker
@@ -41,7 +84,7 @@ public class JpegReader {
             short current = raf.readShort(); // Read next two bytes
             if (current == (short) 0xFFE1) {
                 exifFound = true;
-                System.out.println("Found Exif application marker");
+                debug("Found Exif application marker");
                 break;
             }
             // Move only one byte per iteration
@@ -49,18 +92,17 @@ public class JpegReader {
         }
 
         if (!exifFound) {
-            System.err.println("Couldn't find Exif application marker");
             raf.close();
-            return ERR;
+            throw new RuntimeException("Couldn't find Exif application marker");
         }
         raf.skipBytes(8); // Skip data size and Exif\0\0
         // Check if Intel format
         isIntelFormat = raf.readShort() == (short) 0x4949;
-        System.out.println("Format: " + (isIntelFormat ? "Intel" : "Not Intel"));
+        debug("Format: " + (isIntelFormat ? "Intel" : "Not Intel"));
 
         // Check tag 0x2a00
         if (raf.readShort() == (short) 0x2A00) {
-            System.out.println("Confirmed Intel format");
+            debug("Confirmed Intel format");
         }
 // Get offset of IFD
         byte[] offsetBytes = new byte[4];
@@ -110,22 +152,41 @@ public class JpegReader {
                         new DirectoryDataPointer(dataOffset, length, "Date/Time"));
             }
         }
-        System.out.println("\n===START EXIF DATA===");
+        debug("\n===START EXIF DATA===");
 
         for (DirectoryDataPointer ddp : directoryDataPointers) {
             raf.seek(resetPoint);
             raf.skipBytes(ddp.getOffset());
             byte[] data = new byte[ddp.getLength()];
             raf.readFully(data);
-            System.out.println(ddp.getType() + ": " + new String(data));
+
+            // the last byte read is a zero.  Not "0" but actual zero!!!
+            String sData = new String(data, 0, data.length - 1);
+            debug(ddp.getType() + ": " + sData);
+
+            if (ddp.getType().toLowerCase().equals("date/time")) {
+                timestamp = sData;
+            }
         }
 
-        System.out.println("===END EXIF DATA===");
+        debug("===END EXIF DATA===");
         raf.close();
-        return 0;
     }
 
-    private static int convert(byte... bytes) {
+    private int[] convertDateStringsToInts(String[] strings) throws NumberFormatException {
+        if (strings.length != 6) {
+            return null;
+        }
+
+        int[] ints = new int[6];
+
+        for (int i = 0; i < 6; i++) {
+            ints[i] = Integer.parseInt(strings[i]);
+        }
+        return ints;
+    }
+
+    private int convert(byte... bytes) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         if (isIntelFormat) {
             buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -138,24 +199,29 @@ public class JpegReader {
         }
     }
 
+    private static final void debug(String s) {
+        if (debug) {
+            System.out.println(s);
+        }
+    }
+
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.out.println("Enter a dirname argument");
+            debug("Enter a dirname argument");
             System.exit(1);
         }
         File dir = new File(args[0]);
         if (!dir.exists() || !dir.isDirectory()) {
-            System.out.println("Enter a VALID dirname argument");
+            debug("Enter a VALID dirname argument");
             System.exit(1);
         }
         File[] files = dir.listFiles(new JpegFileFilter());
 
-        for(File f : files) {
-            try {
-                JpegReader.read(f);
-            } catch (IOException ex) {
-                Logger.getLogger(JpegReader.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        for (File f : files) {
+            JpegReader reader = new JpegReader(f);
+
+            System.out.println("Timestamp: " +  reader.getTimestamp().getTime());
+            System.out.println("Suggested Filename: " + "BB_" + reader.getFilenameFromTimestamp());
         }
     }
 
