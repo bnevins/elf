@@ -20,7 +20,7 @@ public class JpegReader {
     private boolean isIntelFormat;
     private String timestamp; // 2020:07:02 10:17:00
 
-    private JpegReader(File file) {
+    public JpegReader(File file) {
         try {
             read(file);
         } catch (Exception ex) {
@@ -55,7 +55,10 @@ public class JpegReader {
         if(c == null)
             return null;
         
-        String fname = String.format("%04d%02d%02d%02d%02d%02d", 
+        String format = "%04d_%02d_%02d_%02d%02d%02d.jpg"; 
+        //String format = "%04d_%02d_%02d%02d%02d%02d.jpg"; 
+        //String format = "%04d_%02d_%02d%02d%02d%02d.jpg"; 
+        String fname = String.format(format, 
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH)+1,
                 c.get(Calendar.DAY_OF_MONTH),
@@ -65,7 +68,7 @@ public class JpegReader {
         
         return fname;
     }
-    public final void read(File file) throws IOException {
+    private final void read(File file) throws IOException {
         timestamp = null;
         debug("\n\nFilename: " + file.getAbsolutePath());
         RandomAccessFile raf = new RandomAccessFile(file, "r");
@@ -168,7 +171,6 @@ public class JpegReader {
                 timestamp = sData;
             }
         }
-
         debug("===END EXIF DATA===");
         raf.close();
     }

@@ -17,7 +17,7 @@ public class JpegFileFilter implements FileFilter {
     @Override
     public boolean accept(File pathname) {
         if (pathname.isDirectory()) {
-            return false;
+            return true;
         }
         return pathname.getName().toLowerCase().endsWith(".jpg");
     }
