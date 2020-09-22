@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 public class JpegReader {
 
     private static final int ERR = 1;
-    private static final boolean debug = true;
+    private static boolean debug = true;
     private boolean isIntelFormat;
     private String timestamp; // 2020:07:02 10:17:00
     private Dimension dimensions;
@@ -30,6 +30,9 @@ public class JpegReader {
         } catch (Exception ex) {
             Logger.getLogger(JpegReader.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public static void setDebug(boolean verbose) {
+        debug = verbose;
     }
 
     public Calendar getTimestamp() {
@@ -165,7 +168,7 @@ public class JpegReader {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Date/Time"));
             } else {
-                System.out.printf("Unknown Tag: %x\n", tag);
+                debug("Unknown Tag: " + tag);
             }
         }
         debug("\n===START EXIF DATA===");
