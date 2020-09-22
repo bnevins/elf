@@ -51,23 +51,25 @@ public class JpegReader {
 
     public String getFilenameFromTimestamp() {
         Calendar c = getTimestamp();
-        
-        if(c == null)
+
+        if (c == null) {
             return null;
-        
-        String format = "%04d_%02d_%02d_%02d%02d%02d.jpg"; 
+        }
+
+        String format = "%04d_%02d_%02d_%02d%02d%02d.jpg";
         //String format = "%04d_%02d_%02d%02d%02d%02d.jpg"; 
         //String format = "%04d_%02d_%02d%02d%02d%02d.jpg"; 
-        String fname = String.format(format, 
+        String fname = String.format(format,
                 c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH)+1,
+                c.get(Calendar.MONTH) + 1,
                 c.get(Calendar.DAY_OF_MONTH),
-                c.get(Calendar.HOUR),
+                c.get(Calendar.HOUR_OF_DAY), // IMPORTANT!  "HOUR" is 12-hour
                 c.get(Calendar.MINUTE),
                 c.get(Calendar.SECOND));
-        
+
         return fname;
     }
+
     private final void read(File file) throws IOException {
         timestamp = null;
         debug("\n\nFilename: " + file.getAbsolutePath());
@@ -81,7 +83,7 @@ public class JpegReader {
             throw new RuntimeException("Not a JPEG File");
         }
 
-// Find Exif marker
+        // Find Exif marker
         boolean exifFound = false;
         for (long i = raf.getFilePointer(); i < raf.length() - 1; i++) {
             short current = raf.readShort(); // Read next two bytes
@@ -222,8 +224,8 @@ public class JpegReader {
         for (File f : files) {
             JpegReader reader = new JpegReader(f);
 
-            System.out.println("Timestamp: " +  reader.getTimestamp().getTime());
-            System.out.println("Suggested Filename: " + "BB_" + reader.getFilenameFromTimestamp());
+            System.out.print("Filename: " + f + "  Timestamp: " + reader.getTimestamp().getTime());
+            System.out.println("   Suggested Filename: " + "BB_" + reader.getFilenameFromTimestamp());
         }
     }
 
