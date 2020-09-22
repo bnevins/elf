@@ -6,19 +6,23 @@
 package com.elf.image;
 
 import com.elf.io.JpegFileFilter;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 public class JpegReader {
 
     private static final int ERR = 1;
-    private static final boolean debug = false;
+    private static final boolean debug = true;
     private boolean isIntelFormat;
     private String timestamp; // 2020:07:02 10:17:00
+    private Dimension dimensions;
 
     public JpegReader(File file) {
         try {
@@ -70,7 +74,19 @@ public class JpegReader {
         return fname;
     }
 
+    private void setDimensions(File f) {
+        BufferedImage bimg;
+        try {
+            bimg = ImageIO.read(f);
+            dimensions = new Dimension(bimg.getWidth(), bimg.getHeight());
+            debug("Dimensions: " + dimensions);
+        } catch (IOException ex) {
+            dimensions = new Dimension(0, 0);
+        }
+    }
+
     private final void read(File file) throws IOException {
+        setDimensions(file);
         timestamp = null;
         debug("\n\nFilename: " + file.getAbsolutePath());
         RandomAccessFile raf = new RandomAccessFile(file, "r");
@@ -85,6 +101,7 @@ public class JpegReader {
 
         // Find Exif marker
         boolean exifFound = false;
+        // FFC0 is segment for image dimensions
         for (long i = raf.getFilePointer(); i < raf.length() - 1; i++) {
             short current = raf.readShort(); // Read next two bytes
             if (current == (short) 0xFFE1) {
@@ -131,30 +148,24 @@ public class JpegReader {
             if (tag == (short) 0x010f) {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Make"));
-            }
-
-            // Model
-            if (tag == (short) 0x0110) {
+            } // Model
+            else if (tag == (short) 0x0110) {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Model"));
-            }
-
-            // Software
-            if (tag == (short) 0x0131) {
+            } // Software
+            else if (tag == (short) 0x0131) {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Software"));
-            }
-
-            // Copyright
-            if (tag == (short) 0x8298) {
+            } // Copyright
+            else if (tag == (short) 0x8298) {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Copyright"));
-            }
-
-            // Date/Time
-            if (tag == (short) 0x0132) {
+            } // Date/Time
+            else if (tag == (short) 0x0132) {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Date/Time"));
+            } else {
+                System.out.printf("Unknown Tag: %x\n", tag);
             }
         }
         debug("\n===START EXIF DATA===");
