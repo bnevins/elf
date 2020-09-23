@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 public class JpegReader {
 
     private static final int ERR = 1;
-    private static boolean debug = true;
+    private static boolean debug = false;
     private boolean isIntelFormat;
     private String timestamp; // 2020:07:02 10:17:00
     private Dimension dimensions;
@@ -33,6 +33,7 @@ public class JpegReader {
     }
     public static void setDebug(boolean verbose) {
         debug = verbose;
+        System.out.println("XXXXXXXXXXXXX   debug set to: " + debug);
     }
 
     public Calendar getTimestamp() {

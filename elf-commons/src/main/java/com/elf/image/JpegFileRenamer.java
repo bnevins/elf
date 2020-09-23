@@ -41,16 +41,21 @@ public class JpegFileRenamer {
         dryRun = Boolean.parseBoolean(params.get("dryRun"));
         prefix = params.get("prefix");
 
+        /*****************************
         if (verbose) {
-            System.out.println("verbose: " + Boolean.parseBoolean(params.get("verbose")));
-            System.out.println("dryRun: " + Boolean.parseBoolean(params.get("dryRun")));
-            System.out.println("prefix: " + params.get("prefix"));
+            System.out.println("XXXXXXX verbose: " + Boolean.parseBoolean(params.get("verbose")));
+            System.out.println("XXXXXXX dryRun: " + Boolean.parseBoolean(params.get("dryRun")));
+            System.out.println("XXXXXXXX prefix: " + params.get("prefix"));
         }
+        else
+          System.out.println("XXXXXXX verbose: " + Boolean.parseBoolean(params.get("verbose")));  
+    *************************************/
     }
 
     public void renameFile(File f) {
         f = FileUtils.safeGetCanonicalFile(f);
         JpegReader.setDebug(verbose);
+        //System.out.println("XXXXXXX calling setDebug(" + verbose + ")");
         JpegReader reader = new JpegReader(f);
         String newName = reader.getFilenameFromTimestamp();
         if (newName == null) {
