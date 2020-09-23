@@ -70,7 +70,7 @@ public class Tester2 extends Window {
         
         
         
-        System.out.println("Orgin: " + origin);
+        System.out.println("Origin: " + origin);
         System.out.printf("\nBefore: %dx%d, Scaled: %dx%d, Screen: %dx%d ",
                 pic.getWidth(), pic.getHeight(),
                 scaledSize.width, scaledSize.height,

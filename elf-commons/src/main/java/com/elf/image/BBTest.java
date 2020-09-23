@@ -1,48 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.elf.image;
 
-/*
- * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Oracle or the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-/**
- * This test takes a number up to 13 as an argument (assumes 2 by default) and
- * creates a multiple buffer strategy with the number of buffers given. This
- * application enters full-screen mode, if available, and flips back and forth
- * between each buffer (each signified by a different color).
- */
 import java.awt.*;
-import java.awt.image.BufferStrategy;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 
 public class BBTest {
 
@@ -50,31 +11,51 @@ public class BBTest {
         Color.red, Color.blue, Color.green, Color.white, Color.black,
         Color.yellow, Color.gray, Color.cyan, Color.pink, Color.lightGray,
         Color.magenta, Color.orange, Color.darkGray};
-    
+
     private static DisplayMode displayMode = new DisplayMode(3840, 2160, 32, 0);
+    private static DisplayMode displayModeLaptop = new DisplayMode(1366, 768, 32, 0);
+    private static File imageFile = new File("C:\\tmp\\Aug09\\2020_08_10_013110.jpg");
+    private static File imageFile2 = new File("C:\\tmp\\aug09\\2020_08_09_141700.jpg");
     Frame mainFrame;
+    BufferedImage image1, image2;
 
     public BBTest(int numBuffers, GraphicsDevice device) {
         try {
+            try {
+                image1 = ImageIO.read(imageFile);
+                image2 = ImageIO.read(imageFile2);
+            } catch (IOException ie) {
+                javax.swing.JOptionPane.showMessageDialog(mainFrame, "Error reading image file", "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+
             GraphicsConfiguration gc = device.getDefaultConfiguration();
             mainFrame = new Frame(gc);
             mainFrame.setUndecorated(true);
             mainFrame.setIgnoreRepaint(true);
             device.setFullScreenWindow(mainFrame);
             if (device.isDisplayChangeSupported()) {
-                device.setDisplayMode(displayMode);
+                device.setDisplayMode(displayModeLaptop);
             }
             Rectangle bounds = mainFrame.getBounds();
             mainFrame.createBufferStrategy(numBuffers);
             BufferStrategy bufferStrategy = mainFrame.getBufferStrategy();
-            for (float lag = 500.0f; lag > 0.00000006f; lag = lag / 1.33f) {
+            for (float lag = 2000.0f; lag > 0.00000006f; lag = lag / 1.33f) {
                 for (int i = 0; i < numBuffers; i++) {
                     Graphics g = bufferStrategy.getDrawGraphics();
                     if (!bufferStrategy.contentsLost()) {
-                        g.setColor(COLORS[i]);
-                        g.fillRect(0, 0, bounds.width, bounds.height);
-                        bufferStrategy.show();
-                        g.dispose();
+                        if (i % 2 == 1) {
+                            showImage(image1, g);
+                            bufferStrategy.show();
+                            g.dispose();
+                        } else {
+
+                            showImage(image2, g);
+//                            g.setColor(COLORS[i]);
+//                            g.fillRect(0, 0, bounds.width, bounds.height);
+                            bufferStrategy.show();
+                            g.dispose();
+                        }
                     }
                     try {
                         Thread.sleep((int) lag);
@@ -87,6 +68,11 @@ public class BBTest {
         } finally {
             device.setFullScreenWindow(null);
         }
+    }
+
+    private void showImage(BufferedImage image, Graphics g) {
+        g.drawImage(image, 0, 0, 1366, 768, mainFrame);
+
     }
 
     public static void main(String[] args) {
