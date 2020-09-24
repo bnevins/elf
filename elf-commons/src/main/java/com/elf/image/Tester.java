@@ -55,7 +55,7 @@ public class Tester {
                 images[i] = ImageIO.read(files.get(i));
             }
             * ***/
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < files.size(); i++) {
                 BufferedImage image = ImageIO.read(files.get(i));
                 Graphics g = bufferStrategy.getDrawGraphics();
                 g.drawImage(image, 0, 0, bounds.width, bounds.height, mainFrame);

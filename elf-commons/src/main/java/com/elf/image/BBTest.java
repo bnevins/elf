@@ -42,7 +42,7 @@ public class BBTest {
             BufferStrategy bufferStrategy = mainFrame.getBufferStrategy();
             for (float lag = 2000.0f; lag > 0.00000006f; lag = lag / 1.33f) {
                 for (int i = 0; i < numBuffers; i++) {
-                    Graphics g = bufferStrategy.getDrawGraphics();
+                    Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
                     if (!bufferStrategy.contentsLost()) {
                         if (i % 2 == 1) {
                             showImage(image1, g);
