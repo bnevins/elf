@@ -33,7 +33,7 @@ public class JpegReader {
     }
     public static void setDebug(boolean verbose) {
         debug = verbose;
-        System.out.println("XXXXXXXXXXXXX   debug set to: " + debug);
+        //System.out.println("XXXXXXXXXXXXX   debug set to: " + debug);
     }
 
     public Calendar getTimestamp() {

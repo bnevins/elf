@@ -36,6 +36,18 @@ public class ImageUtils {
         return dimensions;
     }
 
+    public static final Dimension scaleImage(int imageWidth, int imageHeight, int newWidth, int newHeight) {
+        // Make sure the aspect ratio is maintained, so the image is not distorted
+        double thumbRatio = (double) newWidth / (double) newHeight;
+        double aspectRatio = (double) imageWidth / (double) imageHeight;
+
+        if (thumbRatio < aspectRatio) {
+            newHeight = (int) (newWidth / aspectRatio);
+        } else {
+            newWidth = (int) (newHeight * aspectRatio);
+        }
+        return new Dimension(newWidth, newHeight);
+    }
     public static void main(String[] args) {
         for (String arg : args) {
             Dimension d = getDimensions(arg);
