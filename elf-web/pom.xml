@@ -19,7 +19,7 @@
         <module>WebArt</module>
         <module>Todo</module>
         <module>Cox</module>
-        <module>JMT</module>
+        <!--<module>JMT</module>-->
   </modules>
     <repositories>
         <repository>
