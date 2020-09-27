@@ -10,7 +10,6 @@ class JPEGResizer {
         }
 
         if (args[0].toLowerCase().equals("-d")) {
-
             File f = new File(args[1]);
 
             if (!f.exists() || !f.isDirectory()) {

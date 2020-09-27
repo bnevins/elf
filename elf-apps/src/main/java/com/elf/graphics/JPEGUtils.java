@@ -1,6 +1,7 @@
 package com.elf.graphics;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -30,6 +31,10 @@ class JPEGUtils {
         JPEG2JPEG(in, out);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////
+    static void JPEG2JPEG(File orig, File copy, int w, int h) {
+        pr("Converting " + orig + " to " + copy);
+    }
     ///////////////////////////////////////////////////////////////////////////////
     static void JPEG2JPEG(String orig, String copy) {
         pr("Converting " + orig + " to " + copy);

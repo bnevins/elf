@@ -1,2 +1,2 @@
-java com.elf.raspberry.Tester2 c:/tmp/sample.jpg
+java com.elf.raspberry.ImageScaler %1 %2 %3 %4 %5 %6 %7 %8 %9
 

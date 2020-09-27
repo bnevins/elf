@@ -1,6 +1,7 @@
 package com.elf.raspberry;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -79,6 +80,9 @@ public class Viewer implements MouseListener {
                     BufferedImage bi = ImageIO.read(allFiles[i]);
                     Graphics g = bufferStrategy.getDrawGraphics();
                     g.drawImage(bi, 0, 0, bounds.width, bounds.height, mainFrame);
+//                    BufferedImage resized = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
+//                    Graphics2D g2 = resized.createGraphics();
+//                    g2.drawImage(bi, 0, 0, bounds.width, bounds.height,null);
                     bufferStrategy.show();
                     g.dispose();
                     //Thread.sleep(350);
