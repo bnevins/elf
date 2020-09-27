@@ -82,7 +82,7 @@ public class Viewer implements MouseListener {
                     bufferStrategy.show();
                     g.dispose();
                     //Thread.sleep(350);
-                    Thread.sleep(5000);
+                    //Thread.sleep(5000);
                 }
             }
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class Viewer implements MouseListener {
     }
 
     private static File[] getFiles() {
-        File dir = new File("/media/pi/Media/BayBridge/20200915");
+        File dir = new File("/home/pi/dev/data");
         File[] files = dir.listFiles(new FileFilter() {
             public boolean accept(File f) {
                 return f.getName().toLowerCase().endsWith(".jpg");
@@ -130,7 +130,7 @@ public class Viewer implements MouseListener {
 
     private List<BufferedImage> unthreadedGetImages(File[] files) {
         long start = System.currentTimeMillis();
-        List<BufferedImage> images = new ArrayList<>();
+        List<BufferedImage> images = new ArrayList<BufferedImage>();
         for (File f : files) {
             try {
                 images.add(ImageIO.read(f));
