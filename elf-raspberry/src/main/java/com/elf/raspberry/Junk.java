@@ -1,4 +1,7 @@
 package com.elf.raspberry;
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,21 +34,17 @@ import javax.imageio.ImageIO;
  *
  * @author bnevns
  */
-public class Viewer implements MouseListener {
+public class Junk implements MouseListener {
 
-    private static File imageFile = new File("/home/pi/dev/apod.jpg");
-    private static File imageFile2 = new File("/home/pi/dev/crab.jpg");
-    //private static File imageFile2 = new File("C:\\tmp\\aug09\\2020_08_09_141700.jpg");
     private static Frame mainFrame;
     private File picDir = new File("E:\\WORKING\\BayBridge\\20200921");
-    //private File picDir = new File("/home/pi/dev/data");
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        new Viewer().dome();
+        new Junk().dome();
     }
+    private BufferStrategy bufferStrategy;
+    private Rectangle bounds;
+    private File[] allFiles;
 
     public void dome() {
         GraphicsDevice device = null;
@@ -65,32 +64,20 @@ public class Viewer implements MouseListener {
             });
 
             device.setFullScreenWindow(mainFrame);
-            Rectangle bounds = mainFrame.getBounds();
+            bounds = mainFrame.getBounds();
             System.out.println("BOUNDS: " + bounds);
             mainFrame.createBufferStrategy(2);
-            BufferStrategy bufferStrategy = mainFrame.getBufferStrategy();
-            File[] allFiles = getFiles();
+            bufferStrategy = mainFrame.getBufferStrategy();
+            allFiles = getFiles();
 
             File[] files = new File[25];
             for (int i = 0; i < files.length; i++) {
                 files[i] = allFiles[i];
             }
-
+            //doPrototype();
+            doJunk();
             //List<BufferedImage> images = threadedGetImages(files);
-            while (true) {
-                for (int i = 0; i < allFiles.length; i++) {
-                    BufferedImage bi = ImageIO.read(allFiles[i]);
-                    Graphics g = bufferStrategy.getDrawGraphics();
-                    g.drawImage(bi, 0, 0, bounds.width, bounds.height, mainFrame);
-//                    BufferedImage resized = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
-//                    Graphics2D g2 = resized.createGraphics();
-//                    g2.drawImage(bi, 0, 0, bounds.width, bounds.height,null);
-                    bufferStrategy.show();
-                    g.dispose();
-                    //Thread.sleep(350);
-                    //Thread.sleep(5000);
-                }
-            }
+
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
@@ -100,14 +87,62 @@ public class Viewer implements MouseListener {
         }
     }
 
+    private void doPrototype() throws IOException, InterruptedException {
+        Font font = new Font("Serif", Font.PLAIN, 48);
+
+        for (int i = 0; i < allFiles.length; i++) {
+            BufferedImage bi = ImageIO.read(allFiles[i]);
+            Graphics g = bufferStrategy.getDrawGraphics();
+            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                    bounds.width, bounds.height);
+            scaler.setClipOk(true);
+            scaler.setClipFromTopOnly(true);
+            Rectangle imageRec = scaler.scale();
+            g.drawImage(bi, imageRec.x, imageRec.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            g.setColor(Color.RED);
+            g.setFont(font);
+            g.drawString(allFiles[i].getName(), 400, 400);
+
+            System.out.println("Image Scaler says: " + imageRec);
+            bufferStrategy.show();
+            g.dispose();
+            Thread.sleep(500);
+        }
+    }
+
+    private void doJunk() throws IOException, InterruptedException {
+        Font font = new Font("Serif", Font.PLAIN, 24);
+        BufferedImage bi = ImageIO.read(allFiles[0]);
+        ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                bounds.width, bounds.height);
+        scaler.setClipOk(true);
+        scaler.setClipFromTopOnly(true);
+        Rectangle imageRec = scaler.scale();
+        int y = imageRec.y;
+        while(y++ < -1) {
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, imageRec.x, y,
+                    imageRec.width, imageRec.height, mainFrame);
+            g.setFont(font);
+            g.setColor(Color.RED);
+            g.drawString("Y: " + y, 400, 400);
+            bufferStrategy.show();
+            g.dispose();
+            Thread.sleep(150);
+        }
+
+    }
+
     private File[] getFiles() {
         File[] files = picDir.listFiles(new FileFilter() {
             public boolean accept(File f) {
                 return f.getName().toLowerCase().endsWith(".jpg");
             }
         });
-        
-        if(files.length == 0) {
+
+        if (files.length == 0) {
             throw new RuntimeException("Bad directory: " + picDir);
         }
         Arrays.sort(files);
@@ -145,7 +180,7 @@ public class Viewer implements MouseListener {
                 images.add(ImageIO.read(f));
 
             } catch (IOException ex) {
-                Logger.getLogger(Viewer.class
+                Logger.getLogger(Junk.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
         }

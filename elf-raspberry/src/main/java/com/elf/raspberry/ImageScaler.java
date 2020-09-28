@@ -21,7 +21,8 @@ public class ImageScaler {
     private final double imageRatio;
     private double x;
     private double y;
-    private boolean noBars = false;
+    private boolean clipOK = false; // default is do NOT clip any of the image
+    private boolean clipFromTopOnly = false;
 
     public ImageScaler(int iw, int ih, int dw, int dh) {
         this.imageW = (double) iw;
@@ -36,7 +37,7 @@ public class ImageScaler {
         boolean tall = (imageRatio < 1.0);
         double scaleW;
         double scaleH;
-        if (noBars) {
+        if (!clipOK) {
             if (tall) { // width-priority
                 scaleW = deviceW;
                 scaleH = scaleW / imageRatio;
@@ -49,19 +50,24 @@ public class ImageScaler {
                 y = 0;
                 x = (scaleW - deviceW) / 2;
             }
-
-        } else { // bars means entire pic shown with blank bars
+        // Some of the image will be clipped, but the screen will be completely
+        // filled -- no bars on the sides.  This can lead to highly clipped images!
+        } else { 
             if (tall) {
                 scaleH = deviceH;
                 scaleW = scaleH * imageRatio;
                 y = 0;
-            } else {
+            } else { 
                 scaleW = deviceW;
                 scaleH = scaleW / imageRatio;
                 x = 0;
             }
             x = (deviceW - scaleW) / 2.0;
-            y = (deviceH - scaleH) / 2.0;
+            if(clipFromTopOnly)
+                y = deviceH - scaleH;
+            else
+                y = (deviceH - scaleH) / 2.0;
+            
         }
         return new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
     }
@@ -71,16 +77,22 @@ public class ImageScaler {
         int imageH = Integer.parseInt(args[1]);
         int deviceW = Integer.parseInt(args[2]);
         int deviceH = Integer.parseInt(args[3]);
-        boolean fillDevice = Boolean.parseBoolean(args[4]);
+        boolean clipOK = Boolean.parseBoolean(args[4]);
+        boolean clipTopOnly = Boolean.parseBoolean(args[5]);
 
         ImageScaler scaler = new ImageScaler(imageW, imageH, deviceW, deviceH);
-        scaler.setNoBars(fillDevice);
+        scaler.setClipOk(clipOK);
+        scaler.setClipFromTopOnly(clipTopOnly);
         Rectangle scaled = scaler.scale();
         System.out.println("New Dimensions: " + scaled);
     }
 
-    public void setNoBars(boolean noBars) {
-        this.noBars = noBars;
+    public void setClipOk(boolean clip) {
+        this.clipOK = clip;
+    }
+
+    void setClipFromTopOnly(boolean b) {
+        clipFromTopOnly = b;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
