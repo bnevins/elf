@@ -34,13 +34,14 @@ import javax.imageio.ImageIO;
  *
  * @author bnevns
  */
-public class Junk implements MouseListener {
+public class SlowMover implements MouseListener {
 
     private static Frame mainFrame;
     private File picDir = new File("E:\\WORKING\\BayBridge\\20200921");
+    private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
 
     public static void main(String[] args) {
-        new Junk().dome();
+        new SlowMover().dome();
     }
     private BufferStrategy bufferStrategy;
     private Rectangle bounds;
@@ -113,7 +114,7 @@ public class Junk implements MouseListener {
 
     private void doJunk() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
-        BufferedImage bi = ImageIO.read(allFiles[0]);
+        BufferedImage bi = ImageIO.read(pic);
         ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                 bounds.width, bounds.height);
         scaler.setClipOk(true);
@@ -121,6 +122,18 @@ public class Junk implements MouseListener {
         Rectangle imageRec = scaler.scale();
         int y = imageRec.y;
         while(y++ < -1) {
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, imageRec.x, y,
+                    imageRec.width, imageRec.height, mainFrame);
+            g.setFont(font);
+            g.setColor(Color.RED);
+            g.drawString("Y: " + y, 400, 400);
+            bufferStrategy.show();
+            g.dispose();
+            Thread.sleep(150);
+        }
+        while(y-- > -200) {
             Graphics g = bufferStrategy.getDrawGraphics();
             g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
             g.drawImage(bi, imageRec.x, y,
@@ -180,7 +193,7 @@ public class Junk implements MouseListener {
                 images.add(ImageIO.read(f));
 
             } catch (IOException ex) {
-                Logger.getLogger(Junk.class
+                Logger.getLogger(SlowMover.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
         }
