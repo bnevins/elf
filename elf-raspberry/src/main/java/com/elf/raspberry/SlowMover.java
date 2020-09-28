@@ -41,8 +41,10 @@ public class SlowMover implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
     private File picDir = new File("E:\\WORKING\\BayBridge\\20200921");
+    private int which = 1;
     //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
-    private File pic = new File("P:\\stills\\_collage\\uubest\\bambi-067-055.jpg");
+    //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
+    //private File picDir = new File("P:\\stills\\_collage\\uubest");
 
     public static void main(String[] args) {
         new SlowMover().dome();
@@ -77,12 +79,8 @@ public class SlowMover implements MouseListener, KeyListener {
             bufferStrategy = mainFrame.getBufferStrategy();
             allFiles = getFiles();
 
-            File[] files = new File[25];
-            for (int i = 0; i < files.length; i++) {
-                files[i] = allFiles[i];
-            }
             //doPrototype();
-            doJunk();
+            doPrototype();
             //List<BufferedImage> images = threadedGetImages(files);
 
         } catch (Exception e) {
@@ -95,62 +93,65 @@ public class SlowMover implements MouseListener, KeyListener {
     }
 
     private void doPrototype() throws IOException, InterruptedException {
-        Font font = new Font("Serif", Font.PLAIN, 48);
-
-        for (int i = 0; i < allFiles.length; i++) {
-            BufferedImage bi = ImageIO.read(allFiles[i]);
-            Graphics g = bufferStrategy.getDrawGraphics();
+        Font font = new Font("Serif", Font.PLAIN, 24);
+        BufferedImage bi = ImageIO.read(allFiles[0]);
+        while (true) {
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
-            scaler.setClipOk(false);
-            scaler.setClipFromTopOnly(true);
+            
+            scaler.setClipOk(which == 1 ? false :true);
+            scaler.setClipFromTopOnly(which == 3? true : false);
+            scaler.setDebug(true);
             Rectangle imageRec = scaler.scale();
-            g.drawImage(bi, imageRec.x, imageRec.y,
-                    imageRec.width, imageRec.height, mainFrame);
-            g.setColor(Color.RED);
-            g.setFont(font);
-            g.drawString(allFiles[i].getName(), 400, 400);
+            origin = new Point(imageRec.x, imageRec.y);
 
-            System.out.println("Image Scaler says: " + imageRec);
+            int y = imageRec.y;
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, origin.x, origin.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            g.setFont(font);
+            g.setColor(Color.RED);
+            String s = String.format(
+                    "Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
+                    bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
+                    imageRec.width, imageRec.height, origin.x, origin.y);
+            g.drawString(s, 100, 100);
+            //g.drawString("Origin: " + origin.x + "," + origin.y, 100, 100);
             bufferStrategy.show();
             g.dispose();
             Thread.sleep(500);
         }
     }
 
-    private void doJunk() throws IOException, InterruptedException {
+    private void doPrototype2() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
-        BufferedImage bi = ImageIO.read(pic);
-        ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
-                bounds.width, bounds.height);
-        Point prevOrigin = new Point(-1000, -1000);
-        //scaler.setClipOk(true);
-        //scaler.setClipFromTopOnly(true);
-        scaler.setDebug(true);
-        Rectangle imageRec = scaler.scale();
-        origin = new Point(imageRec.x, imageRec.y);
+        for (File pic : allFiles) {
+            BufferedImage bi = ImageIO.read(pic);
+            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                    bounds.width, bounds.height);
+            scaler.setClipOk(true);
+            scaler.setClipFromTopOnly(true);
+            scaler.setDebug(true);
+            Rectangle imageRec = scaler.scale();
+            origin = new Point(imageRec.x, imageRec.y);
 
-        int y = imageRec.y;
-        while (true) {
-            if (!prevOrigin.equals(origin)) {
-                prevOrigin.x = origin.x;
-                prevOrigin.y = origin.y;
-                Graphics g = bufferStrategy.getDrawGraphics();
-                g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-                g.drawImage(bi, origin.x, origin.y,
-                        imageRec.width, imageRec.height, mainFrame);
-                g.setFont(font);
-                g.setColor(Color.RED);
-                String s = String.format(
-                        "Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d", 
-                        bounds.width, bounds.height, bi.getWidth(), bi.getHeight(), 
-                        imageRec.width, imageRec.height, origin.x, origin.y);
-                g.drawString(s, 100, 100);
-                //g.drawString("Origin: " + origin.x + "," + origin.y, 100, 100);
-                bufferStrategy.show();
-                g.dispose();
-            }
-            Thread.sleep(150);
+            int y = imageRec.y;
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, origin.x, origin.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            g.setFont(font);
+            g.setColor(Color.RED);
+            String s = String.format(
+                    "Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
+                    bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
+                    imageRec.width, imageRec.height, origin.x, origin.y);
+            g.drawString(s, 100, 100);
+            //g.drawString("Origin: " + origin.x + "," + origin.y, 100, 100);
+            bufferStrategy.show();
+            g.dispose();
+            Thread.sleep(10000);
         }
     }
 
@@ -238,6 +239,11 @@ public class SlowMover implements MouseListener, KeyListener {
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_KP_LEFT:
                 origin.x -= 5;
+                break;
+            case KeyEvent.VK_SPACE:
+                ++which;
+                if(which > 3)
+                    which = 0;
                 break;
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:

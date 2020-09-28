@@ -21,7 +21,7 @@ public class ImageScaler {
     private final double imageRatio;
     private double x;
     private double y;
-    private boolean clipOK = false; // default is do NOT clip any of the image
+    private boolean clipOk = false; // default is do NOT clip any of the image
     private boolean clipFromTopOnly = false;
     private boolean debug = false;
 
@@ -34,15 +34,31 @@ public class ImageScaler {
         imageRatio = imageW / imageH;
     }
 
-    public final Rectangle scaleNoClip() {
+    public final Rectangle scale() {
         double scaleW;
         double scaleH;
+        boolean stretchWidthToFit;
 
-        if (imageRatio >= deviceRatio) {
+        if (imageRatio > deviceRatio && clipOk) {
+            stretchWidthToFit = false;
+        } else if ((imageRatio > deviceRatio)) {
+            stretchWidthToFit = true;
+        } else if (clipOk) {
+            stretchWidthToFit = true;
+        } else {
+            stretchWidthToFit = false;
+        }
+        System.out.println("stretchwidthtofit = " + stretchWidthToFit);
+
+        if ((stretchWidthToFit)) {
             scaleW = deviceW;
             scaleH = scaleW / imageRatio;
             x = 0;
-            y = (deviceH - scaleH) / 2;
+            if (clipFromTopOnly) {
+                y = deviceH - scaleH;
+            } else {
+                y = (deviceH - scaleH) / 2;
+            }
             if (debug) {
                 System.out.println("Width Stretched to fit");
             }
@@ -56,60 +72,12 @@ public class ImageScaler {
             }
         }
 
-        if (scaleH > deviceH || scaleW > deviceW) {
+        if (!clipOk && (scaleH > deviceH || scaleW > deviceW)) {
             //can't happen!!
             throw new RuntimeException("ERROR in Scaler -- " + scaleW + "X" + scaleH);
         }
         System.out.println("IR, DR = " + imageRatio + ", " + deviceRatio);
         Rectangle r = new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
-        return r;
-    }
-
-    public final Rectangle scale() {
-        return scaleNoClip();
-    }
-
-    public final Rectangle scalex() {
-        boolean tall = (imageRatio < 1.0);
-        double scaleW;
-        double scaleH;
-        if (!clipOK) {
-            if (tall) { // width-priority
-                scaleW = deviceW;
-                scaleH = scaleW / imageRatio;
-                x = 0;
-                y = (scaleH - deviceH) / 2;
-
-            } else { // height-priority
-                scaleH = deviceH;
-                scaleW = scaleH * imageRatio;
-                y = 0;
-                x = (scaleW - deviceW) / 2;
-            }
-            // Some of the image will be clipped, but the screen will be completely
-            // filled -- no bars on the sides.  This can lead to highly clipped images!
-        } else {
-            if (tall) {
-                scaleH = deviceH;
-                scaleW = scaleH * imageRatio;
-                y = 0;
-            } else {
-                scaleW = deviceW;
-                scaleH = scaleW / imageRatio;
-                x = 0;
-            }
-            x = (deviceW - scaleW) / 2.0;
-            if (clipFromTopOnly) {
-                y = deviceH - scaleH;
-            } else {
-                y = (deviceH - scaleH) / 2.0;
-            }
-
-        }
-        Rectangle r = new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
-        if (debug) {
-            System.out.println("SCALER SAYS: " + r);
-        }
         return r;
     }
 
@@ -129,7 +97,7 @@ public class ImageScaler {
     }
 
     public void setClipOk(boolean clip) {
-        this.clipOK = clip;
+        this.clipOk = clip;
     }
 
     void setClipFromTopOnly(boolean b) {
