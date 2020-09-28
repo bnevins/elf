@@ -34,7 +34,42 @@ public class ImageScaler {
         imageRatio = imageW / imageH;
     }
 
+    public final Rectangle scaleNoClip() {
+        double scaleW;
+        double scaleH;
+
+        if (imageRatio >= deviceRatio) {
+            scaleW = deviceW;
+            scaleH = scaleW / imageRatio;
+            x = 0;
+            y = (deviceH - scaleH) / 2;
+            if (debug) {
+                System.out.println("Width Stretched to fit");
+            }
+        } else {
+            scaleH = deviceH;
+            scaleW = deviceH * imageRatio;
+            y = 0;
+            x = (deviceW - scaleW) / 2;
+            if (debug) {
+                System.out.println("Height Stretched to fit");
+            }
+        }
+
+        if (scaleH > deviceH || scaleW > deviceW) {
+            //can't happen!!
+            throw new RuntimeException("ERROR in Scaler -- " + scaleW + "X" + scaleH);
+        }
+        System.out.println("IR, DR = " + imageRatio + ", " + deviceRatio);
+        Rectangle r = new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
+        return r;
+    }
+
     public final Rectangle scale() {
+        return scaleNoClip();
+    }
+
+    public final Rectangle scalex() {
         boolean tall = (imageRatio < 1.0);
         double scaleW;
         double scaleH;
