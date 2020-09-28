@@ -41,7 +41,8 @@ public class SlowMover implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
     private File picDir = new File("E:\\WORKING\\BayBridge\\20200921");
-    private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
+    //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
+    private File pic = new File("P:\\stills\\_collage\\uubest\\bambi-067-055.jpg");
 
     public static void main(String[] args) {
         new SlowMover().dome();
@@ -101,7 +102,7 @@ public class SlowMover implements MouseListener, KeyListener {
             Graphics g = bufferStrategy.getDrawGraphics();
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
-            scaler.setClipOk(true);
+            scaler.setClipOk(false);
             scaler.setClipFromTopOnly(true);
             Rectangle imageRec = scaler.scale();
             g.drawImage(bi, imageRec.x, imageRec.y,
@@ -118,13 +119,14 @@ public class SlowMover implements MouseListener, KeyListener {
     }
 
     private void doJunk() throws IOException, InterruptedException {
-        Font font = new Font("Serif", Font.PLAIN, 48);
+        Font font = new Font("Serif", Font.PLAIN, 24);
         BufferedImage bi = ImageIO.read(pic);
         ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                 bounds.width, bounds.height);
         Point prevOrigin = new Point(-1000, -1000);
-        scaler.setClipOk(true);
-        scaler.setClipFromTopOnly(true);
+        //scaler.setClipOk(true);
+        //scaler.setClipFromTopOnly(true);
+        scaler.setDebug(true);
         Rectangle imageRec = scaler.scale();
         origin = new Point(imageRec.x, imageRec.y);
 
@@ -139,7 +141,12 @@ public class SlowMover implements MouseListener, KeyListener {
                         imageRec.width, imageRec.height, mainFrame);
                 g.setFont(font);
                 g.setColor(Color.RED);
-                g.drawString("Origin: " + origin.x + "," + origin.y, 400, 400);
+                String s = String.format(
+                        "Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d", 
+                        bounds.width, bounds.height, bi.getWidth(), bi.getHeight(), 
+                        imageRec.width, imageRec.height, origin.x, origin.y);
+                g.drawString(s, 100, 100);
+                //g.drawString("Origin: " + origin.x + "," + origin.y, 100, 100);
                 bufferStrategy.show();
                 g.dispose();
             }
@@ -159,29 +166,6 @@ public class SlowMover implements MouseListener, KeyListener {
         }
         Arrays.sort(files);
         return files;
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        System.out.println("MOUSE CLICKED");
-        mainFrame.dispose();
-        System.exit(0);
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
     }
 
     private List<BufferedImage> unthreadedGetImages(File[] files) {
@@ -241,25 +225,48 @@ public class SlowMover implements MouseListener, KeyListener {
         switch (key) {
             case KeyEvent.VK_DOWN:
             case KeyEvent.VK_KP_DOWN:
-                origin.y++;
+                origin.y += 5;
                 break;
             case KeyEvent.VK_UP:
             case KeyEvent.VK_KP_UP:
-                origin.y--;
+                origin.y -= 5;
                 break;
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_KP_RIGHT:
-                origin.x++;
+                origin.x += 5;
                 break;
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_KP_LEFT:
-                origin.x--;
+                origin.x -= 5;
                 break;
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("MOUSE CLICKED");
+        mainFrame.dispose();
+        System.exit(0);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 
     private static class ImageLoadingTask implements Callable<BufferedImage> {

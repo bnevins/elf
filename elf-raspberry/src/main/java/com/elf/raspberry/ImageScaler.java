@@ -23,6 +23,7 @@ public class ImageScaler {
     private double y;
     private boolean clipOK = false; // default is do NOT clip any of the image
     private boolean clipFromTopOnly = false;
+    private boolean debug = false;
 
     public ImageScaler(int iw, int ih, int dw, int dh) {
         this.imageW = (double) iw;
@@ -50,26 +51,31 @@ public class ImageScaler {
                 y = 0;
                 x = (scaleW - deviceW) / 2;
             }
-        // Some of the image will be clipped, but the screen will be completely
-        // filled -- no bars on the sides.  This can lead to highly clipped images!
-        } else { 
+            // Some of the image will be clipped, but the screen will be completely
+            // filled -- no bars on the sides.  This can lead to highly clipped images!
+        } else {
             if (tall) {
                 scaleH = deviceH;
                 scaleW = scaleH * imageRatio;
                 y = 0;
-            } else { 
+            } else {
                 scaleW = deviceW;
                 scaleH = scaleW / imageRatio;
                 x = 0;
             }
             x = (deviceW - scaleW) / 2.0;
-            if(clipFromTopOnly)
+            if (clipFromTopOnly) {
                 y = deviceH - scaleH;
-            else
+            } else {
                 y = (deviceH - scaleH) / 2.0;
-            
+            }
+
         }
-        return new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
+        Rectangle r = new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
+        if (debug) {
+            System.out.println("SCALER SAYS: " + r);
+        }
+        return r;
     }
 
     public static void main(String[] args) throws Exception {
@@ -93,6 +99,10 @@ public class ImageScaler {
 
     void setClipFromTopOnly(boolean b) {
         clipFromTopOnly = b;
+    }
+
+    void setDebug(boolean b) {
+        debug = b;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
