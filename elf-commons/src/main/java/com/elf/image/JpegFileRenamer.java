@@ -17,16 +17,20 @@ import java.util.logging.Logger;
 /**
  *
  * TODO: DONE!! 1. add cmdline option for prefix
+ * TODO: Progress Bar
  */
 public class JpegFileRenamer {
 
     boolean verbose = false;
     boolean dryRun = false;
+    boolean quiet = false;
     private static int renameCount = 0;
     private final String prefix;
+    
     private final static Arg[] argDescriptions = new Arg[]{
         new BoolArg("verbose", "v", false, "Verbose Output"),
         new BoolArg("dryRun", "n", false, "Dry Run.  Do NOT do the actual renaming"),
+        new BoolArg("quiet", "q", false, "Quiet -- don't print progress"),
         new Arg("prefix", "p", "", "Prefix to prepend to each filename"),};
 
     private static void usage() {
@@ -40,7 +44,11 @@ public class JpegFileRenamer {
         verbose = Boolean.parseBoolean(params.get("verbose"));
         dryRun = Boolean.parseBoolean(params.get("dryRun"));
         prefix = params.get("prefix");
-
+        quiet = Boolean.parseBoolean(params.get("quiet"));
+        
+        if(quiet && verbose) {
+            throw new RuntimeException("Both verbose and quiet were set.  Which makes no sense!!");
+        }
         /*****************************
         if (verbose) {
             System.out.println("XXXXXXX verbose: " + Boolean.parseBoolean(params.get("verbose")));
@@ -91,7 +99,7 @@ public class JpegFileRenamer {
         }
 
         if (verbose) {
-            System.out.println("Rename: " + f + " TO: " + newFile);
+            System.out.println("-------------- Rename -------------\nOLD: " + f + "\nNEW: " + newFile);
         }
     }
 

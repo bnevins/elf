@@ -1,6 +1,7 @@
 package com.elf.raspberry;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -9,6 +10,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -34,7 +37,7 @@ import javax.imageio.ImageIO;
  *
  * @author bnevns
  */
-public class SlowMover implements MouseListener {
+public class SlowMover implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
     private File picDir = new File("E:\\WORKING\\BayBridge\\20200921");
@@ -46,6 +49,7 @@ public class SlowMover implements MouseListener {
     private BufferStrategy bufferStrategy;
     private Rectangle bounds;
     private File[] allFiles;
+    private Point origin = new Point(0, 0);
 
     public void dome() {
         GraphicsDevice device = null;
@@ -58,6 +62,7 @@ public class SlowMover implements MouseListener {
             mainFrame.setUndecorated(true);
             mainFrame.setIgnoreRepaint(true);
             mainFrame.addMouseListener(this);
+            mainFrame.addKeyListener(this);
             mainFrame.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent ev) {
                     System.exit(0);
@@ -113,39 +118,33 @@ public class SlowMover implements MouseListener {
     }
 
     private void doJunk() throws IOException, InterruptedException {
-        Font font = new Font("Serif", Font.PLAIN, 24);
+        Font font = new Font("Serif", Font.PLAIN, 48);
         BufferedImage bi = ImageIO.read(pic);
         ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                 bounds.width, bounds.height);
+        Point prevOrigin = new Point(-1000, -1000);
         scaler.setClipOk(true);
         scaler.setClipFromTopOnly(true);
         Rectangle imageRec = scaler.scale();
-        int y = imageRec.y;
-        while(y++ < -1) {
-            Graphics g = bufferStrategy.getDrawGraphics();
-            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            g.drawImage(bi, imageRec.x, y,
-                    imageRec.width, imageRec.height, mainFrame);
-            g.setFont(font);
-            g.setColor(Color.RED);
-            g.drawString("Y: " + y, 400, 400);
-            bufferStrategy.show();
-            g.dispose();
-            Thread.sleep(150);
-        }
-        while(y-- > -200) {
-            Graphics g = bufferStrategy.getDrawGraphics();
-            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            g.drawImage(bi, imageRec.x, y,
-                    imageRec.width, imageRec.height, mainFrame);
-            g.setFont(font);
-            g.setColor(Color.RED);
-            g.drawString("Y: " + y, 400, 400);
-            bufferStrategy.show();
-            g.dispose();
-            Thread.sleep(150);
-        }
+        origin = new Point(imageRec.x, imageRec.y);
 
+        int y = imageRec.y;
+        while (true) {
+            if (!prevOrigin.equals(origin)) {
+                prevOrigin.x = origin.x;
+                prevOrigin.y = origin.y;
+                Graphics g = bufferStrategy.getDrawGraphics();
+                g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                g.drawImage(bi, origin.x, origin.y,
+                        imageRec.width, imageRec.height, mainFrame);
+                g.setFont(font);
+                g.setColor(Color.RED);
+                g.drawString("Origin: " + origin.x + "," + origin.y, 400, 400);
+                bufferStrategy.show();
+                g.dispose();
+            }
+            Thread.sleep(150);
+        }
     }
 
     private File[] getFiles() {
@@ -223,6 +222,44 @@ public class SlowMover implements MouseListener {
 
         return images;
 
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.printf("keyTyped: %c", e.getKeyChar());
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.printf("Key Pressed: %X\n", e.getKeyCode());
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.printf("Key Released: %X\n", e.getKeyCode());
+        int key = e.getKeyCode();
+        switch (key) {
+            case KeyEvent.VK_DOWN:
+            case KeyEvent.VK_KP_DOWN:
+                origin.y++;
+                break;
+            case KeyEvent.VK_UP:
+            case KeyEvent.VK_KP_UP:
+                origin.y--;
+                break;
+            case KeyEvent.VK_RIGHT:
+            case KeyEvent.VK_KP_RIGHT:
+                origin.x++;
+                break;
+            case KeyEvent.VK_LEFT:
+            case KeyEvent.VK_KP_LEFT:
+                origin.x--;
+                break;
+            case KeyEvent.VK_X:
+            case KeyEvent.VK_Q:
+            case KeyEvent.VK_ESCAPE:
+                System.exit(0);
+        }
     }
 
     private static class ImageLoadingTask implements Callable<BufferedImage> {

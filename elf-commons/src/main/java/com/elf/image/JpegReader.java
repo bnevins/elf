@@ -20,6 +20,7 @@ public class JpegReader {
 
     private static final int ERR = 1;
     private static boolean debug = false;
+    private static boolean verbose = false;
     private boolean isIntelFormat;
     private String timestamp; // 2020:07:02 10:17:00
     private Dimension dimensions;
@@ -31,9 +32,12 @@ public class JpegReader {
             Logger.getLogger(JpegReader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public static void setDebug(boolean verbose) {
-        debug = verbose;
-        //System.out.println("XXXXXXXXXXXXX   debug set to: " + debug);
+
+    public static void setDebug(boolean chattyKathy) {
+        debug = chattyKathy;
+    }
+    public static void setVerbose(boolean superChattyKathy) {
+        verbose = superChattyKathy;
     }
 
     public Calendar getTimestamp() {
@@ -64,16 +68,13 @@ public class JpegReader {
             return null;
         }
 
-        String format = "%04d_%02d_%02d_%02d%02d%02d.jpg";
-        //String format = "%04d_%02d_%02d%02d%02d%02d.jpg"; 
-        //String format = "%04d_%02d_%02d%02d%02d%02d.jpg"; 
+        String format = "%04d_%02d%02d_%02d%02d.jpg";
         String fname = String.format(format,
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH) + 1,
                 c.get(Calendar.DAY_OF_MONTH),
                 c.get(Calendar.HOUR_OF_DAY), // IMPORTANT!  "HOUR" is 12-hour
-                c.get(Calendar.MINUTE),
-                c.get(Calendar.SECOND));
+                c.get(Calendar.MINUTE));
 
         return fname;
     }
@@ -97,7 +98,7 @@ public class JpegReader {
 
         // Check if JPEG
         if (raf.readShort() == (short) 0xFFD8) {
-            debug("Looks like a JPEG file");
+            verbose("Looks like a JPEG file");
         } else {
             raf.close();
             throw new RuntimeException("Not a JPEG File");
@@ -110,7 +111,7 @@ public class JpegReader {
             short current = raf.readShort(); // Read next two bytes
             if (current == (short) 0xFFE1) {
                 exifFound = true;
-                debug("Found Exif application marker");
+                verbose("Found Exif application marker");
                 break;
             }
             // Move only one byte per iteration
@@ -124,11 +125,11 @@ public class JpegReader {
         raf.skipBytes(8); // Skip data size and Exif\0\0
         // Check if Intel format
         isIntelFormat = raf.readShort() == (short) 0x4949;
-        debug("Format: " + (isIntelFormat ? "Intel" : "Not Intel"));
+        verbose("Format: " + (isIntelFormat ? "Intel" : "Not Intel"));
 
         // Check tag 0x2a00
         if (raf.readShort() == (short) 0x2A00) {
-            debug("Confirmed Intel format");
+            verbose("Confirmed Intel format");
         }
 // Get offset of IFD
         byte[] offsetBytes = new byte[4];
@@ -169,10 +170,10 @@ public class JpegReader {
                 directoryDataPointers.add(
                         new DirectoryDataPointer(dataOffset, length, "Date/Time"));
             } else {
-                debug("Unknown Tag: " + tag);
+                verbose("Unknown Tag: " + tag);
             }
         }
-        debug("\n===START EXIF DATA===");
+        verbose("\n===START EXIF DATA===");
 
         for (DirectoryDataPointer ddp : directoryDataPointers) {
             raf.seek(resetPoint);
@@ -182,13 +183,14 @@ public class JpegReader {
 
             // the last byte read is a zero.  Not "0" but actual zero!!!
             String sData = new String(data, 0, data.length - 1);
-            debug(ddp.getType() + ": " + sData);
-
-            if (ddp.getType().toLowerCase().equals("date/time")) {
+            String type = ddp.getType().toLowerCase(); 
+            verbose(type + ": " + sData);
+            if (type.equals("date/time")) {
                 timestamp = sData;
+                debug("TIMESTAMP TAG FOUND: " + sData);
             }
         }
-        debug("===END EXIF DATA===");
+        verbose("===END EXIF DATA===");
         raf.close();
     }
 
@@ -220,6 +222,12 @@ public class JpegReader {
 
     private static final void debug(String s) {
         if (debug) {
+            System.out.println(s);
+        }
+    }
+
+    private static final void verbose(String s) {
+        if (verbose) {
             System.out.println(s);
         }
     }
