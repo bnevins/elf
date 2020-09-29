@@ -23,7 +23,7 @@ public class ImageScaler {
     private double y;
     private boolean clipOk = false; // default is do NOT clip any of the image
     private boolean clipFromTopOnly = false;
-    private boolean debug = false;
+    private static boolean debug = false;
 
     public ImageScaler(int iw, int ih, int dw, int dh) {
         this.imageW = (double) iw;
@@ -48,7 +48,7 @@ public class ImageScaler {
         } else {
             stretchWidthToFit = false;
         }
-        System.out.println("stretchwidthtofit = " + stretchWidthToFit);
+        debug("stretchwidthtofit = " + stretchWidthToFit);
 
         if ((stretchWidthToFit)) {
             scaleW = deviceW;
@@ -60,23 +60,21 @@ public class ImageScaler {
                 y = (deviceH - scaleH) / 2;
             }
             if (debug) {
-                System.out.println("Width Stretched to fit");
+                debug("Width Stretched to fit");
             }
         } else {
             scaleH = deviceH;
             scaleW = deviceH * imageRatio;
             y = 0;
             x = (deviceW - scaleW) / 2;
-            if (debug) {
-                System.out.println("Height Stretched to fit");
-            }
+            debug("Height Stretched to fit");
         }
 
         if (!clipOk && (scaleH > deviceH || scaleW > deviceW)) {
             //can't happen!!
             throw new RuntimeException("ERROR in Scaler -- " + scaleW + "X" + scaleH);
         }
-        System.out.println("IR, DR = " + imageRatio + ", " + deviceRatio);
+        debug("IR, DR = " + imageRatio + ", " + deviceRatio);
         Rectangle r = new Rectangle((int) x, (int) y, (int) scaleW, (int) scaleH);
         return r;
     }
@@ -93,19 +91,25 @@ public class ImageScaler {
         scaler.setClipOk(clipOK);
         scaler.setClipFromTopOnly(clipTopOnly);
         Rectangle scaled = scaler.scale();
-        System.out.println("New Dimensions: " + scaled);
+        debug("New Dimensions: " + scaled);
     }
 
     public void setClipOk(boolean clip) {
         this.clipOk = clip;
     }
 
-    void setClipFromTopOnly(boolean b) {
+    public void setClipFromTopOnly(boolean b) {
         clipFromTopOnly = b;
     }
 
-    void setDebug(boolean b) {
+    public void setDebug(boolean b) {
         debug = b;
+    }
+
+    private static void debug(String string) {
+        if (debug) {
+            System.out.println("DEBUG:: " + string);
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -33,6 +33,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import com.elf.util.OS;
+import java.awt.DisplayMode;
+
 /**
  *
  * @author bnevns
@@ -40,6 +42,7 @@ import com.elf.util.OS;
 public class SlowMover implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
+    private File dellDir = new File("C:\\tmp\\Aug09");
     private File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
     private File piDir = new File("/home/pi/dev/data");
     private File picDir;
@@ -57,13 +60,22 @@ public class SlowMover implements MouseListener, KeyListener {
     }
 
     public void dome() {
-        if(OS.isUnix())
+        if (OS.isUnix()) {
             picDir = piDir;
-        
+        }
+        else if("DELL7470".equals(System.getenv("COMPUTERNAME"))) {
+            picDir = dellDir;
+        }
+        else
+            picDir = megamoDir;
+
         GraphicsDevice device = null;
         try {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             device = env.getDefaultScreenDevice();
+            
+            DisplayMode[] modes = device.getDisplayModes();
+            
             GraphicsConfiguration gc = device.getDefaultConfiguration();
             mainFrame = new Frame(gc);
             mainFrame.setUndecorated(true);
@@ -98,16 +110,18 @@ public class SlowMover implements MouseListener, KeyListener {
 
     private void doPrototype() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
-        BufferedImage bi = ImageIO.read(allFiles[0]);
+        for(File f : allFiles) {
+            BufferedImage bi = ImageIO.read(f);
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
-            
-            scaler.setClipOk(which == 1 ? false :true);
-            scaler.setClipFromTopOnly(which == 3? true : false);
-            scaler.setDebug(true);
+
+            scaler.setClipOk(true);
+            scaler.setClipFromTopOnly(true);
+            //scaler.setClipOk(which == 1 ? false : true);
+            //scaler.setClipFromTopOnly(which == 3 ? true : false);
+            scaler.setDebug(false);
             Rectangle imageRec = scaler.scale();
             origin = new Point(imageRec.x, imageRec.y);
-        while (true) {
             Graphics g = bufferStrategy.getDrawGraphics();
             g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
             g.drawImage(bi, origin.x, origin.y,
@@ -124,15 +138,16 @@ public class SlowMover implements MouseListener, KeyListener {
             Thread.sleep(150);
         }
     }
+
     private void doPrototype3() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
         BufferedImage bi = ImageIO.read(allFiles[0]);
         while (true) {
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
-            
-            scaler.setClipOk(which == 1 ? false :true);
-            scaler.setClipFromTopOnly(which == 3? true : false);
+
+            scaler.setClipOk(which == 1 ? false : true);
+            scaler.setClipFromTopOnly(which == 3 ? true : false);
             scaler.setDebug(true);
             Rectangle imageRec = scaler.scale();
             origin = new Point(imageRec.x, imageRec.y);
@@ -272,8 +287,9 @@ public class SlowMover implements MouseListener, KeyListener {
                 break;
             case KeyEvent.VK_SPACE:
                 ++which;
-                if(which > 3)
+                if (which > 3) {
                     which = 0;
+                }
                 break;
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:
