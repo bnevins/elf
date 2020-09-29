@@ -32,7 +32,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
+import com.elf.util.OS;
 /**
  *
  * @author bnevns
@@ -40,8 +40,14 @@ import javax.imageio.ImageIO;
 public class SlowMover implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
-    private File picDir = new File("E:\\WORKING\\BayBridge\\20200921");
+    private File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
+    private File piDir = new File("/home/pi/dev/data");
+    private File picDir;
     private int which = 1;
+    private BufferStrategy bufferStrategy;
+    private Rectangle bounds;
+    private File[] allFiles;
+    private Point origin = new Point(0, 0);
     //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
     //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
     //private File picDir = new File("P:\\stills\\_collage\\uubest");
@@ -49,15 +55,13 @@ public class SlowMover implements MouseListener, KeyListener {
     public static void main(String[] args) {
         new SlowMover().dome();
     }
-    private BufferStrategy bufferStrategy;
-    private Rectangle bounds;
-    private File[] allFiles;
-    private Point origin = new Point(0, 0);
 
     public void dome() {
+        if(OS.isUnix())
+            picDir = piDir;
+        
         GraphicsDevice device = null;
         try {
-
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             device = env.getDefaultScreenDevice();
             GraphicsConfiguration gc = device.getDefaultConfiguration();
@@ -95,6 +99,34 @@ public class SlowMover implements MouseListener, KeyListener {
     private void doPrototype() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
         BufferedImage bi = ImageIO.read(allFiles[0]);
+            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                    bounds.width, bounds.height);
+            
+            scaler.setClipOk(which == 1 ? false :true);
+            scaler.setClipFromTopOnly(which == 3? true : false);
+            scaler.setDebug(true);
+            Rectangle imageRec = scaler.scale();
+            origin = new Point(imageRec.x, imageRec.y);
+        while (true) {
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, origin.x, origin.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            g.setFont(font);
+            g.setColor(Color.RED);
+            String s = String.format(
+                    "Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
+                    bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
+                    imageRec.width, imageRec.height, origin.x, origin.y);
+            g.drawString(s, 100, 100);
+            bufferStrategy.show();
+            g.dispose();
+            Thread.sleep(150);
+        }
+    }
+    private void doPrototype3() throws IOException, InterruptedException {
+        Font font = new Font("Serif", Font.PLAIN, 24);
+        BufferedImage bi = ImageIO.read(allFiles[0]);
         while (true) {
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
@@ -117,7 +149,6 @@ public class SlowMover implements MouseListener, KeyListener {
                     bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
                     imageRec.width, imageRec.height, origin.x, origin.y);
             g.drawString(s, 100, 100);
-            //g.drawString("Origin: " + origin.x + "," + origin.y, 100, 100);
             bufferStrategy.show();
             g.dispose();
             Thread.sleep(500);
@@ -136,7 +167,6 @@ public class SlowMover implements MouseListener, KeyListener {
             Rectangle imageRec = scaler.scale();
             origin = new Point(imageRec.x, imageRec.y);
 
-            int y = imageRec.y;
             Graphics g = bufferStrategy.getDrawGraphics();
             g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
             g.drawImage(bi, origin.x, origin.y,
