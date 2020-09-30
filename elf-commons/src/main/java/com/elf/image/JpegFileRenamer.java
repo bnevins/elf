@@ -117,9 +117,10 @@ public class JpegFileRenamer {
             List<File> files = ff.getFiles();
 
             JpegFileRenamer renamer = new JpegFileRenamer(params);
-
-            for (File f : files) {
-                renamer.renameFile(f);
+          
+            for (int i = 0; i < files.size(); i++) {
+                renamer.renameFile(files.get(i));
+                    System.out.printf("\b\b\b\b\b\b\b\b\b\b\b%05d", i);;
             }
             System.out.printf("%d files renamed in directory %s\n", renameCount, dirName);
 
