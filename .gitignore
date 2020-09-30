@@ -2,9 +2,14 @@
 **/target
 q.*
 nbactions.xml
-q*.*
 **/q*.bat
 **/q*.txt
+q
 foo*
 junk*
-*.class
+**/*.class
+**/*.jpg
+**/*.log
+**/*.zip
+*.bat
+

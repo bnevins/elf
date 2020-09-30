@@ -21,23 +21,25 @@ import java.util.logging.Logger;
  */
 public class JpegFileRenamer {
 
-    boolean verbose = false;
-    boolean dryRun = false;
-    boolean quiet = false;
+    private boolean verbose = false;
+    private boolean dryRun = false;
+    private boolean quiet = false;
     private static int renameCount = 0;
+    private boolean secondsInFilename = false;
     private final String prefix;
     
     private final static Arg[] argDescriptions = new Arg[]{
         new BoolArg("verbose", "v", false, "Verbose Output"),
         new BoolArg("dryRun", "n", false, "Dry Run.  Do NOT do the actual renaming"),
         new BoolArg("quiet", "q", false, "Quiet -- don't print progress"),
+        new BoolArg("seconds", "s", false, "Seconds -- put seconds in the filename"),
         new Arg("prefix", "p", "", "Prefix to prepend to each filename"),};
 
     private static void usage() {
         System.out.println("JpegFileRenamer directory-name");
         System.out.println("");
         System.out.println(Arg.toHelp(argDescriptions));
-        System.exit(1);
+        System.out.println("XXXXX");
     }
 
     private JpegFileRenamer(Map<String, String> params) {
@@ -45,19 +47,11 @@ public class JpegFileRenamer {
         dryRun = Boolean.parseBoolean(params.get("dryRun"));
         prefix = params.get("prefix");
         quiet = Boolean.parseBoolean(params.get("quiet"));
+        secondsInFilename = Boolean.parseBoolean(params.get("seconds"));
         
         if(quiet && verbose) {
             throw new RuntimeException("Both verbose and quiet were set.  Which makes no sense!!");
         }
-        /*****************************
-        if (verbose) {
-            System.out.println("XXXXXXX verbose: " + Boolean.parseBoolean(params.get("verbose")));
-            System.out.println("XXXXXXX dryRun: " + Boolean.parseBoolean(params.get("dryRun")));
-            System.out.println("XXXXXXXX prefix: " + params.get("prefix"));
-        }
-        else
-          System.out.println("XXXXXXX verbose: " + Boolean.parseBoolean(params.get("verbose")));  
-    *************************************/
     }
 
     public void renameFile(File f) {
@@ -65,7 +59,7 @@ public class JpegFileRenamer {
         JpegReader.setDebug(verbose);
         //System.out.println("XXXXXXX calling setDebug(" + verbose + ")");
         JpegReader reader = new JpegReader(f);
-        String newName = reader.getFilenameFromTimestamp();
+        String newName = reader.getFilenameFromTimestamp(secondsInFilename);
         if (newName == null) {
             throw new RuntimeException("Bad filename (" + newName + ") generated from: " + f);
         }

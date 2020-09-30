@@ -22,7 +22,7 @@ public class JpegReader {
     private static boolean debug = false;
     private static boolean verbose = false;
     private boolean isIntelFormat;
-    private String timestamp; // 2020:07:02 10:17:00
+    private String rawTimestamp; // 2020:07:02 10:17:00
     private Dimension dimensions;
 
     public JpegReader(File file) {
@@ -36,15 +36,16 @@ public class JpegReader {
     public static void setDebug(boolean chattyKathy) {
         debug = chattyKathy;
     }
+
     public static void setVerbose(boolean superChattyKathy) {
         verbose = superChattyKathy;
     }
 
     public Calendar getTimestamp() {
-        if (timestamp == null || timestamp.length() != 19) {
+        if (rawTimestamp == null || rawTimestamp.length() != 19) {
             return null;
         }
-        String[] strings = timestamp.split("[: \"]");
+        String[] strings = rawTimestamp.split("[: \"]");
         if (strings.length != 6) {
             return null;
         }
@@ -61,20 +62,32 @@ public class JpegReader {
         return c;
     }
 
-    public String getFilenameFromTimestamp() {
+    public String getFilenameFromTimestamp(boolean useSeconds) {
         Calendar c = getTimestamp();
-
+        String fname;
         if (c == null) {
             return null;
         }
 
-        String format = "%04d_%02d%02d_%02d%02d.jpg";
-        String fname = String.format(format,
-                c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH) + 1,
-                c.get(Calendar.DAY_OF_MONTH),
-                c.get(Calendar.HOUR_OF_DAY), // IMPORTANT!  "HOUR" is 12-hour
-                c.get(Calendar.MINUTE));
+        if (useSeconds) {
+            String format = "%04d_%02d%02d_%02d%02d%02d.jpg";
+            fname = String.format(format,
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH) + 1,
+                    c.get(Calendar.DAY_OF_MONTH),
+                    c.get(Calendar.HOUR_OF_DAY), // IMPORTANT!  "HOUR" is 12-hour
+                    c.get(Calendar.MINUTE),
+                    c.get(Calendar.SECOND));
+
+        } else {
+            String format = "%04d_%02d%02d_%02d%02d.jpg";
+            fname = String.format(format,
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH) + 1,
+                    c.get(Calendar.DAY_OF_MONTH),
+                    c.get(Calendar.HOUR_OF_DAY), // IMPORTANT!  "HOUR" is 12-hour
+                    c.get(Calendar.MINUTE));
+        }
 
         return fname;
     }
@@ -92,7 +105,7 @@ public class JpegReader {
 
     private final void read(File file) throws IOException {
         setDimensions(file);
-        timestamp = null;
+        rawTimestamp = null;
         debug("\n\nFilename: " + file.getAbsolutePath());
         RandomAccessFile raf = new RandomAccessFile(file, "r");
 
@@ -183,10 +196,10 @@ public class JpegReader {
 
             // the last byte read is a zero.  Not "0" but actual zero!!!
             String sData = new String(data, 0, data.length - 1);
-            String type = ddp.getType().toLowerCase(); 
+            String type = ddp.getType().toLowerCase();
             verbose(type + ": " + sData);
             if (type.equals("date/time")) {
-                timestamp = sData;
+                rawTimestamp = sData;
                 debug("TIMESTAMP TAG FOUND: " + sData);
             }
         }
@@ -248,7 +261,8 @@ public class JpegReader {
             JpegReader reader = new JpegReader(f);
 
             System.out.print("Filename: " + f + "  Timestamp: " + reader.getTimestamp().getTime());
-            System.out.println("   Suggested Filename: " + "BB_" + reader.getFilenameFromTimestamp());
+            System.out.println("   Suggested Filename: " + "BB_" + reader.getFilenameFromTimestamp(false));
+
         }
     }
 
