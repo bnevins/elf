@@ -65,8 +65,10 @@ public class SlowMover implements MouseListener, KeyListener {
             picDir = piDir;
         } else if ("DELL7470".equals(System.getenv("COMPUTERNAME"))) {
             picDir = dellDir;
-        } else {
+        } else if ("MEGAMO".equals(System.getenv("COMPUTERNAME"))) {
             picDir = megamoDir;
+        } else {
+            picDir = null;
         }
 
         GraphicsDevice device = null;
@@ -96,8 +98,8 @@ public class SlowMover implements MouseListener, KeyListener {
             allFiles = getFiles();
 
             //doPrototype();
-            //doPrototypeViewer();
-            doPrototypeSlider();
+            doPrototypeViewer();
+            //doPrototypeSlider();
             //List<BufferedImage> images = threadedGetImages(files);
 
         } catch (Exception e) {
@@ -106,6 +108,32 @@ public class SlowMover implements MouseListener, KeyListener {
         } finally {
             device.setFullScreenWindow(null);
             mainFrame.dispose();
+        }
+    }
+
+    private void doPrototypeSlider() throws IOException, InterruptedException {
+        Font font = new Font("Serif", Font.PLAIN, 24);
+        int currentImage = 0;
+        BufferedImage bi = ImageIO.read(allFiles[currentImage]);
+        ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                bounds.width, bounds.height);
+        setScalerOptions(scaler);
+        Rectangle imageRec = scaler.scale();
+        System.out.println("scale Image: " + imageRec);
+        // 914 == height
+        origin = new Point(imageRec.x, imageRec.y);
+
+        while (origin.y > -imageRec.height) {
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, origin.x, origin.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            //g.setFont(font);
+            g.setColor(Color.BLACK);
+            bufferStrategy.show();
+            g.dispose();
+            //Thread.sleep(2);
+            origin.y--;
         }
     }
 
@@ -121,9 +149,7 @@ public class SlowMover implements MouseListener, KeyListener {
             BufferedImage bi = ImageIO.read(allFiles[currentImage]);
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
-            scaler.setClipOk(true);
-            scaler.setClipFromTopOnly(true);
-            scaler.setDebug(false);
+            setScalerOptions(scaler);
             Rectangle imageRec = scaler.scale();
             origin = new Point(imageRec.x, imageRec.y);
             Graphics g = bufferStrategy.getDrawGraphics();
@@ -133,41 +159,13 @@ public class SlowMover implements MouseListener, KeyListener {
             g.setFont(font);
             g.setColor(Color.RED);
             String s = String.format(
-                    "Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
-                    bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
+                    "Filename: %s   Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
+                    allFiles[which].getName(), bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
                     imageRec.width, imageRec.height, origin.x, origin.y);
             g.drawString(s, 100, 100);
             bufferStrategy.show();
             g.dispose();
             //Thread.sleep(150);
-        }
-    }
-
-    private void doPrototypeSlider() throws IOException, InterruptedException {
-        Font font = new Font("Serif", Font.PLAIN, 24);
-        int currentImage = 0;
-        BufferedImage bi = ImageIO.read(allFiles[currentImage]);
-        ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
-                bounds.width, bounds.height);
-        scaler.setClipOk(true);
-        scaler.setClipFromTopOnly(true);
-        scaler.setDebug(false);
-        Rectangle imageRec = scaler.scale();
-        System.out.println("scale Image: " + imageRec);
-        // 914 == height
-        origin = new Point(imageRec.x, imageRec.y);
-        
-        while (origin.y > -914) {
-            Graphics g = bufferStrategy.getDrawGraphics();
-            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            g.drawImage(bi, origin.x, origin.y,
-                    imageRec.width, imageRec.height, mainFrame);
-            //g.setFont(font);
-            g.setColor(Color.BLACK);
-            bufferStrategy.show();
-            g.dispose();
-            Thread.sleep(2);
-            origin.y--;
         }
     }
 
@@ -324,7 +322,13 @@ public class SlowMover implements MouseListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //System.out.printf("Key Pressed: %X\n", e.getKeyCode());
+        int key = e.getKeyCode();
+        if (key == KeyEvent.VK_SPACE) {
+            ++which;
+            if (which >= allFiles.length) {
+                which = 0;
+            }
+        }
     }
 
     @Override
@@ -334,25 +338,28 @@ public class SlowMover implements MouseListener, KeyListener {
         switch (key) {
             case KeyEvent.VK_DOWN:
             case KeyEvent.VK_KP_DOWN:
-                origin.y += 5;
+                //origin.y += 5;
                 break;
             case KeyEvent.VK_UP:
             case KeyEvent.VK_KP_UP:
-                origin.y -= 5;
+                //origin.y -= 5;
                 break;
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_KP_RIGHT:
-                origin.x += 5;
+                if(which == allFiles.length - 1)
+                    which = 0;
+                else
+                    ++which;
                 break;
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_KP_LEFT:
-                origin.x -= 5;
+                //origin.x -= 5;
+                if(which == 0)
+                    which = allFiles.length - 1;
+                else
+                    --which;
                 break;
             case KeyEvent.VK_SPACE:
-                ++which;
-                if (which >= allFiles.length) {
-                    which = 0;
-                }
                 break;
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:
@@ -382,6 +389,18 @@ public class SlowMover implements MouseListener, KeyListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    private void setScalerOptions(ImageScaler scaler) {
+        if (allFiles[0].getName().startsWith("BB_")) {
+            scaler.setClipOk(true);
+            scaler.setClipFromTopOnly(true);
+            scaler.setDebug(false);
+        } else {
+            scaler.setClipOk(false);
+            scaler.setClipFromTopOnly(false);
+            scaler.setDebug(true);
+        }
     }
 
     private static class ImageLoadingTask implements Callable<BufferedImage> {
