@@ -63,20 +63,19 @@ public class SlowMover implements MouseListener, KeyListener {
     public void dome() {
         if (OS.isUnix()) {
             picDir = piDir;
-        }
-        else if("DELL7470".equals(System.getenv("COMPUTERNAME"))) {
+        } else if ("DELL7470".equals(System.getenv("COMPUTERNAME"))) {
             picDir = dellDir;
-        }
-        else
+        } else {
             picDir = megamoDir;
+        }
 
         GraphicsDevice device = null;
         try {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             device = env.getDefaultScreenDevice();
-            
+
             DisplayMode[] modes = device.getDisplayModes();
-            
+
             GraphicsConfiguration gc = device.getDefaultConfiguration();
             mainFrame = new Frame(gc);
             mainFrame.setUndecorated(true);
@@ -97,7 +96,8 @@ public class SlowMover implements MouseListener, KeyListener {
             allFiles = getFiles();
 
             //doPrototype();
-            doPrototypeViewer();
+            //doPrototypeViewer();
+            doPrototypeSlider();
             //List<BufferedImage> images = threadedGetImages(files);
 
         } catch (Exception e) {
@@ -112,20 +112,18 @@ public class SlowMover implements MouseListener, KeyListener {
     private void doPrototypeViewer() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
         int currentImage = -1;
-        while(true) {
-            if(which == currentImage) {
+        while (true) {
+            if (which == currentImage) {
                 Thread.sleep(100);
                 continue;
             }
             currentImage = which;
-            BufferedImage bi = ImageIO.read(allFiles[currentImage]); 
+            BufferedImage bi = ImageIO.read(allFiles[currentImage]);
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
-            //scaler.setClipOk(true);
-            //scaler.setClipFromTopOnly(true);
-            //scaler.setClipOk(which == 1 ? false : true);
-            //scaler.setClipFromTopOnly(which == 3 ? true : false);
-            scaler.setDebug(true);
+            scaler.setClipOk(true);
+            scaler.setClipFromTopOnly(true);
+            scaler.setDebug(false);
             Rectangle imageRec = scaler.scale();
             origin = new Point(imageRec.x, imageRec.y);
             Graphics g = bufferStrategy.getDrawGraphics();
@@ -144,9 +142,38 @@ public class SlowMover implements MouseListener, KeyListener {
             //Thread.sleep(150);
         }
     }
+
+    private void doPrototypeSlider() throws IOException, InterruptedException {
+        Font font = new Font("Serif", Font.PLAIN, 24);
+        int currentImage = 0;
+        BufferedImage bi = ImageIO.read(allFiles[currentImage]);
+        ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                bounds.width, bounds.height);
+        scaler.setClipOk(true);
+        scaler.setClipFromTopOnly(true);
+        scaler.setDebug(false);
+        Rectangle imageRec = scaler.scale();
+        System.out.println("scale Image: " + imageRec);
+        // 914 == height
+        origin = new Point(imageRec.x, imageRec.y);
+        
+        while (origin.y > -914) {
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, origin.x, origin.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            //g.setFont(font);
+            g.setColor(Color.BLACK);
+            bufferStrategy.show();
+            g.dispose();
+            Thread.sleep(2);
+            origin.y--;
+        }
+    }
+
     private void doPrototype() throws IOException, InterruptedException {
         Font font = new Font("Serif", Font.PLAIN, 24);
-        for(File f : allFiles) {
+        for (File f : allFiles) {
             BufferedImage bi = ImageIO.read(f);
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
