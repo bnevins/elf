@@ -101,6 +101,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             drawText(g);
             bufferStrategy.show();
             g.dispose();
+            currentImageNumber++;
             Thread.sleep(5000);
         }
     }
