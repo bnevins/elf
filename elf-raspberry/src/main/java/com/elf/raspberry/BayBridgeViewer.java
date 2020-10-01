@@ -33,6 +33,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     private Point origin = new Point(0, 0);
     private BayBridgeViewerTask viewerTask;
     GraphicsDevice device;
+    private static final boolean debug = true;
 
     //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
     //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
@@ -45,7 +46,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         });
 
     }
-
+    
     public void initialize() {
         if (OS.isUnix()) {
             picDir = piDir;
@@ -214,6 +215,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     }
 
     private void drawText(Graphics g) {
+        if(!debug)
+            return;
         Font font = new Font("Serif", Font.PLAIN, 48);
         g.setFont(font);
         g.setColor(Color.RED);
