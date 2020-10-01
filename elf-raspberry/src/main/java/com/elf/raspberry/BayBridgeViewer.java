@@ -4,14 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
-import java.util.List;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import com.elf.util.OS;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
 /**
@@ -21,10 +16,10 @@ import javax.swing.*;
 public class BayBridgeViewer implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
-    private File dellDir = new File("C:\\tmp\\Aug09");
-    private File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
-    private File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
-    private File piDir = new File("/home/pi/dev/bb_data");
+    private final File dellDir = new File("C:\\tmp\\Aug09");
+    private final File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
+    private final File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
+    private final File piDir = new File("/home/pi/dev/bb_data");
     private File picDir;
     private volatile int currentImageNumber = 0;
     private BufferStrategy bufferStrategy;
@@ -39,12 +34,9 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
     //private File picDir = new File("P:\\stills\\_collage\\uubest");
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new BayBridgeViewer().initialize();
-            }
+        SwingUtilities.invokeLater(() -> {
+            new BayBridgeViewer().initialize();
         });
-
     }
     
     public void initialize() {
@@ -108,6 +100,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
                 g.dispose();
                 currentImageNumber++;
                 Thread.sleep(5000);
+                //wait(5000);
             }
         } catch (Exception e) {
             System.out.println("Closed with this: " + e);
@@ -158,6 +151,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_KP_RIGHT:
                 currentImageNumber += 5;
+                //notifyAll();
                 break;
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_KP_LEFT:
