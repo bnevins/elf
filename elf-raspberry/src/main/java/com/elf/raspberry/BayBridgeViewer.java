@@ -98,6 +98,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
             g.drawImage(bi, origin.x, origin.y,
                     imageRec.width, imageRec.height, mainFrame);
+            drawText(g);
             bufferStrategy.show();
             g.dispose();
             Thread.sleep(5000);
@@ -186,9 +187,9 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     }
 
     private void setScalerOptions(ImageScaler scaler) {
-            scaler.setClipOk(true);
-            scaler.setClipFromTopOnly(true);
-            scaler.setDebug(false);
+        scaler.setClipOk(true);
+        scaler.setClipFromTopOnly(true);
+        scaler.setDebug(false);
     }
 
     private void checkCurrentImageNumber() {
@@ -201,5 +202,16 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         if (currentImageNumber < 0) {
             currentImageNumber = 0;
         }
+    }
+
+    private void drawText(Graphics g) {
+        Font font = new Font("Serif", Font.PLAIN, 48);
+        g.setFont(font);
+        g.setColor(Color.RED);
+        //String s = String.format(
+                //"Filename: %s   Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
+                //allFiles[which].getName(), bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
+                //imageRec.width, imageRec.height, origin.x, origin.y);
+        g.drawString("" + currentImageNumber, bounds.width/2, bounds.height/2);
     }
 }
