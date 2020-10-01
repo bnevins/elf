@@ -189,7 +189,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             scaler.setClipOk(true);
             scaler.setClipFromTopOnly(true);
             scaler.setDebug(false);
-        
     }
 
     private void checkCurrentImageNumber() {
