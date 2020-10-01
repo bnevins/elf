@@ -56,7 +56,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         } else {
             picDir = null;
         }
-        System.out.println("initialize(): in swing thread: " + SwingUtilities.isEventDispatchThread());
 
         try {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -80,24 +79,18 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             bufferStrategy = mainFrame.getBufferStrategy();
             allFiles = getFiles();
             currentImageNumber = 0;
-            //doBayBridge();
             viewerTask = new BayBridgeViewerTask(this);
             viewerTask.execute();
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
-        } finally {
-            //device.setFullScreenWindow(null);
-            //mainFrame.dispose();
         }
     }
 
     private void doBayBridge() throws IOException, InterruptedException {
-        //Font font = new Font("Serif", Font.PLAIN, 24);
-        //while (true) {
         System.out.println("doBayBridge: in swing thread: " + SwingUtilities.isEventDispatchThread());
         try {
-            for (int i = 0; i < 2; i++) {
+            while (true) {
                 checkCurrentImageNumber();
                 BufferedImage bi = ImageIO.read(allFiles[currentImageNumber]);
                 ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
@@ -115,9 +108,10 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
                 currentImageNumber++;
                 Thread.sleep(5000);
             }
+        } catch (Exception e) {
+            System.out.println("Closed with this: " + e);
         } finally {
-            device.setFullScreenWindow(null);
-
+            //device.setFullScreenWindow(null);
         }
     }
 
@@ -150,9 +144,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.printf("Key Released: %X\n", e.getKeyCode());
-        System.out.println("keyReleased: in swing thread: " + SwingUtilities.isEventDispatchThread());
-
         int key = e.getKeyCode();
         switch (key) {
             case KeyEvent.VK_DOWN:
@@ -184,7 +175,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("MOUSE CLICKED");
         mainFrame.dispose();
         System.exit(0);
     }
@@ -232,6 +222,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         //allFiles[which].getName(), bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
         //imageRec.width, imageRec.height, origin.x, origin.y);
         g.drawString("" + currentImageNumber, bounds.width / 2, bounds.height / 2);
+
     }
 
     class BayBridgeViewerTask extends SwingWorker<Object, Object> {
@@ -245,6 +236,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         @Override
         protected Object doInBackground() throws Exception {
             viewer.doBayBridge();
+            device.setFullScreenWindow(null);
             mainFrame.dispose();
             System.exit(0);
             return null;
