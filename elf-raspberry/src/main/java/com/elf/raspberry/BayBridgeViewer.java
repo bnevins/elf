@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import com.elf.util.OS;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.*;
 
 /**
  *
@@ -29,15 +31,22 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     private Rectangle bounds;
     private File[] allFiles;
     private Point origin = new Point(0, 0);
+    private BayBridgeViewerTask viewerTask;
+    GraphicsDevice device;
+
     //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
     //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
     //private File picDir = new File("P:\\stills\\_collage\\uubest");
-
     public static void main(String[] args) {
-        new BayBridgeViewer().dome();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new BayBridgeViewer().initialize();
+            }
+        });
+
     }
 
-    public void dome() {
+    public void initialize() {
         if (OS.isUnix()) {
             picDir = piDir;
         } else if ("DELL7470".equals(System.getenv("COMPUTERNAME"))) {
@@ -47,14 +56,11 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         } else {
             picDir = null;
         }
+        System.out.println("initialize(): in swing thread: " + SwingUtilities.isEventDispatchThread());
 
-        GraphicsDevice device = null;
         try {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             device = env.getDefaultScreenDevice();
-
-            DisplayMode[] modes = device.getDisplayModes();
-
             GraphicsConfiguration gc = device.getDefaultConfiguration();
             mainFrame = new Frame(gc);
             mainFrame.setUndecorated(true);
@@ -73,36 +79,45 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             mainFrame.createBufferStrategy(2);
             bufferStrategy = mainFrame.getBufferStrategy();
             allFiles = getFiles();
-            doBayBridge();
+            currentImageNumber = 0;
+            //doBayBridge();
+            viewerTask = new BayBridgeViewerTask(this);
+            viewerTask.execute();
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
         } finally {
-            device.setFullScreenWindow(null);
-            mainFrame.dispose();
+            //device.setFullScreenWindow(null);
+            //mainFrame.dispose();
         }
     }
 
     private void doBayBridge() throws IOException, InterruptedException {
         //Font font = new Font("Serif", Font.PLAIN, 24);
-        currentImageNumber = 0;
-        while (true) {
-            checkCurrentImageNumber();
-            BufferedImage bi = ImageIO.read(allFiles[currentImageNumber]);
-            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
-                    bounds.width, bounds.height);
-            setScalerOptions(scaler);
-            Rectangle imageRec = scaler.scale();
-            origin = new Point(imageRec.x, imageRec.y);
-            Graphics g = bufferStrategy.getDrawGraphics();
-            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            g.drawImage(bi, origin.x, origin.y,
-                    imageRec.width, imageRec.height, mainFrame);
-            drawText(g);
-            bufferStrategy.show();
-            g.dispose();
-            currentImageNumber++;
-            Thread.sleep(5000);
+        //while (true) {
+        System.out.println("doBayBridge: in swing thread: " + SwingUtilities.isEventDispatchThread());
+        try {
+            for (int i = 0; i < 2; i++) {
+                checkCurrentImageNumber();
+                BufferedImage bi = ImageIO.read(allFiles[currentImageNumber]);
+                ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                        bounds.width, bounds.height);
+                setScalerOptions(scaler);
+                Rectangle imageRec = scaler.scale();
+                origin = new Point(imageRec.x, imageRec.y);
+                Graphics g = bufferStrategy.getDrawGraphics();
+                g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                g.drawImage(bi, origin.x, origin.y,
+                        imageRec.width, imageRec.height, mainFrame);
+                drawText(g);
+                bufferStrategy.show();
+                g.dispose();
+                currentImageNumber++;
+                Thread.sleep(5000);
+            }
+        } finally {
+            device.setFullScreenWindow(null);
+
         }
     }
 
@@ -136,6 +151,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         System.out.printf("Key Released: %X\n", e.getKeyCode());
+        System.out.println("keyReleased: in swing thread: " + SwingUtilities.isEventDispatchThread());
+
         int key = e.getKeyCode();
         switch (key) {
             case KeyEvent.VK_DOWN:
@@ -159,6 +176,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:
             case KeyEvent.VK_ESCAPE:
+                viewerTask.cancel(true);
                 mainFrame.dispose();
                 System.exit(0);
         }
@@ -210,9 +228,26 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         g.setFont(font);
         g.setColor(Color.RED);
         //String s = String.format(
-                //"Filename: %s   Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
-                //allFiles[which].getName(), bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
-                //imageRec.width, imageRec.height, origin.x, origin.y);
-        g.drawString("" + currentImageNumber, bounds.width/2, bounds.height/2);
+        //"Filename: %s   Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
+        //allFiles[which].getName(), bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
+        //imageRec.width, imageRec.height, origin.x, origin.y);
+        g.drawString("" + currentImageNumber, bounds.width / 2, bounds.height / 2);
+    }
+
+    class BayBridgeViewerTask extends SwingWorker<Object, Object> {
+
+        private final BayBridgeViewer viewer;
+
+        public BayBridgeViewerTask(BayBridgeViewer viewer) {
+            this.viewer = viewer;
+        }
+
+        @Override
+        protected Object doInBackground() throws Exception {
+            viewer.doBayBridge();
+            mainFrame.dispose();
+            System.exit(0);
+            return null;
+        }
     }
 }
