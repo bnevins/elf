@@ -17,7 +17,7 @@ public class ImageData {
 
     public static void main(String[] args) {
         ImageData meta = new ImageData();
-        String[] junk = {"c:/tmp/test_vert.jpg"};
+        String[] junk = {"c:/tmp/BB.jpg"};
         args = junk;
         for (int i = 0; i < args.length; i++) {
             System.out.println("Reading: " + args[i]);
