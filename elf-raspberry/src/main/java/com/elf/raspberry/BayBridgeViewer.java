@@ -1,5 +1,6 @@
 package com.elf.raspberry;
 
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -13,7 +14,7 @@ import javax.swing.*;
  *
  * @author bnevns
  */
-public class BayBridgeViewer implements MouseListener, KeyListener {
+public class BayBridgeViewer implements MouseListener, KeyListener, ActionListener {
 
     private static Frame mainFrame;
     private final File dellDir = new File("C:\\tmp\\Aug09");
@@ -26,9 +27,10 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     private Rectangle bounds;
     private File[] allFiles;
     private Point origin = new Point(0, 0);
-    private BayBridgeViewerTask viewerTask;
     GraphicsDevice device;
     private static final boolean debug = true;
+    Timer timer = null;
+    private final int delay = 5000; // 5 seconds
 
     //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
     //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
@@ -38,7 +40,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             new BayBridgeViewer().initialize();
         });
     }
-    
+
     public void initialize() {
         if (OS.isUnix()) {
             picDir = piDir;
@@ -64,7 +66,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
                     System.exit(0);
                 }
             });
-
+            timer = new Timer(delay, this);
+            timer.setInitialDelay(0);
             device.setFullScreenWindow(mainFrame);
             bounds = mainFrame.getBounds();
             System.out.println("BOUNDS: " + bounds);
@@ -72,40 +75,55 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
             bufferStrategy = mainFrame.getBufferStrategy();
             allFiles = getFiles();
             currentImageNumber = 0;
-            viewerTask = new BayBridgeViewerTask(this);
-            viewerTask.execute();
+            start();
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
         }
     }
 
-    private void doBayBridge() throws IOException, InterruptedException {
-        System.out.println("doBayBridge: in swing thread: " + SwingUtilities.isEventDispatchThread());
+    private void start() {
+        timer.start();
+    }
+
+    private void stop() {
+        timer.stop();
+        device.setFullScreenWindow(null);
+        mainFrame.dispose();
+        System.exit(0);
+    }
+
+    private void restart() {
+        if (timer != null) {
+            timer.restart();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        paintBridge();
+    }
+
+    public void paintBridge() {
         try {
-            while (true) {
-                checkCurrentImageNumber();
-                BufferedImage bi = ImageIO.read(allFiles[currentImageNumber]);
-                ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
-                        bounds.width, bounds.height);
-                setScalerOptions(scaler);
-                Rectangle imageRec = scaler.scale();
-                origin = new Point(imageRec.x, imageRec.y);
-                Graphics g = bufferStrategy.getDrawGraphics();
-                g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-                g.drawImage(bi, origin.x, origin.y,
-                        imageRec.width, imageRec.height, mainFrame);
-                drawText(g);
-                bufferStrategy.show();
-                g.dispose();
-                currentImageNumber++;
-                Thread.sleep(5000);
-                //wait(5000);
-            }
+            checkCurrentImageNumber();
+            BufferedImage bi = ImageIO.read(allFiles[currentImageNumber]);
+            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                    bounds.width, bounds.height);
+            setScalerOptions(scaler);
+            Rectangle imageRec = scaler.scale();
+            origin = new Point(imageRec.x, imageRec.y);
+            Graphics g = bufferStrategy.getDrawGraphics();
+            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawImage(bi, origin.x, origin.y,
+                    imageRec.width, imageRec.height, mainFrame);
+            drawText(g);
+            bufferStrategy.show();
+            g.dispose();
+            currentImageNumber++;
         } catch (Exception e) {
-            System.out.println("Closed with this: " + e);
-        } finally {
-            //device.setFullScreenWindow(null);
+            System.out.println("Got Exception: " + e);
+            timer.stop();
         }
     }
 
@@ -132,12 +150,13 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_SPACE) {
-            ++currentImageNumber;
+            restart();
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        // note that doing a restart() will already cause a "+1" change to image number...
         int key = e.getKeyCode();
         switch (key) {
             case KeyEvent.VK_DOWN:
@@ -150,21 +169,21 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
                 break;
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_KP_RIGHT:
-                currentImageNumber += 5;
-                //notifyAll();
+                currentImageNumber += 4;
+                restart();
                 break;
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_KP_LEFT:
-                currentImageNumber -= 5;
+                currentImageNumber -= 6;
+                restart();
                 break;
             case KeyEvent.VK_SPACE:
                 break;
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:
             case KeyEvent.VK_ESCAPE:
-                viewerTask.cancel(true);
-                mainFrame.dispose();
-                System.exit(0);
+                stop();
+                break;
         }
     }
 
@@ -176,6 +195,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        stop();
     }
 
     @Override
@@ -209,8 +229,9 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
     }
 
     private void drawText(Graphics g) {
-        if(!debug)
+        if (!debug) {
             return;
+        }
         Font font = new Font("Serif", Font.PLAIN, 48);
         g.setFont(font);
         g.setColor(Color.RED);
@@ -220,23 +241,5 @@ public class BayBridgeViewer implements MouseListener, KeyListener {
         //imageRec.width, imageRec.height, origin.x, origin.y);
         g.drawString("" + currentImageNumber, bounds.width / 2, bounds.height / 2);
 
-    }
-
-    class BayBridgeViewerTask extends SwingWorker<Object, Object> {
-
-        private final BayBridgeViewer viewer;
-
-        public BayBridgeViewerTask(BayBridgeViewer viewer) {
-            this.viewer = viewer;
-        }
-
-        @Override
-        protected Object doInBackground() throws Exception {
-            viewer.doBayBridge();
-            device.setFullScreenWindow(null);
-            mainFrame.dispose();
-            System.exit(0);
-            return null;
-        }
     }
 }
