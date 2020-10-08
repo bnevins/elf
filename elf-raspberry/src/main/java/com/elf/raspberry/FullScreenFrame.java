@@ -16,12 +16,12 @@ import javax.swing.JFrame;
  *
  * @author bnevins
  */
-public class FullScreenWindow extends JFrame implements MouseListener, KeyListener, ActionListener {
+public class FullScreenFrame extends JFrame implements MouseListener, KeyListener, ActionListener {
 
     public static void main(String[] args) {
     }
 
-    public FullScreenWindow() throws HeadlessException {
+    public FullScreenFrame() throws HeadlessException {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
         setIgnoreRepaint(true);
