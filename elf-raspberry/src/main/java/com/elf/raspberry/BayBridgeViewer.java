@@ -57,6 +57,15 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             device = env.getDefaultScreenDevice();
             GraphicsConfiguration gc = device.getDefaultConfiguration();
             mainFrame = new Frame(gc);
+            mainFrame.setUndecorated(true);
+            mainFrame.setIgnoreRepaint(true);
+            mainFrame.addMouseListener(this);
+            mainFrame.addKeyListener(this);
+            mainFrame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent ev) {
+                    System.exit(0);
+                }
+            });
             timer = new Timer(delay, this);
             timer.setInitialDelay(0);
             device.setFullScreenWindow(mainFrame);
