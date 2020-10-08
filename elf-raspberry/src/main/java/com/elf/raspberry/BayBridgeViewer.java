@@ -92,7 +92,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        System.out.println("ationevent: " + event + "cmd: " + event.getActionCommand() + "params: " + event.paramString());
         paintBridge();
     }
 
