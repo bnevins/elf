@@ -40,6 +40,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             new BayBridgeViewer().initialize();
         });
     }
+    private BridgePainter painter;
+    private Rectangle imageRec;
 
     public void initialize() {
         if (OS.isUnix()) {
@@ -75,6 +77,15 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             bufferStrategy = mainFrame.getBufferStrategy();
             allFiles = getFiles();
             currentImageNumber = 0;
+
+            painter = new BridgePainter(bufferStrategy);
+            // ALL photos are exactly the same size so do this just ONCE!
+            BufferedImage bi = ImageIO.read(allFiles[0]);
+            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
+                    bounds.width, bounds.height);
+            setScalerOptions(scaler);
+            imageRec = scaler.scale();
+
             start();
         } catch (Exception e) {
             System.out.println(e);
@@ -107,19 +118,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     public void paintBridge() {
         try {
             checkCurrentImageNumber();
-            BufferedImage bi = ImageIO.read(allFiles[currentImageNumber]);
-            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
-                    bounds.width, bounds.height);
-            setScalerOptions(scaler);
-            Rectangle imageRec = scaler.scale();
-            origin = new Point(imageRec.x, imageRec.y);
-            Graphics g = bufferStrategy.getDrawGraphics();
-            g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            g.drawImage(bi, origin.x, origin.y,
-                    imageRec.width, imageRec.height, mainFrame);
-            drawText(g);
-            bufferStrategy.show();
-            g.dispose();
+            painter.paintBridge(allFiles[currentImageNumber], imageRec);
             currentImageNumber++;
         } catch (Exception e) {
             System.out.println("Got Exception: " + e);
@@ -228,18 +227,5 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
         }
     }
 
-    private void drawText(Graphics g) {
-        if (!debug) {
-            return;
-        }
-        Font font = new Font("Serif", Font.PLAIN, 48);
-        g.setFont(font);
-        g.setColor(Color.RED);
-        //String s = String.format(
-        //"Filename: %s   Canvas: %dx%d Image Size: %dX%d Scaled Size: %dX%d Origin: %d,%d",
-        //allFiles[which].getName(), bounds.width, bounds.height, bi.getWidth(), bi.getHeight(),
-        //imageRec.width, imageRec.height, origin.x, origin.y);
-        g.drawString("" + currentImageNumber, bounds.width / 2, bounds.height / 2);
 
-    }
 }
