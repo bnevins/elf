@@ -19,22 +19,18 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private static Frame mainFrame;
     private final File dellDir = new File("C:\\tmp\\Aug09");
     private final File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
-    private final File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
+    //private final File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
     private final File piDir = new File("/home/pi/dev/bb_data");
     private File picDir;
     private volatile int currentImageNumber = 0;
     private BufferStrategy bufferStrategy;
     private Rectangle bounds;
     private File[] allFiles;
-    private Point origin = new Point(0, 0);
     GraphicsDevice device;
     private static final boolean debug = true;
     Timer timer = null;
     private final int delay = 5000; // 5 seconds
 
-    //private File pic = new File("E:\\dev\\elf\\data\\BB.jpg");
-    //private File pic = new File("P:\\stills\\_collage\\uubest\\ray_lgh005005.jpg");
-    //private File picDir = new File("P:\\stills\\_collage\\uubest");
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new BayBridgeViewer().initialize();
@@ -85,7 +81,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
                     bounds.width, bounds.height);
             setScalerOptions(scaler);
             imageRec = scaler.scale();
-
             start();
         } catch (Exception e) {
             System.out.println(e);
@@ -226,6 +221,4 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             currentImageNumber = 0;
         }
     }
-
-
 }

@@ -38,7 +38,6 @@ class BridgePainter {
             drawText(g, image, origin);
             bufferStrategy.show();
             g.dispose();
-
         } catch (Exception e) {
             System.out.println("Got Exception: " + e);
         }
