@@ -9,11 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>Elf</name>
 
-    <scm>
-        <connection>scm:svn:http://svn.bnevins.com:8888/svn/elf/trunk/elf</connection>
-    </scm>
-
-    <modules>
+       <modules>
         <module>elf-apps</module>
         <module>elf-commons</module>
         <module>elf-web</module>
@@ -49,15 +45,6 @@
     </dependencies>
     <reporting>
         <plugins>
-            <!--plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.0.1</version>
-                <configuration>
-                    <threshold>High</threshold>
-                    <excludeFilterFile>${findbugs.exclude}</excludeFilterFile>
-                </configuration>
-            </plugin-->
         </plugins>
     </reporting>
     <properties>
