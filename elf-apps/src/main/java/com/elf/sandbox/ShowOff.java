@@ -5,6 +5,8 @@ import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.*;
 
 public class ShowOff extends Component {
@@ -66,14 +68,20 @@ public class ShowOff extends Component {
     }
 
     public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-
-        // Turn on antialiasing.
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        drawBackground(g2);
-        drawImageMosaic(g2);
-        drawText(g2);
+        try {
+            Graphics2D g2 = (Graphics2D) g;
+            
+            // Turn on antialiasing.
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            drawBackground(g2);
+            Thread.sleep(2000);
+            drawImageMosaic(g2);
+            Thread.sleep(2000);
+            drawText(g2);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ShowOff.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected void drawBackground(Graphics2D g2) {
