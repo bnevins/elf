@@ -13,3 +13,4 @@ junk*
 **/*.zip
 *.bat
 *~
+**/nb-configuration.xml
