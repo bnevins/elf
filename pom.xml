@@ -15,7 +15,7 @@
         <module>elf-gf</module>
         <module>elf-algorithms</module>
         <module>elf-raspberry</module>
-    	<module>fx</module>
+    	<module>elf-jfx</module>
   </modules>
 
     <build>
