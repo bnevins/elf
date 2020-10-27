@@ -22,10 +22,14 @@ import javax.imageio.ImageIO;
 class BridgePainter {
 
     private BufferStrategy bufferStrategy;
-    private static final boolean debug = true;
+    private static boolean debug = false;
 
     BridgePainter(BufferStrategy theBufferStrategy) {
         bufferStrategy = theBufferStrategy;
+    }
+
+    void toggleDebug() {
+        debug = !debug;
     }
 
     void paintBridge(File image, Rectangle imageRec) {

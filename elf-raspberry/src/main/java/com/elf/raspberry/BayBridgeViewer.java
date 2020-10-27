@@ -30,14 +30,14 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private static final boolean debug = true;
     Timer timer = null;
     private final int delay = 5000; // 5 seconds
+    private BridgePainter painter;
+    private Rectangle imageRec;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new BayBridgeViewer().initialize();
         });
     }
-    private BridgePainter painter;
-    private Rectangle imageRec;
 
     public void initialize() {
         if (OS.isUnix()) {
@@ -172,6 +172,11 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
                 restart();
                 break;
             case KeyEvent.VK_SPACE:
+                break;
+            case KeyEvent.VK_D:
+                painter.toggleDebug();
+                --currentImageNumber; // this results in SAME pic getting refreshed
+                timer.restart();
                 break;
             case KeyEvent.VK_X:
             case KeyEvent.VK_Q:
