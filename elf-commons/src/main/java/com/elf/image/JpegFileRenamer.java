@@ -122,7 +122,7 @@ public class JpegFileRenamer {
                 renamer.renameFile(files.get(i));
                     System.out.printf("\b\b\b\b\b\b\b\b\b\b\b%05d", i);;
             }
-            System.out.printf("%d files renamed in directory %s\n", renameCount, dirName);
+            System.out.printf("\b\b\b\b\b\b\b\b\b\b\b%d files renamed in directory %s\n", renameCount, dirName);
 
         } catch (IOException ex) {
             Logger.getLogger(JpegFileRenamer.class.getName()).log(Level.SEVERE, null, ex);
