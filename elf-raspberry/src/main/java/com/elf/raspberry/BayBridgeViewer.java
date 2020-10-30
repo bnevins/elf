@@ -1,13 +1,14 @@
 package com.elf.raspberry;
 
+import java.util.List;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
-import java.util.*;
 import javax.imageio.ImageIO;
 import com.elf.util.OS;
+import java.nio.file.Path;
 import javax.swing.*;
 
 /**
@@ -17,15 +18,15 @@ import javax.swing.*;
 public class BayBridgeViewer implements MouseListener, KeyListener, ActionListener {
 
     private static Frame mainFrame;
-    private final File dellDir = new File("C:\\tmp\\Aug09");
-    private final File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
-    //private final File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
-    private final File piDir = new File("/home/pi/dev/bb_data");
-    private File picDir;
+    private final String dellDir = "C:\\tmp\\Aug09";
+    private final String megamoDir = "E:\\WORKING\\BayBridge";
+    //private final File megamoDir2 = "P:\\stills\\_collage\\ubest10");
+    private final String piDir = "/mnt/Photos/BayBridge";
+    private String picDir;
     private volatile int currentImageNumber = 0;
     private BufferStrategy bufferStrategy;
     private Rectangle bounds;
-    private File[] allFiles;
+    private List<Path> allFiles;
     GraphicsDevice device;
     private static final boolean debug = true;
     Timer timer = null;
@@ -76,7 +77,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
 
             painter = new BridgePainter(bufferStrategy);
             // ALL photos are exactly the same size so do this just ONCE!
-            BufferedImage bi = ImageIO.read(allFiles[0]);
+            BufferedImage bi = ImageIO.read(allFiles.get(0).toFile());
             ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
                     bounds.width, bounds.height);
             setScalerOptions(scaler);
@@ -113,7 +114,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     public void paintBridge() {
         try {
             checkCurrentImageNumber();
-            painter.paintBridge(allFiles[currentImageNumber], imageRec);
+            painter.paintBridge(allFiles.get(currentImageNumber).toFile(), imageRec);
             currentImageNumber++;
         } catch (Exception e) {
             System.out.println("Got Exception: " + e);
@@ -121,18 +122,13 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
         }
     }
 
-    private File[] getFiles() {
-        File[] files = picDir.listFiles(new FileFilter() {
-            public boolean accept(File f) {
-                return f.getName().toLowerCase().endsWith(".jpg");
-            }
-        });
+    private List<Path> getFiles() throws IOException {
+        java.util.List<Path> paths = com.elf.raspberry.FileLister.getFiles(picDir);
 
-        if (files.length == 0) {
-            throw new RuntimeException("Bad directory: " + picDir);
+        if (paths.size() == 0) {
+            throw new IOException("Bad directory: " + picDir);
         }
-        Arrays.sort(files);
-        return files;
+        return paths;
     }
 
     @Override
@@ -163,7 +159,10 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
                 break;
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_KP_RIGHT:
-                currentImageNumber += 4;
+                int jump = 4;
+                if((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
+                    jump = 1000;
+                currentImageNumber += jump;
                 restart();
                 break;
             case KeyEvent.VK_LEFT:
@@ -216,11 +215,11 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     }
 
     private void checkCurrentImageNumber() {
-        if (currentImageNumber >= allFiles.length) {
+        if (currentImageNumber >= allFiles.size()) {
             currentImageNumber = 0;
         }
         if (currentImageNumber < 0) {
-            currentImageNumber += allFiles.length; // it's a negative number!
+            currentImageNumber += allFiles.size(); // it's a negative number!
         }
         if (currentImageNumber < 0) {
             currentImageNumber = 0;
