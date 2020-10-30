@@ -8,27 +8,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- *
- * @author bnevins
- */
 public class FileLister {
-
-    public static void main(String[] args) throws IOException {
-
-        String dirName = "e:/working/baybridge";
-
-        List<String> result;
-        List<Path> result2;
-
+    public static List<Path> getFiles(String dirName) throws IOException {
         try (Stream<Path> paths = Files.walk(Paths.get(dirName))) {
-            result2 = paths.filter(f -> f.toString().toUpperCase().endsWith(".JPG")).collect(Collectors.toList());
+            return paths
+                .filter(f -> f.toString().toLowerCase().endsWith(".jpg"))
+                .collect(Collectors.toList());
         }
-        for (int i = 0; i < 10; i++) {
-            System.out.println(result2.get(i));
-            System.out.println(result2.get(i).getFileName());
-        }
-//        for(String s : result)
-//            System.out.println("xxxx " + s);
     }
+    public static void main(String[] args) {
+try {
+        List<Path> list = getFiles(args[0]);
+        System.out.println(list.size() + " entries found");
+        System.out.println(list.get(200));
+}
+catch(IOException e) {
+System.out.println(e);}
+}
 }
