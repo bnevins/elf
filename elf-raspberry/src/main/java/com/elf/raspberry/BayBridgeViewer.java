@@ -9,6 +9,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import com.elf.util.OS;
 import java.nio.file.Path;
+import java.util.Collections;
 import javax.swing.*;
 
 /**
@@ -125,9 +126,10 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private List<Path> getFiles() throws IOException {
         java.util.List<Path> paths = com.elf.raspberry.FileLister.getFiles(picDir);
 
-        if (paths.size() == 0) {
+        if (paths.isEmpty()) {
             throw new IOException("Bad directory: " + picDir);
         }
+        Collections.shuffle(paths);
         return paths;
     }
 
