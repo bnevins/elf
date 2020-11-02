@@ -25,14 +25,15 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private String picDir;
     private volatile int currentImageNumber = 0;
     private BufferStrategy bufferStrategy;
-    private Rectangle bounds;
     private List<Path> allFiles;
     GraphicsDevice device;
     private static final boolean debug = true;
     Timer timer = null;
     private final int delay = 5000; // 5 seconds
     private BridgePainter painter;
+    private Rectangle imageScaledRec;
     private Rectangle imageRec;
+    private Rectangle screenRec;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -68,8 +69,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             timer = new Timer(delay, this);
             timer.setInitialDelay(0);
             device.setFullScreenWindow(mainFrame);
-            bounds = mainFrame.getBounds();
-            System.out.println("BOUNDS: " + bounds);
+            screenRec = mainFrame.getBounds();
+            System.out.println("BOUNDS: " + screenRec);
             mainFrame.createBufferStrategy(2);
             bufferStrategy = mainFrame.getBufferStrategy();
             allFiles = getFiles();
@@ -78,10 +79,11 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             painter = new BridgePainter(bufferStrategy);
             // ALL photos are exactly the same size so do this just ONCE!
             BufferedImage bi = ImageIO.read(allFiles.get(0).toFile());
-            ImageScaler scaler = new ImageScaler(bi.getWidth(), bi.getHeight(),
-                    bounds.width, bounds.height);
+            imageRec = new Rectangle(bi.getWidth(), bi.getHeight());
+            ImageScaler scaler = new ImageScaler(imageRec.width, imageRec.height,
+                    screenRec.width, screenRec.height);
             setScalerOptions(scaler);
-            imageRec = scaler.scale();
+            imageScaledRec = scaler.scale();
             start();
         } catch (Exception e) {
             System.out.println(e);
@@ -114,7 +116,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     public void paintBridge() {
         try {
             checkCurrentImageNumber();
-            painter.paintBridge(allFiles.get(currentImageNumber).toFile(), imageRec);
+            painter.paintBridge(allFiles.get(currentImageNumber).toFile(), imageRec, imageScaledRec, screenRec);
             currentImageNumber++;
         } catch (Exception e) {
             System.out.println("Got Exception: " + e);
@@ -161,8 +163,9 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_KP_RIGHT:
                 int jump = 4;
-                if((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
+                if ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
                     jump = 1000;
+                }
                 currentImageNumber += jump;
                 restart();
                 break;
