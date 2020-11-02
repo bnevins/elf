@@ -21,7 +21,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private static Frame mainFrame;
     private final String dellDir = "C:\\tmp\\Aug09";
     private final String megamoDir = "E:\\WORKING\\BayBridge";
-    //private final File megamoDir2 = "P:\\stills\\_collage\\ubest10");
     private final String piDir = "/mnt/Photos/BayBridge";
     private String picDir;
     private volatile int currentImageNumber = 0;
