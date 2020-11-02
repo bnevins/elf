@@ -19,7 +19,7 @@ import javax.swing.*;
 public class BayBridgeViewer implements MouseListener, KeyListener, ActionListener {
 
     private static Frame mainFrame;
-    private final String dellDir = "C:\\tmp\\Aug09";
+    private final String dellDir = "C:\\tmp\\BB";
     private final String megamoDir = "E:\\WORKING\\BayBridge";
     private final String piDir = "/mnt/Photos/BayBridge";
     private String picDir;
