@@ -16,6 +16,7 @@
         <module>elf-algorithms</module>
         <module>elf-raspberry</module>
     	<module>elf-jfx</module>
+    	<module>elf-external</module>
   </modules>
 
     <build>
