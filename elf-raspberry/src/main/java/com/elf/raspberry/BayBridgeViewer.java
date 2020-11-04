@@ -22,6 +22,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private final String dellDir = "C:\\tmp\\BB";
     private final String megamoDir = "E:\\WORKING\\BayBridge";
     private final String piDir = "/mnt/Photos/BayBridge";
+    private final String macDir = "Users/bnevins/tmp/BB";
     private String picDir;
     private volatile int currentImageNumber = 0;
     private BufferStrategy bufferStrategy;
@@ -42,7 +43,9 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     }
 
     public void initialize() {
-        if (OS.isUnix()) {
+        if (System.getProperty("os.name").startsWith("Mac")) {
+            picDir = macDir;
+        } else if (OS.isUnix()) {
             picDir = piDir;
         } else if ("DELL7470".equals(System.getenv("COMPUTERNAME"))) {
             picDir = dellDir;
