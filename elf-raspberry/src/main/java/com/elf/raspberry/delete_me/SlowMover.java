@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import com.elf.util.OS;
 import java.awt.DisplayMode;
+import com.elf.io.FileExtFinder;
 
 /**
  *
@@ -43,7 +44,7 @@ import java.awt.DisplayMode;
 public class SlowMover implements MouseListener, KeyListener {
 
     private static Frame mainFrame;
-    private File dellDir = new File("C:\\tmp\\Aug09");
+    private File dellDir = new File("C:\\tmp\\BB");
     private File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
     private File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
     private File piDir = new File("/home/pi/dev/data");
@@ -99,7 +100,7 @@ public class SlowMover implements MouseListener, KeyListener {
             allFiles = getFiles();
 
             //doPrototype();
-            doPrototypeViewer();
+            doPrototypeSlider();
             //doPrototypeSlider();
             //List<BufferedImage> images = threadedGetImages(files);
 
@@ -133,7 +134,7 @@ public class SlowMover implements MouseListener, KeyListener {
             g.setColor(Color.BLACK);
             bufferStrategy.show();
             g.dispose();
-            //Thread.sleep(2);
+            Thread.sleep(20);
             origin.y--;
         }
     }
@@ -262,18 +263,19 @@ public class SlowMover implements MouseListener, KeyListener {
         }
     }
 
-    private File[] getFiles() {
-        File[] files = picDir.listFiles(new FileFilter() {
-            public boolean accept(File f) {
-                return f.getName().toLowerCase().endsWith(".jpg");
+    private File[] getFiles() throws IOException {
+            FileExtFinder ff = new FileExtFinder(picDir.getAbsolutePath(), "jpg");
+            List<File> ffs = ff.getFiles();
+            
+            if (ffs.size() == 0) {
+                throw new RuntimeException("Bad directory: " + picDir);
             }
-        });
-
-        if (files.length == 0) {
-            throw new RuntimeException("Bad directory: " + picDir);
-        }
-        Arrays.sort(files);
-        return files;
+            File[] files = new File[ffs.size()];
+            for(int i = 0; i < files.length; i++) {
+                files[i] = ffs.get(i);
+            }
+            Arrays.sort(files);
+            return files;
     }
 
     private List<BufferedImage> unthreadedGetImages(File[] files) {
