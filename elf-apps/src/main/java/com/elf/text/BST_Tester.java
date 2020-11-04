@@ -1,6 +1,6 @@
 package com.elf.text;
 
-import static com.elf.algorithms.stdlib.StdRandom.uniform;
+import static com.elf.stdlib.StdRandom.uniform;
 import com.elf.util.sort.BST;
 import com.elf.util.sort.PQ;
 import java.io.BufferedReader;

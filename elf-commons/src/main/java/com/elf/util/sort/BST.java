@@ -21,7 +21,6 @@ package com.elf.util.sort;
  */
 
 import java.util.NoSuchElementException;
-import com.elf.algorithms.stdlib.*;
 
 /**
  * The {@code BST} class represents an ordered symbol table of generic key-value
@@ -625,13 +624,13 @@ public class BST<Key extends Comparable<Key>, Value> {
      */
     private boolean check() {
         if (!isBST()) {
-            StdOut.println("Not in symmetric order");
+            System.out.println("Not in symmetric order");
         }
         if (!isSizeConsistent()) {
-            StdOut.println("Subtree counts not consistent");
+            System.out.println("Subtree counts not consistent");
         }
         if (!isRankConsistent()) {
-            StdOut.println("Ranks not consistent");
+            System.out.println("Ranks not consistent");
         }
         return isBST() && isSizeConsistent() && isRankConsistent();
     }
@@ -695,10 +694,6 @@ public class BST<Key extends Comparable<Key>, Value> {
      */
     public static void main(String[] args) {
         BST<String, Integer> st = new BST<String, Integer>();
-//        for (int i = 0; !StdIn.isEmpty(); i++) {
-//            String key = StdIn.readString();
-//            st.put(key, i);
-//        }
         st.put("C", 2);
         st.put("A", 0);
         st.put("F", 1);
@@ -706,13 +701,13 @@ public class BST<Key extends Comparable<Key>, Value> {
         //st.put("E", 4);
 
         for (String s : st.levelOrder()) {
-            StdOut.println(s + " " + st.get(s));
+            System.out.println(s + " " + st.get(s));
         }
 
-        StdOut.println();
+        System.out.println();
 
         for (String s : st.keys()) {
-            StdOut.println(s + " " + st.get(s));
+            System.out.println(s + " " + st.get(s));
         }
 
         System.out.println("Height: " + st.height());

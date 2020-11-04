@@ -1,4 +1,4 @@
-package elf.algorithms.stdlib;
+package com.elf.stdlib;
 
 /**
  * ***********************************************************************

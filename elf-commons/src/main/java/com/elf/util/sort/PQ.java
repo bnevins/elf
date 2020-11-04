@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.elf.util.sort;
 
 /**
@@ -24,8 +19,6 @@ package com.elf.util.sort;
  *
  *****************************************************************************
  */
-import com.elf.algorithms.stdlib.StdIn;
-import com.elf.algorithms.stdlib.StdOut;
 import java.io.*;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -366,7 +359,7 @@ public class PQ<Key> implements Iterable<Key> {
             if (!item.equals("-")) {
                 pq.insert(item);
             } else if (!pq.isEmpty()) {
-                StdOut.print(pq.delMax() + " ");
+                System.out.println(pq.delMax() + " ");
             }
         }
         System.out.println("(" + pq.size() + " left on pq)");

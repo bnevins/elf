@@ -18,8 +18,8 @@ package com.elf.sandbox;
  *
  *****************************************************************************
  */
-import com.elf.algorithms.stdlib.StdDraw;
-import com.elf.algorithms.stdlib.StdIn;
+import com.elf.stdlib.StdDraw;
+import com.elf.stdlib.StdIn;
 import com.elf.util.sort.MinPQ;
 import java.awt.Color;
 import java.io.BufferedReader;

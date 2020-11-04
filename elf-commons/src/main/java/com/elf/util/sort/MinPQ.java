@@ -5,8 +5,6 @@
  */
 package com.elf.util.sort;
 
-import com.elf.algorithms.stdlib.StdOut;
-
 /**
  *
  * @author bnevns

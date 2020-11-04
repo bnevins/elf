@@ -1,8 +1,7 @@
 package com.elf.util.sort;
 
-import com.elf.algorithms.stdlib.StdRandom;
-import com.elf.algorithms.stdlib.Stopwatch;
 import com.elf.util.Assertion;
+import java.util.Random;
 
 /**
  *
@@ -138,16 +137,17 @@ public class MergeSort implements SortAlgorithm {
         //int[] test = {11, 2, 88, 33, 22, 5, 9, 55, 1};
         final int numInts = 100 * 1000 * 1000;
         int[] toSort = new int[numInts];
+        Random random = new Random(System.currentTimeMillis());
 
         for (int i = 0; i < numInts; i++) {
             // random 0-1 billion
-            toSort[i] = StdRandom.uniform(1000 * 1000 * 1000);
+            toSort[i] = random.nextInt(1000 * 1000 * 1000);
         }
         //int[] test = {88, 33, 24, 11, 90, 60, 70, 80, 100, 88,88,88,88};
-        Stopwatch timer = new Stopwatch();
+        long start = System.currentTimeMillis();
         sorter.setTopDown();
         sorter.sort(toSort);
-        double time = timer.elapsedTime();
+        double time = (System.currentTimeMillis() - start) / 1000.0;
         Assertion.check(sorter.isSorted());
         System.out.printf("%s (%.2f seconds)\n", sorter.getName(), time);
     }
@@ -171,7 +171,4 @@ public class MergeSort implements SortAlgorithm {
             System.out.printf("%s: low=%d, mid=%d, high=%d\n", s, low, mid, high);
         }
     }
-//    private static void debug(String s, int low, int high) {
-//        System.out.printf("%s: low=%d, high=%d\n", s, low, high);
-//    }
 }

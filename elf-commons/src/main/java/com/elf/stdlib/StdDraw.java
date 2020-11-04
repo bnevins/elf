@@ -1,8 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package com.elf.stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdDraw.java
  *  Execution:    java StdDraw
@@ -30,7 +27,6 @@
  *
  ******************************************************************************/
 
-package com.elf.algorithms.stdlib;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -2092,5 +2088,4 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.text(0.8, 0.8, "white text");
     }
-
 }

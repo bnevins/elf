@@ -5,8 +5,8 @@
  */
 package com.elf.text;
 
-import com.elf.algorithms.stdlib.In;
-import com.elf.algorithms.stdlib.StdIn;
+import com.elf.stdlib.In;
+import com.elf.stdlib.StdIn;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

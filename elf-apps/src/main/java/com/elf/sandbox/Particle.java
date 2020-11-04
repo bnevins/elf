@@ -9,7 +9,7 @@
  ***************************************************************************** */
 package com.elf.sandbox;
 
-import com.elf.algorithms.stdlib.*;
+import com.elf.stdlib.*;
 import com.elf.util.StringUtils;
 import java.awt.Color;
 import static java.awt.Color.*;

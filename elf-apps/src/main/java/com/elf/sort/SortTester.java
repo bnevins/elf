@@ -5,8 +5,8 @@
  */
 package com.elf.sort;
 
-import com.elf.algorithms.stdlib.StdRandom;
-import com.elf.algorithms.stdlib.Stopwatch;
+import com.elf.stdlib.StdRandom;
+import com.elf.stdlib.Stopwatch;
 import com.elf.util.Assertion;
 import com.elf.util.sort.SortAlgorithm;
 import com.elf.util.sort.BubbleSort;

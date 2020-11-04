@@ -18,8 +18,8 @@ package com.elf.sandbox;
 
 //package edu.princeton.cs.algs4;
 
-import com.elf.algorithms.stdlib.BinaryStdIn;
-import com.elf.algorithms.stdlib.Picture;
+import com.elf.stdlib.BinaryStdIn;
+import com.elf.stdlib.Picture;
 import java.awt.Color;
 
 
