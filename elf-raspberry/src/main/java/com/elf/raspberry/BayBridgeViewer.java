@@ -19,7 +19,8 @@ import javax.swing.*;
 public class BayBridgeViewer implements MouseListener, KeyListener, ActionListener {
 
     private static Frame mainFrame;
-    private final String dellDir = "C:\\tmp\\BB";
+    private static String home = System.getProperty("user.home");
+    private final String dellDir = home + "\\tmp\\BB";
     private final String megamoDir = "E:\\WORKING\\BayBridge";
     private final String piDir = "/mnt/Photos/BayBridge";
     private final String macDir = "/Users/bnevins/tmp/BB";
@@ -119,7 +120,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     public void paintBridge() {
         try {
             checkCurrentImageNumber();
-            painter.paintBridge(allFiles.get(currentImageNumber).toFile(), imageRec, imageScaledRec, screenRec);
+            painter.paintBridge(allFiles.get(currentImageNumber).toFile(), 
+                    imageRec, imageScaledRec, screenRec);
             currentImageNumber++;
         } catch (Exception e) {
             System.out.println("Got Exception: " + e);
