@@ -19,23 +19,31 @@ class BridgePainter {
 
     private BufferStrategy bufferStrategy;
     private static boolean debug = false;
+    private final Rectangle screenRec;
+    private final Rectangle imageRec;
+    private final Rectangle imageScaledRec;
 
-    BridgePainter(BufferStrategy theBufferStrategy) {
+    BridgePainter(BufferStrategy theBufferStrategy, Rectangle theImageRec, 
+            Rectangle theImageScaledRec, Rectangle theScreenRec) {
         bufferStrategy = theBufferStrategy;
+        screenRec = theScreenRec;
+        imageRec = theImageRec;
+        imageScaledRec = theImageScaledRec;
     }
 
     void toggleDebug() {
         debug = !debug;
     }
 
-    void paintBridge(File image, Rectangle imageRec, Rectangle imageScaledRec, Rectangle screenRec) {
+    void paintBridge(File image) {
         try {
             BufferedImage bi = ImageIO.read(image);
             Graphics g = bufferStrategy.getDrawGraphics();
-            g.clearRect(imageScaledRec.x, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height);
+            //g.clearRect(imageScaledRec.x, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height);
+            g.clearRect(screenRec.x, screenRec.y, screenRec.width, screenRec.height);
             g.drawImage(bi, imageScaledRec.x, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
             Point origin = new Point(0, 100);
-            drawText(g, image, origin, imageRec, imageScaledRec, screenRec);
+            drawText(g, image, origin);
             bufferStrategy.show();
             g.dispose();
         } catch (Exception e) {
@@ -43,7 +51,7 @@ class BridgePainter {
         }
     }
 
-    private void drawText(Graphics g, File image, Point origin, Rectangle imageRec, Rectangle imageScaledRec, Rectangle screenRec) {
+    private void drawText(Graphics g, File image, Point origin) {
         if (!debug) {
             return;
         }
