@@ -46,7 +46,6 @@ public class SlowMover implements MouseListener, KeyListener {
     private static Frame mainFrame;
     private File dellDir = new File("C:\\tmp\\BB");
     private File megamoDir = new File("E:\\WORKING\\BayBridge\\20200921");
-    private File megamoDir2 = new File("P:\\stills\\_collage\\ubest10");
     private File piDir = new File("/home/pi/dev/data");
     private File picDir;
     private int which = 0;
@@ -126,16 +125,15 @@ public class SlowMover implements MouseListener, KeyListener {
         origin = new Point(imageRec.x, imageRec.y);
 
         while (origin.y > -imageRec.height) {
-            Graphics g = bufferStrategy.getDrawGraphics();
+            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
+            g.setBackground(Color.BLACK);
             g.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
             g.drawImage(bi, origin.x, origin.y,
                     imageRec.width, imageRec.height, mainFrame);
-            //g.setFont(font);
-            g.setColor(Color.BLACK);
             bufferStrategy.show();
             g.dispose();
-            Thread.sleep(20);
-            origin.y--;
+            Thread.sleep(10);
+            origin.y -= 1;
         }
     }
 
