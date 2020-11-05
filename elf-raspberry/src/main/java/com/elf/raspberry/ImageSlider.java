@@ -7,6 +7,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -60,6 +62,7 @@ public class ImageSlider {
             screenRec = mainFrame.getBounds();
             bi1 = ImageIO.read(image1);
             bi2 = ImageIO.read(image2);
+            //BufferedImage bi1A = new BufferedImage(0, 0, 0)
             imageRec = new Rectangle(bi1.getWidth(), bi1.getHeight());
             ImageScaler scaler = new ImageScaler(imageRec.width, imageRec.height,
                     screenRec.width, screenRec.height);
@@ -71,6 +74,13 @@ public class ImageSlider {
             mainFrame.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
+                    mainFrame.dispose();
+                    System.exit(0);
+                }
+            });
+            mainFrame.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
                     mainFrame.dispose();
                     System.exit(0);
                 }
