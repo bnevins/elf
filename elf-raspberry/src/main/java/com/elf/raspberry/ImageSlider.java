@@ -113,23 +113,27 @@ public class ImageSlider {
     public void paint() throws IOException {
         int ht = bi1A.getHeight();
         
-        for(int i = 0; i < ht; i++) {
+        for(int i = 0; i < ht; i += 20) {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.drawImage(bi1A, 0, -i, null);
         g.drawImage(bi2A, 0, ht-i, null);
         bufferStrategy.show();
         g.dispose();
-            try {
+            /**
+             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
             }
+            * **/
         }
     }
 
     public static void main(String[] args) {
-        File file1 = new File("C:/Users/biz/tmp/bb/20201030/BB_2020_1030_1458.jpg");
-        File file2 = new File("C:/Users/biz/tmp/bb/20201030/BB_2020_1031_0208.jpg");
+        //File file1 = new File("C:/Users/biz/tmp/bb/20201030/BB_2020_1030_1458.jpg");
+        //File file2 = new File("C:/Users/biz/tmp/bb/20201030/BB_2020_1031_0208.jpg");
+        File file1 = new File("E:/WORKING/BayBridge/20201030/BB_2020_1030_1458.jpg");
+        File file2 = new File("E:/WORKING/BayBridge/20201030/BB_2020_1031_0208.jpg");
         SwingUtilities.invokeLater(() -> {
             try {
                 ImageSlider is = new ImageSlider();
