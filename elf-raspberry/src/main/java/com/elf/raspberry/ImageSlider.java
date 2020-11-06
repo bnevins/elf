@@ -109,16 +109,20 @@ public class ImageSlider {
     }
 
     public void paint() throws IOException {
-        int ht = bi1A.getHeight();
-
-        for (int i = 0; i < ht; i += 1) {
+        int screenHt = screenRec.height;
+        int topOffset = imageScaledRec.y;
+        int imageWidth = imageScaledRec.width;
+        int imageHt = imageScaledRec.height;
+        
+        for (int i = 0; i < screenHt; i += 1) {
             Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-            g.drawImage(bi1A, 0, -i, null);
-            g.drawImage(bi2A, 0, ht - i, null);
+            // important!  draw bottom before first to clip off top of bottom image!!
+            g.drawImage(bi2, 0, topOffset - i + screenHt, imageWidth, imageHt, null);
+            g.drawImage(bi1, 0, topOffset - i, imageWidth, imageHt, null);
             bufferStrategy.show();
             g.dispose();
             try {
-                //Thread.sleep(1);
+                Thread.sleep(10);
             } catch (Exception ex) {
                 Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
             }
