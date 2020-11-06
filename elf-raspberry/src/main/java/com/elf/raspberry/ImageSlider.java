@@ -75,7 +75,6 @@ public class ImageSlider {
 
             ////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
-            
             bi1A = new BufferedImage(screenRec.width, screenRec.height, bi1.getType());
             Graphics2D g = (Graphics2D) bi1A.getGraphics();
             g.drawImage(bi1, imageScaledRec.x, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
@@ -88,7 +87,6 @@ public class ImageSlider {
 
             ////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
-
             mainFrame.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -112,28 +110,26 @@ public class ImageSlider {
 
     public void paint() throws IOException {
         int ht = bi1A.getHeight();
-        
-        for(int i = 0; i < ht; i += 20) {
-        Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-        g.drawImage(bi1A, 0, -i, null);
-        g.drawImage(bi2A, 0, ht-i, null);
-        bufferStrategy.show();
-        g.dispose();
-            /**
-             try {
-                Thread.sleep(10);
+
+        for (int i = 0; i < ht; i += 1) {
+            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
+            g.drawImage(bi1A, 0, -i, null);
+            g.drawImage(bi2A, 0, ht - i, null);
+            bufferStrategy.show();
+            g.dispose();
+            try {
+                Thread.sleep(1);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
             }
-            * **/
+
         }
     }
 
     public static void main(String[] args) {
-        //File file1 = new File("C:/Users/biz/tmp/bb/20201030/BB_2020_1030_1458.jpg");
-        //File file2 = new File("C:/Users/biz/tmp/bb/20201030/BB_2020_1031_0208.jpg");
-        File file1 = new File("E:/WORKING/BayBridge/20201030/BB_2020_1030_1458.jpg");
-        File file2 = new File("E:/WORKING/BayBridge/20201030/BB_2020_1031_0208.jpg");
+        final String home = System.getProperty("user.home").replace('\\', '/');
+        File file1 = new File(home + "/tmp/bb/day.jpg");
+        File file2 = new File(home + "/tmp/bb/night.jpg");
         SwingUtilities.invokeLater(() -> {
             try {
                 ImageSlider is = new ImageSlider();
