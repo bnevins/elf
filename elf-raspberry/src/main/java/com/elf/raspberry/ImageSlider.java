@@ -118,8 +118,26 @@ public class ImageSlider {
             bufferStrategy.show();
             g.dispose();
             try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
+                //Thread.sleep(1);
+            } catch (Exception ex) {
+                Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+
+    public void paintx() throws IOException {
+        int ht = bi1A.getHeight();
+
+        for (int i = 0; i < ht; i += 1) {
+            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
+            g.drawImage(bi1A, 0, -i, null);
+            g.drawImage(bi2A, 0, ht - i, null);
+            bufferStrategy.show();
+            g.dispose();
+            try {
+                //Thread.sleep(1);
+            } catch (Exception ex) {
                 Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
             }
 

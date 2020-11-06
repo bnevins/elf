@@ -19,11 +19,11 @@ import javax.swing.*;
 public class BayBridgeViewer implements MouseListener, KeyListener, ActionListener {
 
     private static Frame mainFrame;
-    private static String home = System.getProperty("user.home");
-    private final String dellDir = home + "\\tmp\\BB";
+    private static String defDir = System.getProperty("user.home") + "/tmp/BB";
+    private final String dellDir = defDir;
     private final String megamoDir = "E:\\WORKING\\BayBridge";
     private final String piDir = "/mnt/Photos/BayBridge";
-    private final String macDir = "/Users/bnevins/tmp/BB";
+    private final String macDir = defDir;
     private String picDir;
     private volatile int currentImageNumber = 0;
     private BufferStrategy bufferStrategy;
