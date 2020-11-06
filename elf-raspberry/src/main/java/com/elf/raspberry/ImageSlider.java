@@ -36,8 +36,6 @@ public class ImageSlider {
     private Rectangle imageScaledRec;
     private BufferedImage bi1;
     private BufferedImage bi2;
-    private BufferedImage bi1A;
-    private BufferedImage bi2A;
     private Frame mainFrame;
 
     public ImageSlider() {
@@ -72,21 +70,6 @@ public class ImageSlider {
             scaler.setClipFromTopOnly(true);
             scaler.setDebug(false);
             imageScaledRec = scaler.scale();
-
-            ////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////
-            bi1A = new BufferedImage(screenRec.width, screenRec.height, bi1.getType());
-            Graphics2D g = (Graphics2D) bi1A.getGraphics();
-            g.drawImage(bi1, imageScaledRec.x, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
-            g.dispose();
-
-            bi2A = new BufferedImage(screenRec.width, screenRec.height, bi2.getType());
-            g = (Graphics2D) bi2A.getGraphics();
-            g.drawImage(bi2, imageScaledRec.x, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
-            g.dispose();
-
-            ////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////
             mainFrame.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -123,24 +106,6 @@ public class ImageSlider {
             g.dispose();
             try {
                 Thread.sleep(10);
-            } catch (Exception ex) {
-                Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-    }
-
-    public void paintx() throws IOException {
-        int ht = bi1A.getHeight();
-
-        for (int i = 0; i < ht; i += 1) {
-            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-            g.drawImage(bi1A, 0, -i, null);
-            g.drawImage(bi2A, 0, ht - i, null);
-            bufferStrategy.show();
-            g.dispose();
-            try {
-                //Thread.sleep(1);
             } catch (Exception ex) {
                 Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
             }
