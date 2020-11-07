@@ -25,7 +25,8 @@ public class ImageSlider {
     private final Rectangle screenRec;
     private final Rectangle imageScaledRec;
     private int delay = 5;
-    
+    private int columnRowIncrement = 10;
+
     public ImageSlider(BufferStrategy bufferStrategy, BufferedImage curr, BufferedImage next, Rectangle screenRec, Rectangle imageScaledRec) {
         this.bufferStrategy = bufferStrategy;
         this.curr = curr;
@@ -33,22 +34,71 @@ public class ImageSlider {
         this.screenRec = screenRec;
         this.imageScaledRec = imageScaledRec;
     }
+
     public ImageSlider(int delay, BufferStrategy bufferStrategy, BufferedImage curr, BufferedImage next, Rectangle screenRec, Rectangle imageScaledRec) {
         this(bufferStrategy, curr, next, screenRec, imageScaledRec);
         this.delay = delay;
     }
 
-    public void paint() throws IOException {
+    public void slideRight() throws IOException {
+        slideHorizontal(true);
+    }
 
-        for (int i = 0; i < screenRec.height; i += 1) {
+    public void slideLeft() throws IOException {
+        slideHorizontal(false);
+    }
+
+    public void slideUp() throws IOException {
+        slideVertical(true);
+    }
+
+    public void slideDown() throws IOException {
+        slideVertical(false);
+    }
+    //////////////////////////////////////////////////////////////////////////////
+
+    private void slideVertical(boolean up) throws IOException {
+
+        for (int i = 0; i <= screenRec.height; i += columnRowIncrement) {
             Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-            // important!  draw bottom before first to clip off top of bottom image!!
-            g.drawImage(next, 0, imageScaledRec.y - i + screenRec.height, imageScaledRec.width, imageScaledRec.height, null);
-            g.drawImage(curr, 0, imageScaledRec.y - i, imageScaledRec.width, imageScaledRec.height, null);
+            if (up) {
+                // important!  draw next before curr to clip off top of next image!!
+                g.drawImage(next, 0, imageScaledRec.y - i + screenRec.height, imageScaledRec.width, imageScaledRec.height, null);
+                g.drawImage(curr, 0, imageScaledRec.y - i, imageScaledRec.width, imageScaledRec.height, null);
+            } else { // down
+                // important!  draw curr before next to clip off top of next image!!
+                g.drawImage(curr, 0, imageScaledRec.y + i, imageScaledRec.width, imageScaledRec.height, null);
+                g.drawImage(next, 0, imageScaledRec.y + i - screenRec.height, imageScaledRec.width, imageScaledRec.height, null);
+            }
             bufferStrategy.show();
             g.dispose();
             try {
                 Thread.sleep(delay);
+            } catch (Exception ex) {
+                Logger.getLogger(ImageSliderTester.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+
+    private void slideHorizontal(boolean right) throws IOException {
+
+        for (int i = 0; i <= screenRec.width; i += columnRowIncrement) {
+            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
+            // important!  draw bottom before first to clip off top of bottom image!!
+            if (right) {
+                g.drawImage(curr, i, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
+                g.drawImage(next, i - screenRec.width, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
+            } else {
+                g.drawImage(curr, -i, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
+                g.drawImage(next, screenRec.width - i, imageScaledRec.y, imageScaledRec.width, imageScaledRec.height, null);
+            }
+            bufferStrategy.show();
+            g.dispose();
+            try {
+                if (delay > 0) {
+                    Thread.sleep(delay);
+                }
             } catch (Exception ex) {
                 Logger.getLogger(ImageSliderTester.class.getName()).log(Level.SEVERE, null, ex);
             }

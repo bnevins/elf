@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
 /**
  * @author bnevins
  */
-public class ImageSlider {
+public class ImageSliderTester {
 
     //private static Frame mainFrame;
     private BufferStrategy bufferStrategy;
@@ -38,7 +38,7 @@ public class ImageSlider {
     private BufferedImage bi2;
     private Frame mainFrame;
 
-    public ImageSlider() {
+    public ImageSliderTester() {
     }
 
     public void init(File image1, File image2) {
@@ -57,7 +57,7 @@ public class ImageSlider {
             });
 
             device.setFullScreenWindow(mainFrame);
-            mainFrame.createBufferStrategy(2);
+            mainFrame.createBufferStrategy(4);
             bufferStrategy = mainFrame.getBufferStrategy();
             screenRec = mainFrame.getBounds();
             bi1 = ImageIO.read(image1);
@@ -86,30 +86,23 @@ public class ImageSlider {
             });
 
         } catch (IOException ex) {
-            Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImageSliderTester.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
     }
 
     public void paint() throws IOException {
-        int screenHt = screenRec.height;
-        int topOffset = imageScaledRec.y;
-        int imageWidth = imageScaledRec.width;
-        int imageHt = imageScaledRec.height;
-        
-        for (int i = 0; i < screenHt; i += 1) {
-            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-            // important!  draw bottom before first to clip off top of bottom image!!
-            g.drawImage(bi2, 0, topOffset - i + screenHt, imageWidth, imageHt, null);
-            g.drawImage(bi1, 0, topOffset - i, imageWidth, imageHt, null);
-            bufferStrategy.show();
-            g.dispose();
-            try {
-                Thread.sleep(10);
-            } catch (Exception ex) {
-                Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+        try {
+            ImageSlider slider = new ImageSlider(0, bufferStrategy, bi1, bi2, screenRec, imageScaledRec);
+            slider.slideDown();
+            Thread.sleep(100);
+            slider.slideRight();
+            Thread.sleep(100);
+            slider.slideUp();
+            Thread.sleep(100);
+            slider.slideLeft();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ImageSliderTester.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -119,11 +112,11 @@ public class ImageSlider {
         File file2 = new File(home + "/tmp/bb/night.jpg");
         SwingUtilities.invokeLater(() -> {
             try {
-                ImageSlider is = new ImageSlider();
+                ImageSliderTester is = new ImageSliderTester();
                 is.init(file1, file2);
                 is.paint();
             } catch (IOException ex) {
-                Logger.getLogger(ImageSlider.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImageSliderTester.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(1);
             }
         });
