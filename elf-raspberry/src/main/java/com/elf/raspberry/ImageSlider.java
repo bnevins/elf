@@ -25,7 +25,7 @@ public class ImageSlider {
     private final Rectangle screenRec;
     private final Rectangle imageScaledRec;
     private int delay = 5;
-    private int columnRowIncrement = 10;
+    private int columnRowIncrement = 1;
 
     public ImageSlider(BufferStrategy bufferStrategy, BufferedImage curr, BufferedImage next, Rectangle screenRec, Rectangle imageScaledRec) {
         this.bufferStrategy = bufferStrategy;

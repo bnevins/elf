@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.elf</groupId>
+        <artifactId>elf-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>elf-jfx</artifactId>
+    <packaging>jar</packaging>
+    <name>Elf JFX</name>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    <dependencies>
+        <!--dependency>
+            <groupId>com.elf</groupId>
+            <artifactId>elf-algorithms</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency-->
+    </dependencies>
+    <properties>
+        <maven.compiler.source>1.15</maven.compiler.source>
+        <maven.compiler.target>1.15</maven.compiler.target>
+    </properties>
+</project>
