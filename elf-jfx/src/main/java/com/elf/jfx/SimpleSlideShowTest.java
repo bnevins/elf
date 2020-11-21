@@ -45,9 +45,9 @@ public class SimpleSlideShowTest extends Application{
           slide.setPreserveRatio(true);
         SequentialTransition sequentialTransition = new SequentialTransition();
 
-        FadeTransition fadeIn = getFadeTransition(slide, 0.5, 1.0, 500);
+        FadeTransition fadeIn = getFadeTransition(slide, 0.5, 1.0, 3500);
         PauseTransition stayOn = new PauseTransition(Duration.millis(2000));
-        FadeTransition fadeOut = getFadeTransition(slide, 1.0, 0.5, 500);
+        FadeTransition fadeOut = getFadeTransition(slide, 1.0, 0.5, 3500);
 
         sequentialTransition.getChildren().addAll(fadeIn, stayOn, fadeOut);
         slide.setOpacity(0);
