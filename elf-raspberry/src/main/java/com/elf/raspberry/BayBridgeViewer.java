@@ -22,7 +22,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private static String defDir = System.getProperty("user.home") + "/tmp/BB";
     private final String dellDir = defDir;
     private final String megamoDir = "E:\\WORKING\\BayBridge";
-    private final String piDir = "/media/pi/Photos/BayBridge";
+    private final String piDir = "/mnt/BBX/BayBridge";
+    //private final String piDir = "/media/pi/Photos/BayBridge";
     private final String macDir = defDir;
     private String picDir;
     private volatile int currentImageNumber = 0;
@@ -70,6 +71,8 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
                     System.exit(0);
                 }
             });
+            System.out.println("Fetching Files...");
+            allFiles = getFiles();
             timer = new Timer(delay, this);
             timer.setInitialDelay(0);
             device.setFullScreenWindow(mainFrame);
@@ -77,7 +80,6 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             System.out.println("BOUNDS: " + screenRec);
             mainFrame.createBufferStrategy(2);
             bufferStrategy = mainFrame.getBufferStrategy();
-            allFiles = getFiles();
             currentImageNumber = 0;
 
             // ALL photos are exactly the same size so do this just ONCE!
@@ -92,6 +94,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -129,6 +132,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     }
 
     private List<Path> getFiles() throws IOException {
+        File f = new File(picDir);
         java.util.List<Path> paths = com.elf.raspberry.FileLister.getFiles(picDir);
 
         if (paths.isEmpty()) {
