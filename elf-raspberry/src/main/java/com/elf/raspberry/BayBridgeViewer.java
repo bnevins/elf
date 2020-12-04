@@ -22,7 +22,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     private static String defDir = System.getProperty("user.home") + "/tmp/BB";
     private final String dellDir = defDir;
     private final String megamoDir = "E:\\WORKING\\BayBridge";
-    private final String piDir = "/mnt/BBX/BayBridge";
+    private final String piDir = "/mnt/BB/BayBridge";
     //private final String piDir = "/media/pi/Photos/BayBridge";
     private final String macDir = defDir;
     private String picDir;
@@ -93,7 +93,7 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
             start();
         } catch (Exception e) {
             System.out.println(e);
-            e.printStackTrace();
+            //e.printStackTrace();
             System.exit(1);
         }
     }
