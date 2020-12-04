@@ -1,5 +1,8 @@
 package com.elf.raspberry;
 
+import com.elf.args.Arg;
+import com.elf.args.ArgProcessor;
+import com.elf.args.BoolArg;
 import java.util.List;
 import javax.swing.Timer;
 import java.awt.*;
@@ -10,6 +13,7 @@ import javax.imageio.ImageIO;
 import com.elf.util.OS;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Map;
 import javax.swing.*;
 
 /**
@@ -17,6 +21,15 @@ import javax.swing.*;
  * @author bnevns
  */
 public class BayBridgeViewer implements MouseListener, KeyListener, ActionListener {
+
+    Map<String, String> params;
+    List<String> operands;
+    private final static Arg[] argDescriptions = new Arg[]{
+        //new BoolArg("verbose", "v", false, "Verbose Output"),
+        //new BoolArg("dryRun", "n", false, "Dry Run.  Do NOT do the actual renaming"),
+        new BoolArg("help", "h", false, "Help"),
+        //new BoolArg("seconds", "s", false, "Seconds -- put seconds in the filename"),
+        new Arg("delay", "d", "", "Delay in seconds between slides"),};
 
     private static Frame mainFrame;
     private static String defDir = System.getProperty("user.home") + "/tmp/BB";
@@ -32,15 +45,49 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
     GraphicsDevice device;
     private static final boolean debug = true;
     Timer timer = null;
-    private final int delay = 5000; // 5 seconds
+    private int delay = 5000; // 5 seconds
     private BridgePainter painter;
     private Rectangle imageScaledRec;
     private Rectangle imageRec;
     private Rectangle screenRec;
 
+    public BayBridgeViewer(Map<String, String> params, List<String> operands) {
+        this.params = params;
+        this.operands = operands;
+
+        // delete me!
+        boolean help = Boolean.parseBoolean(params.get("help"));
+        if (help) {
+            usage();
+            System.exit(0);
+        }
+
+        String delayS = params.get("delay");
+        if (delayS != null) {
+            try {
+                int delayProposed = Integer.parseInt(delayS);
+                if (delayProposed > 0) {
+                    delay = delayProposed * 1000;
+                }
+            } catch (NumberFormatException nfe) {
+                // ignore -- use default...
+            }
+        }
+    }
+
+    private static void usage() {
+        System.out.println("BayBridgeViewer [filedir]");
+        System.out.println("");
+        System.out.println(Arg.toHelp(argDescriptions));
+    }
+
     public static void main(String[] args) {
+        ArgProcessor proc = new ArgProcessor(argDescriptions, args);
+        final Map<String, String> params = proc.getParams();
+        final List<String> operands = proc.getOperands();
+
         SwingUtilities.invokeLater(() -> {
-            new BayBridgeViewer().initialize();
+            new BayBridgeViewer(params, operands).initialize();
         });
     }
 
@@ -56,7 +103,9 @@ public class BayBridgeViewer implements MouseListener, KeyListener, ActionListen
         } else {
             picDir = null;
         }
-
+        if(!operands.isEmpty()) {
+            picDir = operands.get(0);
+        }
         try {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             device = env.getDefaultScreenDevice();
