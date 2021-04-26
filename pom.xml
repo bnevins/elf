@@ -11,7 +11,7 @@
        <modules>
         <module>elf-apps</module>
         <module>elf-commons</module>
-        <module>elf-web</module>
+        <!--<module>elf-web</module>-->
         <module>elf-gf</module>
         <module>elf-raspberry</module>
     	<module>elf-jfx</module>
