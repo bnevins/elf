@@ -232,14 +232,10 @@ public class CollisionSystem {
             }
         } // or read from standard input
         else {
-            if(args.length == 2) {
-                // just take second arg...
-                filename = args[1];
-            }
             String[] particleDescriptions;
-            
-            if(filename != null)
-                particleDescriptions = readParticleDescriptions(filename);
+            if(args.length == 2 && args[0].equalsIgnoreCase("-f")) {
+                particleDescriptions = readParticleDescriptions(args[1]);
+            }
             else // standard input
                 particleDescriptions = readParticleDescriptions();
             
@@ -278,10 +274,8 @@ public class CollisionSystem {
             ArrayList<String> ss = new ArrayList<>();
 
             for (String s = br.readLine(); s != null; s = br.readLine()) {
-                if(s.length() < 9)
-                    continue;
-                // comment
-                if(s.contains("/"))
+                // skip comments...
+                if(s.length() < 9 || s.contains("/"))
                     continue;
                 ss.add(s);
             }

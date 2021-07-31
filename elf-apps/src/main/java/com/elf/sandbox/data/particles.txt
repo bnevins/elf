@@ -1,0 +1,3 @@
+// rx ry vx vy radius mass r g b
+//
+0 0 .001 .001 .02 .5 255 128 0
