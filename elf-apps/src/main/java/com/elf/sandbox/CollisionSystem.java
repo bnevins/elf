@@ -209,8 +209,7 @@ public class CollisionSystem {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        String filename = null;
-        StdDraw.setCanvasSize(600, 600);
+     StdDraw.setCanvasSize(600, 600);
 
         // enable double buffering
         StdDraw.enableDoubleBuffering();

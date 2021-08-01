@@ -1,1 +1,1 @@
-java com.elf.sandbox.CollisionSystem -f %1
+java com.elf.sandbox.CollisionSystem -f data/%1.txt
