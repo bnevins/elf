@@ -38,7 +38,7 @@ public class Particle {
     private double radius;  // radius
     private double mass;    // mass
     private Color color;    // color
-    private final static boolean debug = false;
+    private final static boolean debug = true;
 
     /**
      * Initializes a particle with the specified position, velocity, radius,
