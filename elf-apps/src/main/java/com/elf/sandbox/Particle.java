@@ -407,8 +407,9 @@ public class Particle {
 
     public String toString(Particle that) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("this: (%5.3f, %5.3f) Vx=%5.3f  Vy=%5.3f\n", this.rx, this.ry, this.vx, this.vy));
+        sb.append(String.format("this: (%5.3f, %5.3f) Radius=%8.5f Mass=%10.2f  Vx=%5.3f  Vy=%5.3f\n", this.rx, this.ry, radius, mass, this.vx, this.vy));
         sb.append(String.format("that: (%5.3f, %5.3f) Vx=%5.3f  Vy=%5.3f\n", that.rx, that.ry, that.vx, that.vy));
+        
         return sb.toString();
 //        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.7f, vy: %5.7f, energy: "
 //                + "%.2e, momentum: %.2e, radius: %5.3f, mass: %5.3f, color: %s, count: %d",
