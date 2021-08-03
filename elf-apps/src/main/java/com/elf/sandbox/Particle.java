@@ -405,9 +405,27 @@ public class Particle {
 
     }
 
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    
+    // HUGE BUG!  that versus this...
+    
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     public String toString(Particle that) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("this: (%5.3f, %5.3f) Radius=%8.5f Mass=%10.2f  Vx=%5.3f  Vy=%5.3f\n", this.rx, this.ry, radius, mass, this.vx, this.vy));
+         sb.append(String.format("Radius=%4.2f Mass=%5.2f "
+                + "Color=(%3s,%3s,%3s) "
+                + "position=(%3f, %5.3f) Vx=%5.3f  Vy=%5.3f"
+                + " Energy=%.2e Momentum=%.2e\n", 
+                radius, mass, 
+                color.getRed(), color.getGreen(), color.getBlue(), 
+                this.rx, this.ry, 
+                this.vx, this.vy,
+                kineticEnergy(), momentum()));
+        
         sb.append(String.format("that: (%5.3f, %5.3f) Vx=%5.3f  Vy=%5.3f\n", that.rx, that.ry, that.vx, that.vy));
         
         return sb.toString();
