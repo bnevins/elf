@@ -254,12 +254,7 @@ public class Particle {
      * @param that the other particle
      */
     public void bounceOff(Particle that) {
-        debug(toString(that));
-
-        debug("============================= THIS =============================");
-        debug(this.toString());
-        debug("============================= THAT =============================");
-        debug(that.toString());
+        debug("THIS ==>> " + toString(this) + "THAT ==>> " + toString(that));
         double dx = that.rx - this.rx;
         double dy = that.ry - this.ry;
         double dvx = that.vx - this.vx;
@@ -274,10 +269,10 @@ public class Particle {
         double fx = magnitude * dx / dist;
         double fy = magnitude * dy / dist;
 
-        String saveThisBefore = "this before: " + this;
-        String saveThatBefore = "that before: " + that;
-        double energyBefore = this.kineticEnergy() + that.kineticEnergy();
-        double momentumBefore = this.momentum() + that.momentum();
+        //String saveThisBefore = "this before: " + this;
+//        String saveThatBefore = "that before: " + that;
+//        double energyBefore = this.kineticEnergy() + that.kineticEnergy();
+//        double momentumBefore = this.momentum() + that.momentum();
         double[] speeds = calculate1DVelocity(that);
         double[] speeds2 = calculate2DVelocity(that);
         // update velocities according to normal force
@@ -308,7 +303,7 @@ public class Particle {
 //        if (totaldiff > 0.00000001) {
 //            throw new RuntimeException("Total Difference too high: " + totaldiff);
 //        }
-    }
+     }
 
     /**
      * Updates the velocity of this particle upon collision with a vertical wall
@@ -399,39 +394,21 @@ public class Particle {
 
     @Override
     public String toString() {
-        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.7f, vy: %5.7f, energy: "
-                + "%.2e, momentum: %.2e, radius: %5.3f, mass: %5.3f, color: %s, count: %d",
-                rx, ry, vx, vy, kineticEnergy(), momentum(), radius, mass, color, count);
-
+       return toString(this);
     }
 
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    
-    // HUGE BUG!  that versus this...
-    
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    public String toString(Particle that) {
+    public static String toString(Particle particle) {
         StringBuilder sb = new StringBuilder();
          sb.append(String.format("Radius=%4.2f Mass=%5.2f "
                 + "Color=(%3s,%3s,%3s) "
                 + "position=(%3f, %5.3f) Vx=%5.3f  Vy=%5.3f"
                 + " Energy=%.2e Momentum=%.2e\n", 
-                radius, mass, 
-                color.getRed(), color.getGreen(), color.getBlue(), 
-                this.rx, this.ry, 
-                this.vx, this.vy,
-                kineticEnergy(), momentum()));
-        
-        sb.append(String.format("that: (%5.3f, %5.3f) Vx=%5.3f  Vy=%5.3f\n", that.rx, that.ry, that.vx, that.vy));
+                particle.radius, particle.mass, 
+                particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(), 
+                particle.rx, particle.ry, 
+                particle.vx, particle.vy,
+                particle.kineticEnergy(), particle.momentum()));
         
         return sb.toString();
-//        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.7f, vy: %5.7f, energy: "
-//                + "%.2e, momentum: %.2e, radius: %5.3f, mass: %5.3f, color: %s, count: %d",
-//                rx, ry, vx, vy, kineticEnergy(), momentum(), radius, mass, color, count);
-
     }
 }

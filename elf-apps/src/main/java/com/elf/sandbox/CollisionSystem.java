@@ -91,7 +91,7 @@ public class CollisionSystem {
     // redraw all particles
     private void redraw(double limit) {
         StdDraw.clear();
-        for (int i = 0; i < particles.length; i++) {
+           for (int i = 0; i < particles.length; i++) {
             particles[i].draw();
         }
         StdDraw.show();
@@ -134,7 +134,7 @@ public class CollisionSystem {
 
             // process event
             if (a != null && b != null) {
-                a.bounceOff(b);              // particle-particle collision
+                 a.bounceOff(b);              // particle-particle collision
             } else if (a != null && b == null) {
                 a.bounceOffVerticalWall();   // particle-wall collision
             } else if (a == null && b != null) {
@@ -209,7 +209,7 @@ public class CollisionSystem {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-     StdDraw.setCanvasSize(600, 600);
+      StdDraw.setCanvasSize(600, 600);
 
         // enable double buffering
         StdDraw.enableDoubleBuffering();
