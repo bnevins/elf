@@ -38,7 +38,7 @@ public class Particle {
     private double radius;  // radius
     private double mass;    // mass
     private Color color;    // color
-    private final static boolean debug = false;
+    private final static boolean debug = true;
 
     /**
      * Initializes a particle with the specified position, velocity, radius,
@@ -175,11 +175,11 @@ public class Particle {
 
     /**
      * Returns the amount of time for this particle to collide with the
-     * specified particle, assuming no interening collisions.
+     * specified particle, assuming no intervening collisions.
      *
      * @param that the other particle
      * @return the amount of time for this particle to collide with the
-     * specified particle, assuming no interening collisions;
+     * specified particle, assuming no intervening collisions;
      * {@code Double.POSITIVE_INFINITY} if the particles will not collide
      */
     public double timeToHit(Particle that) {
@@ -210,11 +210,12 @@ public class Particle {
 
     /**
      * Returns the amount of time for this particle to collide with a vertical
-     * wall, assuming no interening collisions.
+     * wall, assuming no intervening collisions.
      *
      * @return the amount of time for this particle to collide with a vertical
-     * wall, assuming no interening collisions; {@code Double.POSITIVE_INFINITY}
-     * if the particle will not collide with a vertical wall
+     * wall, assuming no intervening collisions;
+     * {@code Double.POSITIVE_INFINITY} if the particle will not collide with a
+     * vertical wall
      */
     public double timeToHitVerticalWall() {
         if (vx > 0) {
@@ -228,11 +229,12 @@ public class Particle {
 
     /**
      * Returns the amount of time for this particle to collide with a horizontal
-     * wall, assuming no interening collisions.
+     * wall, assuming no intervening collisions.
      *
      * @return the amount of time for this particle to collide with a horizontal
-     * wall, assuming no interening collisions; {@code Double.POSITIVE_INFINITY}
-     * if the particle will not collide with a horizontal wall
+     * wall, assuming no intervening collisions;
+     * {@code Double.POSITIVE_INFINITY} if the particle will not collide with a
+     * horizontal wall
      */
     public double timeToHitHorizontalWall() {
         if (vy > 0) {
@@ -252,6 +254,7 @@ public class Particle {
      * @param that the other particle
      */
     public void bounceOff(Particle that) {
+        debug("THIS ==>> " + toString(this) + "THAT ==>> " + toString(that));
         double dx = that.rx - this.rx;
         double dy = that.ry - this.ry;
         double dvx = that.vx - this.vx;
@@ -266,10 +269,10 @@ public class Particle {
         double fx = magnitude * dx / dist;
         double fy = magnitude * dy / dist;
 
-        String saveThisBefore = "this before: " + this;
-        String saveThatBefore = "that before: " + that;
-        double energyBefore = this.kineticEnergy() + that.kineticEnergy();
-        double momentumBefore = this.momentum() + that.momentum();
+        //String saveThisBefore = "this before: " + this;
+//        String saveThatBefore = "that before: " + that;
+//        double energyBefore = this.kineticEnergy() + that.kineticEnergy();
+//        double momentumBefore = this.momentum() + that.momentum();
         double[] speeds = calculate1DVelocity(that);
         double[] speeds2 = calculate2DVelocity(that);
         // update velocities according to normal force
@@ -285,21 +288,22 @@ public class Particle {
         double totaldiff = Math.abs(this.vx - speeds[0]) + Math.abs(that.vx - speeds[1]);
         double energyAfter = this.kineticEnergy() + that.kineticEnergy();
         double momentumAfter = this.momentum() + that.momentum();
-        //debug("difference between starting and ending energy: " + Math.abs(energyAfter - energyBefore));
-        debug("Momentum Before: " + momentumBefore + ", After: " + momentumAfter);
-        debug("Energy Before: " + energyBefore + ", After: " + energyAfter);
-        //debug("Total difference in speed from my 1Dcalculation: : " + totaldiff + "");
-        debug(saveThisBefore);
-        debug("this after: " + this);
-        debug(saveThatBefore);
-        debug("that after: " + that);
-        debug("");
-        debug("Calculated 2D: vx1 = " + speeds2[0] + " vy1 = " + speeds2[1] + 
-                "Calculated 2D: vx2 = " + speeds2[2] + "Calculated 2D: vy2 = " + speeds2[3]);
+        //difference between starting and ending energy: " + Math.abs(energyAfter - energyBefore));
+//        debug("Momentum Before: " + momentumBefore + ", After: " + momentumAfter);
+//        debug("Energy Before: " + energyBefore + ", After: " + energyAfter);
+//        Energy Before: " + energyBefore + ", After: " +ATnergyAfter);
+//       /        //debug("Total difference in speed from my 1Dcalculation: : " + totaldiff + "");
+//        debug(saveThisBefore);
+//        debug("this after: " + this);
+//        debug(saveThatBefore);
+//        debug("that after: " + that);
+//        debug("");
+//        debug("Calculated 2D: vx1 = " + speeds2[0] + " vy1 = " + speeds2[1] + 
+//                "Calculated 2D: vx2 = " + speeds2[2] + "Calculated 2D: vy2 = " + speeds2[3]);
 //        if (totaldiff > 0.00000001) {
 //            throw new RuntimeException("Total Difference too high: " + totaldiff);
 //        }
-    }
+     }
 
     /**
      * Updates the velocity of this particle upon collision with a vertical wall
@@ -345,7 +349,7 @@ public class Particle {
         part1 = 2 * this.mass / (this.mass + that.mass) * (this.vx);
         part2 = (that.mass - this.mass) / (this.mass + that.mass) * (that.vx);
         answer[1] = part1 + part2;
-        debug("My 1D calcs: vx1 = " + answer[0] + ", vx2 = " + answer[1]);
+//        debug("My 1D calcs: vx1 = " + answer[0] + ", vx2 = " + answer[1]);
 //        debug("This Momemtum - before = " + (this.vx * this.mass) + ", After: "+ (answer[0] * this.mass));
 //        debug("That Momemtum - before = " + (that.vx * that.mass) + ", After: "+ (answer[1] * that.mass));
 //        debug("Total Momemtum - before = " + ((this.vx * this.mass) +  (that.vx * that.mass)));
@@ -378,7 +382,6 @@ public class Particle {
         return speeds;
     }
 
-
     private void debug(String s) {
         if (debug) {
             System.out.println(s);
@@ -391,10 +394,21 @@ public class Particle {
 
     @Override
     public String toString() {
-        return String.format("rx: %5.3f, ry: %5.3f, vx: %5.7f, vy: %5.7f, energy: "
-                + "%.2e, momentum: %.2e, radius: %5.3f, mass: %5.3f, color: %s, count: %d",
-                rx, ry, vx, vy, kineticEnergy(), momentum(), radius, mass, color, count);
-
+       return toString(this);
     }
 
+    public static String toString(Particle particle) {
+        StringBuilder sb = new StringBuilder();
+         sb.append(String.format("Radius=%4.2f Mass=%5.2f "
+                + "Color=(%3s,%3s,%3s) "
+                + "position=(%3f, %5.3f) Vx=%5.3f  Vy=%5.3f"
+                + " Energy=%.2e Momentum=%.2e\n", 
+                particle.radius, particle.mass, 
+                particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(), 
+                particle.rx, particle.ry, 
+                particle.vx, particle.vy,
+                particle.kineticEnergy(), particle.momentum()));
+        
+        return sb.toString();
+    }
 }

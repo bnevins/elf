@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Scanner;
 
 /**
  * The {@code CollisionSystem} class represents a collection of particles moving
@@ -47,7 +48,7 @@ import java.util.logging.Logger;
 public class CollisionSystem {
 
     private static final double HZ = 0.5;    // number of redraw events per clock tick
-
+    private static final boolean STEPMODE = false;
     private MinPQ<Event> pq;          // the priority queue
     private double t = 0.0;          // simulation clock time
     private Particle[] particles;     // the array of particles
@@ -91,7 +92,7 @@ public class CollisionSystem {
     // redraw all particles
     private void redraw(double limit) {
         StdDraw.clear();
-        for (int i = 0; i < particles.length; i++) {
+           for (int i = 0; i < particles.length; i++) {
             particles[i].draw();
         }
         StdDraw.show();
@@ -131,10 +132,15 @@ public class CollisionSystem {
                 particles[i].move(e.time - t);
             }
             t = e.time;
+            //System.out.println("TIME: " + t);
 
             // process event
             if (a != null && b != null) {
-                a.bounceOff(b);              // particle-particle collision
+                if(STEPMODE) {
+                    Scanner in = new Scanner(System.in);
+                    in.nextLine();
+                }
+                 a.bounceOff(b);              // particle-particle collision
             } else if (a != null && b == null) {
                 a.bounceOffVerticalWall();   // particle-wall collision
             } else if (a == null && b != null) {
@@ -209,8 +215,7 @@ public class CollisionSystem {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        String filename = null;
-        StdDraw.setCanvasSize(600, 600);
+      StdDraw.setCanvasSize(900, 900);
 
         // enable double buffering
         StdDraw.enableDoubleBuffering();
@@ -232,14 +237,10 @@ public class CollisionSystem {
             }
         } // or read from standard input
         else {
-            if(args.length == 2) {
-                // just take second arg...
-                filename = args[1];
-            }
             String[] particleDescriptions;
-            
-            if(filename != null)
-                particleDescriptions = readParticleDescriptions(filename);
+            if(args.length == 2 && args[0].equalsIgnoreCase("-f")) {
+                particleDescriptions = readParticleDescriptions(args[1]);
+            }
             else // standard input
                 particleDescriptions = readParticleDescriptions();
             
@@ -278,10 +279,8 @@ public class CollisionSystem {
             ArrayList<String> ss = new ArrayList<>();
 
             for (String s = br.readLine(); s != null; s = br.readLine()) {
-                if(s.length() < 9)
-                    continue;
-                // comment
-                if(s.contains("/"))
+                // skip comments...
+                if(s.length() < 9 || s.contains("/"))
                     continue;
                 ss.add(s);
             }

@@ -1,0 +1,2 @@
+// FORMAT: 
+// rx, ry, vx, vy, radius, mass, red, green, blue
