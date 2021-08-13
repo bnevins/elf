@@ -17,7 +17,7 @@ import static java.awt.Color.*;
 /**
  * The {@code Particle} class represents a particle moving in the unit box, with
  * a given position, velocity, radius, and mass. Methods are provided for moving
- * the particle and for predicting and resolvling elastic collisions with
+ * the particle and for predicting and resolving elastic collisions with
  * vertical walls, horizontal walls, and other particles. This data type is
  * mutable because the position and velocity change.
  * <p>
@@ -32,6 +32,7 @@ public class Particle {
 
     private static final double INFINITY = Double.POSITIVE_INFINITY;
 
+    private String name = "nobody";
     private double rx, ry;        // position
     private double vx, vy;        // velocity
     private int count;            // number of collisions so far
@@ -254,7 +255,7 @@ public class Particle {
      * @param that the other particle
      */
     public void bounceOff(Particle that) {
-        debug("THIS ==>> " + toString(this) + "THAT ==>> " + toString(that));
+        //debug("THIS ==>> " + toString(this) + "THAT ==>> " + toString(that));
         double dx = that.rx - this.rx;
         double dy = that.ry - this.ry;
         double dvx = that.vx - this.vx;
@@ -303,7 +304,7 @@ public class Particle {
 //        if (totaldiff > 0.00000001) {
 //            throw new RuntimeException("Total Difference too high: " + totaldiff);
 //        }
-     }
+    }
 
     /**
      * Updates the velocity of this particle upon collision with a vertical wall
@@ -394,21 +395,53 @@ public class Particle {
 
     @Override
     public String toString() {
-       return toString(this);
+        return toString(this);
     }
 
     public static String toString(Particle particle) {
         StringBuilder sb = new StringBuilder();
-         sb.append(String.format("Radius=%4.2f Mass=%5.2f "
+        sb.append(String.format("Radius=%4.2f Mass=%5.2f "
                 + "Color=(%3s,%3s,%3s) "
                 + "position=(%3f, %5.3f) Vx=%5.3f  Vy=%5.3f"
-                + " Energy=%.2e Momentum=%.2e\n", 
-                particle.radius, particle.mass, 
-                particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(), 
-                particle.rx, particle.ry, 
+                + " Energy=%.2e Momentum=%.2e\n",
+                particle.radius, particle.mass,
+                particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(),
+                particle.rx, particle.ry,
                 particle.vx, particle.vy,
                 particle.kineticEnergy(), particle.momentum()));
-        
+
         return sb.toString();
+    }
+
+    public String toStringAbridged() {
+        return String.format("ID: %s Center: %f, %f Velocities: %f, %f  "
+                + "KE: %.2E  Momentum: %.2E\n",
+                getColorString(),
+                rx, ry,
+                vx, vy,
+                kineticEnergy(),
+                momentum());
+    }
+
+    public String getColorString() {
+        String ret = "";
+
+        if (color.getRed() == 0) {
+            ret += " ";
+        } else {
+            ret += "R";
+        }
+        if (color.getGreen() != 0) {
+            ret += " ";
+        } else {
+            ret += "G";
+        }
+        if (color.getBlue() != 0) {
+            ret += " ";
+        } else {
+            ret += "B";
+        }
+
+        return ret;
     }
 }

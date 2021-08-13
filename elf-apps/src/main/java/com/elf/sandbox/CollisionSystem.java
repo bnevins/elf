@@ -92,7 +92,7 @@ public class CollisionSystem {
     // redraw all particles
     private void redraw(double limit) {
         StdDraw.clear();
-           for (int i = 0; i < particles.length; i++) {
+        for (int i = 0; i < particles.length; i++) {
             particles[i].draw();
         }
         StdDraw.show();
@@ -136,11 +136,17 @@ public class CollisionSystem {
 
             // process event
             if (a != null && b != null) {
-                if(STEPMODE) {
-                    Scanner in = new Scanner(System.in);
-                    in.nextLine();
+                if (STEPMODE) {
+                    // kill time...
+                    getFromKB();
                 }
-                 a.bounceOff(b);              // particle-particle collision
+                String s = dump(a, b, t);
+
+                if (s != null) {
+                    System.out.println(s);
+                }
+
+                a.bounceOff(b);              // particle-particle collision
             } else if (a != null && b == null) {
                 a.bounceOffVerticalWall();   // particle-wall collision
             } else if (a == null && b != null) {
@@ -152,6 +158,20 @@ public class CollisionSystem {
             predict(a, limit);
             predict(b, limit);
         }
+    }
+
+    private static String dump(Particle a, Particle b, double time) {
+        // filter out noise...
+        double a_e = a.kineticEnergy();
+        double b_e = b.kineticEnergy();
+        double total_e = a_e + b_e;
+
+        if (total_e < 25.0e-10) {
+            return null;
+        }
+
+        return String.format("Time: %.2f\nTHIS: %s\nTHAT: %s\n", 
+                time, a.toStringAbridged(), b.toStringAbridged());
     }
 
     /**
@@ -215,7 +235,7 @@ public class CollisionSystem {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-      StdDraw.setCanvasSize(900, 900);
+        StdDraw.setCanvasSize(900, 900);
 
         // enable double buffering
         StdDraw.enableDoubleBuffering();
@@ -226,7 +246,7 @@ public class CollisionSystem {
         int num = 0;
         // create n random particles
         if (args.length == 1) {
-                num = Integer.parseInt(args[0]);
+            num = Integer.parseInt(args[0]);
             particles = new Particle[num];
             for (int i = 0; i < num; i++) {
                 particles[i] = new Particle();
@@ -238,19 +258,21 @@ public class CollisionSystem {
         } // or read from standard input
         else {
             String[] particleDescriptions;
-            if(args.length == 2 && args[0].equalsIgnoreCase("-f")) {
+            if (args.length == 2 && args[0].equalsIgnoreCase("-f")) {
                 particleDescriptions = readParticleDescriptions(args[1]);
-            }
-            else // standard input
+            } else // standard input
+            {
                 particleDescriptions = readParticleDescriptions();
-            
+            }
+
             particles = new Particle[particleDescriptions.length];
             int particleNum = 0;
-            
-            for(String desc : particleDescriptions) {
+
+            for (String desc : particleDescriptions) {
                 Particle p = Particle.makeParticle(desc);
-                if(p == null)
+                if (p == null) {
                     throw new NullPointerException("Bad Input Line");
+                }
                 particles[particleNum++] = p;
             }
         }
@@ -259,6 +281,7 @@ public class CollisionSystem {
         CollisionSystem system = new CollisionSystem(particles);
         system.simulate(10000);
     }
+
     public static String[] readParticleDescriptions(String fname) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(fname));
@@ -267,26 +290,28 @@ public class CollisionSystem {
             Logger.getLogger(CollisionSystem.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
+
     }
+
     public static String[] readParticleDescriptions() {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            return readParticleDescriptions(br);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        return readParticleDescriptions(br);
     }
-    
+
     private static String[] readParticleDescriptions(BufferedReader br) {
         try {
             ArrayList<String> ss = new ArrayList<>();
 
             for (String s = br.readLine(); s != null; s = br.readLine()) {
                 // skip comments...
-                if(s.length() < 9 || s.contains("/"))
+                if (s.length() < 9 || s.contains("/")) {
                     continue;
+                }
                 ss.add(s);
             }
             String[] values = new String[ss.size()];
             return ss.toArray(values);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(CollisionSystem.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -302,5 +327,25 @@ public class CollisionSystem {
 //        mass = pickMass();  //0.5;
 //        color = pickColor();
         return new Particle(0.1, 0.1, .005, .005, .02, 5, Color.BLACK);
+    }
+
+    private static char getFromKB() {
+        if (System.console() != null) {
+            String s = System.console().readLine();
+
+            if (s != null && s.length() > 0) {
+                char c = s.charAt(0);
+
+                if (c == 'q') {
+                    System.exit(0);
+                }
+
+                return c;
+            } else {
+                return '.';
+            }
+        }
+        Scanner scanner = new Scanner(System.in);
+        return scanner.next().charAt(0);
     }
 }
