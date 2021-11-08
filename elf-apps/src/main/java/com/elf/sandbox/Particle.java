@@ -431,12 +431,12 @@ public class Particle {
         } else {
             ret += "R";
         }
-        if (color.getGreen() != 0) {
+        if (color.getGreen() == 0) {
             ret += " ";
         } else {
             ret += "G";
         }
-        if (color.getBlue() != 0) {
+        if (color.getBlue() == 0) {
             ret += " ";
         } else {
             ret += "B";

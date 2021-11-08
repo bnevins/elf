@@ -132,7 +132,7 @@ public class CollisionSystem {
                 particles[i].move(e.time - t);
             }
             t = e.time;
-            //System.out.println("TIME: " + t);
+            System.out.println("TIME: " + t);
 
             // process event
             if (a != null && b != null) {
