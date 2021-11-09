@@ -12,27 +12,60 @@
   by Byron Nevins
 
   This example code is in the public domain.
+  IMPORTANT:  tone() is asynchronous!
 */
 
 #include "pitches.h"
 
-unsigned long interval = 5000;
-int speakerPin = 8;
-int switchPin = 2;
-int speakerTime = 1000;
+const int     speakerPin    = 8;
+const int     switchPin     = 2;
+const int     speakerTime   = 650;
+const int     note1         = NOTE_C6;   
+const int     note2         = NOTE_G6;   
+int           getReadyTime;
+unsigned long interval;
 
 void setup() {
-  //configure pin 2 as an input and enable the internal pull-up resistor
   pinMode(switchPin, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop() {
-
-   if (digitalRead(switchPin) == HIGH)
+    setTimes();
+    tone(speakerPin, note1, speakerTime);
+    digitalWrite(LED_BUILTIN, HIGH); 
+    delay(getReadyTime);
+    tone(speakerPin, note2, speakerTime);
+    digitalWrite(LED_BUILTIN, LOW); 
+    delay(interval);
+}
+void setTimes() {
+   if (digitalRead(switchPin) == HIGH) {
     interval = 5000;
-  else
-    interval = 30000;  
-  
-    tone(speakerPin, NOTE_C6, speakerTime);
-    delay(interval + speakerTime);
+    getReadyTime = 2500;
+   }
+   else {
+    interval = 30000;
+    getReadyTime = 7000;
+   }  
+}
+
+void playNotes() {
+  tone(speakerPin, NOTE_C1, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_C2, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_C3, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_C4, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_C6, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_G6, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_F6, speakerTime);
+  delay(speakerTime * 2);
+  tone(speakerPin, NOTE_C8, speakerTime);
+  delay(speakerTime * 2);
 }
