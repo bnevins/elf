@@ -25,6 +25,7 @@ const int     note2         = NOTE_G6;
 int           getReadyTime;
 unsigned long interval;
 
+
 void setup() {
   pinMode(switchPin, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
