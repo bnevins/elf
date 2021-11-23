@@ -13,6 +13,9 @@
 
   This example code is in the public domain.
   IMPORTANT:  tone() is asynchronous!
+
+  Nov 18 change - 
+  pin8 to base of 2N3904 transistor.  +5 to speaker, - speaker to Collector.  Emitter to ground
 */
 
 #include "pitches.h"
