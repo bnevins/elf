@@ -22,6 +22,7 @@
 
 const int     speakerPin    = 8;
 const int     switchPin     = 2;
+const int     ledPin        = 13;
 const int     speakerTime   = 650;
 const int     note1         = NOTE_C6;   
 const int     note2         = NOTE_G6;   
@@ -31,27 +32,28 @@ unsigned long interval;
 
 void setup() {
   pinMode(switchPin, INPUT_PULLUP);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+  //playNotes();
 }
 
 void loop() {
     setTimes();
     tone(speakerPin, note1, speakerTime);
-    digitalWrite(LED_BUILTIN, HIGH); 
+    digitalWrite(ledPin, HIGH); 
     delay(getReadyTime);
     tone(speakerPin, note2, speakerTime);
-    digitalWrite(LED_BUILTIN, LOW); 
+    digitalWrite(ledPin, LOW); 
     delay(interval);
 }
 void setTimes() {
    if (digitalRead(switchPin) == HIGH) {
     interval = 5000;
-    getReadyTime = 2500;
+    getReadyTime = 2000;
    }
    else {
     interval = 30000;
-    getReadyTime = 7000;
+    getReadyTime = 5000;
    }  
 }
 
@@ -66,9 +68,7 @@ void playNotes() {
   delay(speakerTime * 2);
   tone(speakerPin, NOTE_C6, speakerTime);
   delay(speakerTime * 2);
-  tone(speakerPin, NOTE_G6, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_F6, speakerTime);
+  tone(speakerPin, NOTE_C7, speakerTime);
   delay(speakerTime * 2);
   tone(speakerPin, NOTE_C8, speakerTime);
   delay(speakerTime * 2);
