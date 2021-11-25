@@ -16,13 +16,16 @@
 
   Nov 18 change - 
   pin8 to base of 2N3904 transistor.  +5 to speaker, - speaker to Collector.  Emitter to ground
+
+  Nov 23, 2021 -- added red and green leds to pins 6,4   
 */
 
 #include "pitches.h"
 
 const int     speakerPin    = 8;
 const int     switchPin     = 2;
-const int     ledPin        = 13;
+const int     redLED        = 6;
+const int     greenLED      = 4;
 const int     speakerTime   = 650;
 const int     note1         = NOTE_C6;   
 const int     note2         = NOTE_G6;   
@@ -32,24 +35,27 @@ unsigned long interval;
 
 void setup() {
   pinMode(switchPin, INPUT_PULLUP);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  pinMode(redLED, OUTPUT);
+  digitalWrite(redLED, LOW);
   //playNotes();
 }
 
 void loop() {
     setTimes();
-    tone(speakerPin, note1, speakerTime);
-    digitalWrite(ledPin, HIGH); 
+    tone(speakerPin, note1, speakerTime * 2);
+    digitalWrite(greenLED, LOW); 
+    digitalWrite(redLED, HIGH); 
     delay(getReadyTime);
     tone(speakerPin, note2, speakerTime);
-    digitalWrite(ledPin, LOW); 
+    digitalWrite(greenLED, HIGH); 
+    digitalWrite(redLED, LOW); 
+    
     delay(interval);
 }
 void setTimes() {
    if (digitalRead(switchPin) == HIGH) {
     interval = 5000;
-    getReadyTime = 2000;
+    getReadyTime = 2500;
    }
    else {
     interval = 30000;
