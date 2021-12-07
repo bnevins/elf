@@ -22,10 +22,10 @@
 
 #include "pitches.h"
 
-const int     speakerPin    = 8;
-const int     switchPin     = 2;
-const int     redLED        = 6;
-const int     greenLED      = 4;
+const int     speakerPin    = 9;
+const int     switchPin     = 7;
+const int     redLED        = 3;
+const int     greenLED      = 5;
 const int     speakerTime   = 650;
 const int     note1         = NOTE_C6;   
 const int     note2         = NOTE_G6;   
@@ -36,7 +36,9 @@ unsigned long interval;
 void setup() {
   pinMode(switchPin, INPUT_PULLUP);
   pinMode(redLED, OUTPUT);
+  pinMode(13, OUTPUT);
   digitalWrite(redLED, LOW);
+  digitalWrite(13, HIGH);
   //playNotes();
 }
 
@@ -45,10 +47,16 @@ void loop() {
     tone(speakerPin, note1, speakerTime * 2);
     digitalWrite(greenLED, LOW); 
     digitalWrite(redLED, HIGH); 
+      digitalWrite(13, LOW);
+
     delay(getReadyTime);
     tone(speakerPin, note2, speakerTime);
     digitalWrite(greenLED, HIGH); 
-    digitalWrite(redLED, LOW); 
+    digitalWrite(redLED, LOW);   
+    
+    digitalWrite(13, HIGH);
+
+
     
     delay(interval);
 }
