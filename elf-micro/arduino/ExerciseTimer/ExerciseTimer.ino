@@ -29,8 +29,10 @@ const int     greenLED      = 5;
 const int     speakerTime   = 650;
 const int     note1         = NOTE_C6;   
 const int     note2         = NOTE_G6;   
+const int     note3         = NOTE_C7;   
 int           getReadyTime;
 unsigned long interval;
+bool          longInterval = false;
 
 
 void setup() {
@@ -53,22 +55,32 @@ void loop() {
     tone(speakerPin, note2, speakerTime);
     digitalWrite(greenLED, HIGH); 
     digitalWrite(redLED, LOW);   
-    
     digitalWrite(13, HIGH);
 
-
-    
-    delay(interval);
+    if(longInterval)
+      reminderDelay();
+    else
+      delay(interval);
 }
 void setTimes() {
    if (digitalRead(switchPin) == HIGH) {
     interval = 5000;
     getReadyTime = 2500;
+    longInterval = false;
    }
    else {
     interval = 30000;
     getReadyTime = 5000;
+    longInterval = true;
    }  
+}
+
+void reminderDelay() {
+  for(int i = 0; i < 2; i++) {
+    delay(interval / 3);
+    tone(speakerPin, note3, speakerTime / 2);   
+  }
+  delay(interval / 3);
 }
 
 void playNotes() {
