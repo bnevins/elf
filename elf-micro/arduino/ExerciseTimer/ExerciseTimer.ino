@@ -23,7 +23,7 @@
 #include "pitches.h"
 
 const int     speakerPin    = 9;
-const int     switchPin     = 7;
+const int     timeSwitchPin = 7;
 const int     redLED        = 3;
 const int     greenLED      = 5;
 const int     speakerTime   = 650;
@@ -36,7 +36,7 @@ bool          longInterval = false;
 
 
 void setup() {
-  pinMode(switchPin, INPUT_PULLUP);
+  pinMode(timeSwitchPin, INPUT_PULLUP);
   pinMode(redLED, OUTPUT);
   pinMode(13, OUTPUT);
   digitalWrite(redLED, LOW);
@@ -63,7 +63,7 @@ void loop() {
       delay(interval);
 }
 void setTimes() {
-   if (digitalRead(switchPin) == HIGH) {
+   if (digitalRead(timeSwitchPin) == HIGH) {
     interval = 5000;
     getReadyTime = 2500;
     longInterval = false;
