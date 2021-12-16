@@ -5,34 +5,20 @@ TODO: hacked C++ can be greatly improved!
 TODO:  use array of temperatureRange objects...
 */
 
-const int dataPin = A0;  // A5 == 19, A0 == 14
+const int temperatureDataPin = A0;  // A5 == 19, A0 == 14
 const int redPin = 3;
 const int greenPin = 5;
 const int bluePin = 6;
-int degF = 25;
-int red, green, blue;
+const boolean debug = true;
+const boolean super_debug = false; // enter temp manually
+const int lowestTemp = 20;
+const int highestTemp = 70;
+const int brightness = 255; // 255 is maximum brightness
+const boolean invert = false; // common cathode:false, common anode:true
 
-class temperatureRange {
-  public:
-  temperatureRange(int l, int h, int r, int g, int b) : red(r), green(g), blue(b), low(l), high(h) {
-  }
-  bool isInRange(int temp);
-  int red,green,blue;
-  int low;
-  int high;
-};
+//int degF = 25;
+int R, G, B;
 
-bool temperatureRange::isInRange(int temp) {
-  if(temp >= low && temp <= high)
-    return true;
-  return false;
-}
-
-temperatureRange range1(0, 32, 0, 0, 15);
-temperatureRange range2(33, 40, 0, 15, 15);
-temperatureRange range3(41, 48, 0, 15, 0);
-temperatureRange range4(49, 56, 15, 15, 0);
-temperatureRange range5(57, 100, 15, 0, 0);
 
 void setup() {
   Serial.begin(9600);
@@ -40,70 +26,130 @@ void setup() {
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
 }
-/* testing loop!! */
-void test_loop() {
-  //printTemperature();
-  if(degF > 70)
-    degF = 25;
-    
-  Serial.print("Temperature = ");
-  Serial.print(degF++);
-  Serial.print("F  -->  ");
-  showTemperatureLED();
-  delay(1000);
- }
 
 void loop() {
-  printTemperature();
-  showTemperatureLED();
+  int degF = getTemperature();
+  setRGBColor(degF);
+  lightRGB();
   delay(5000);
  }
  
-void printTemperature() {
+int getTemperature() {
+  int degF = 0;
+  
+  if(super_debug) {
+    Serial.println("ENTER TEMPERATURE");
+    degF = Serial.parseInt();
+  }
+  else {
+    int sensorValue = analogRead(temperatureDataPin);
+    int mV = map(sensorValue, 0, 1023, 0, 5000);
+    int degC = mV / 20;
+    degF = degC * 1.8 + 32;
+  }
+
+  return degF;
+}
+
+void setRGBColor(int tempF) {
+  int hue = tempToHue(tempF);
+  hueToRGB(hue, brightness);
+   if(debug) {
+    Serial.print("Temp: ");
+    Serial.print(tempF);
+    Serial.print("   Hue: ");
+    Serial.print(hue);
+    Serial.print("   RGB:  ");
+    Serial.print(R);
+    Serial.print(":::");
+    Serial.print(G);
+    Serial.print(":::");
+    Serial.println(B);
+  }
+}
+
+int tempToHue(int tempF) {
+  tempF = constrain(tempF, lowestTemp, highestTemp);
+  return map(tempF, lowestTemp, highestTemp, 240, 0);  
+}
+
+// borrowed code
+void hueToRGB( int hue, int brightness)
+{
+    unsigned int scaledHue = (hue * 6);
+    // segment 0 to 5 around the color wheel
+    unsigned int segment = scaledHue / 256;
+    // position within the segment 
+    unsigned int segmentOffset = scaledHue - (segment * 256); 
+
+    unsigned int complement = 0;
+    unsigned int prev = (brightness * ( 255 -  segmentOffset)) / 256;
+    unsigned int next = (brightness *  segmentOffset) / 256;
+    if(invert)
+    {
+      brightness = 255-brightness;
+      complement = 255;
+      prev = 255-prev;
+      next = 255-next;
+    }
+
+    switch(segment ) {
+    case 0:      // red
+      R = brightness;
+      G = next;
+      B = complement;
+    break;
+    case 1:     // yellow
+      R = prev;
+      G = brightness;
+      B = complement;
+    break;
+    case 2:     // green
+      R = complement;
+      G = brightness;
+      B = next;
+    break;
+    case 3:    // cyan
+      R = complement;
+      G = prev;
+      B = brightness;
+    break;
+    case 4:    // blue
+      R = next;
+      G = complement;
+      B = brightness;
+    break;
+   case 5:      // magenta
+    default:
+      R = brightness;
+      G = complement;
+      B = prev;
+    break;
+    }
+}
+ void lightRGB() {
  
-  int sensorValue = analogRead(dataPin);
-  int mV = map(sensorValue, 0, 1023, 0, 5000);
-  int degC = mV / 20;
-  degF = degC * 1.8 + 32;
-  Serial.print("Temperature = ");
-  Serial.print(degF);
-  Serial.println("F");
+  analogWrite(greenPin, G);
+  analogWrite(redPin, R);
+  analogWrite(bluePin, B);
 }
 
-void showTemperatureLED() {
-  if(range1.isInRange(degF))
-    setColors(range1);
-  else if(range2.isInRange(degF))
-    setColors(range2);
-  else if(range3.isInRange(degF))
-    setColors(range3);
-  else if(range4.isInRange(degF))
-    setColors(range4);
-  else if(range5.isInRange(degF))
-    setColors(range5);
-  rgbWrite();
-}
 
-void setColors(temperatureRange range) {
-  red = range.red;
-  green = range.green;
-  blue = range.blue;  
-}
 
- void rgbWrite() {
-    Serial.print(red);
-    Serial.print(":::");
-    Serial.print(green);
-    Serial.print(":::");
-    Serial.println(blue);
-    analogWrite(greenPin, green);
-    analogWrite(redPin, red);
-    analogWrite(bluePin, blue);
-}
+
+
+
+
+
+
+
+
+
+
 ////  JUNKYARD  ////////
 void loopx() {
  
-  int sensorValue = analogRead(dataPin);
+  int sensorValue = analogRead(temperatureDataPin);
    Serial.println(sensorValue);
   // print out the value you read:
   int mV = map(sensorValue, 0, 1023, 0, 5000);
