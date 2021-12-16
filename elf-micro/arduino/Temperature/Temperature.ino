@@ -9,10 +9,15 @@ const int temperatureDataPin = A0;  // A5 == 19, A0 == 14
 const int redPin = 3;
 const int greenPin = 5;
 const int bluePin = 6;
-const boolean debug = true;
+const boolean debug = false;
 const boolean super_debug = false; // enter temp manually
-const int lowestTemp = 20; // change these 2 temps for indoor vs. oudoor, seasons, etc.
-const int highestTemp = 70;
+enum Season { indoor_winter, outdoor_winter, indoor_summer, outdoor_summer };
+
+// change this for indoor vs. oudoor, seasons, etc.
+const Season season = indoor_winter;
+
+int lowestTemp = 20; 
+int highestTemp = 70;
 const int brightness = 255; // 255 is maximum brightness
 const boolean invert = false; // common cathode:false, common anode:true
 
@@ -25,6 +30,12 @@ void setup() {
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
+  switch(season) {
+    case indoor_winter:   lowestTemp = 60; highestTemp = 75; break;
+    case outdoor_winter:  lowestTemp = 20; highestTemp = 70; break;
+    case indoor_summer:   lowestTemp = 65; highestTemp = 80; break;
+    case outdoor_summer:  lowestTemp = 60; highestTemp = 95; break;
+  }
 }
 
 void loop() {
