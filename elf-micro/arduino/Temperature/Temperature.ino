@@ -9,12 +9,13 @@ const int temperatureDataPin = A0;  // A5 == 19, A0 == 14
 const int redPin = 3;
 const int greenPin = 5;
 const int bluePin = 6;
-const boolean debug = false;
-const boolean super_debug = false; // enter temp manually
-enum Season { indoor_winter, outdoor_winter, indoor_summer, outdoor_summer };
+const int locationSwitchPin = 7;
+const int seasonSwitchPin = 8;
+const boolean debug = true;
+//enum Season { indoor_winter, outdoor_winter, indoor_summer, outdoor_summer };
 
 // change this for indoor vs. oudoor, seasons, etc.
-const Season season = indoor_winter;
+//const Season seasonAndLocation = indoor_winter;
 
 int lowestTemp = 20; 
 int highestTemp = 70;
@@ -30,26 +31,43 @@ void setup() {
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
-  switch(season) {
-    case indoor_winter:   lowestTemp = 60; highestTemp = 75; break;
-    case outdoor_winter:  lowestTemp = 20; highestTemp = 70; break;
-    case indoor_summer:   lowestTemp = 65; highestTemp = 80; break;
-    case outdoor_summer:  lowestTemp = 60; highestTemp = 95; break;
-  }
+  pinMode(seasonSwitchPin, INPUT_PULLUP);
+  pinMode(locationSwitchPin, INPUT_PULLUP);
+  setSeasonAndLocation();
 }
 
+
 void loop() {
+  setSeasonAndLocation();
   int degF = getTemperature();
   setRGBColor(degF);
   lightRGB();
   delay(5000);
  }
- 
+
+ void setSeasonAndLocation(){
+    bool indoor = digitalRead(locationSwitchPin); // switch OPEN (HIGH) == indoor
+    bool winter = digitalRead(seasonSwitchPin);   // switch OPEN (HIGH) == winter
+
+    if(indoor && winter) {
+      lowestTemp = 60; 
+      highestTemp = 75;
+    } else if(!indoor && winter) {
+      lowestTemp = 20; 
+      highestTemp = 70;
+    } else if(indoor && !winter) {
+      lowestTemp = 65; 
+      highestTemp = 80;
+    } else { // !indoor && !winter
+      lowestTemp = 60; 
+      highestTemp = 95; 
+    }
+ }
 int getTemperature() {
   int degF = 0;
-  
-  if(super_debug) {
-    Serial.println("ENTER TEMPERATURE");
+
+  // if someone types in a temperature -- use it!
+  if(Serial.available()) {
     degF = Serial.parseInt();
   }
   else {
@@ -82,6 +100,12 @@ void setRGBColor(int tempF) {
 int tempToHue(int tempF) {
   tempF = constrain(tempF, lowestTemp, highestTemp);
   return map(tempF, lowestTemp, highestTemp, 240, 0);  
+}
+
+ void lightRGB() {
+  analogWrite(greenPin, G);
+  analogWrite(redPin, R);
+  analogWrite(bluePin, B);
 }
 
 // borrowed code
@@ -137,12 +161,6 @@ void hueToRGB( int hue, int brightness)
       B = prev;
     break;
     }
-}
- void lightRGB() {
- 
-  analogWrite(greenPin, G);
-  analogWrite(redPin, R);
-  analogWrite(bluePin, B);
 }
 
 
