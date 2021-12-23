@@ -34,6 +34,8 @@ public class CapCalc {
             List<String> operands = proc.getOperands();
             CapCalc cc = new CapCalc(params, operands);
             cc.processArgs();
+            cc.calculate();
+            cc.report();
         } catch (Exception ex) {
             Logger.getLogger(TreeGrep.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,16 +53,10 @@ public class CapCalc {
 
     private void processFrequency(String s) {
         freq = processKandM(s);
-        if (freq > 0) {
-            System.out.printf("FREQUENCY: %e\n", freq);
-        }
     }
 
     private void processResistance(String s) {
         res = processKandM(s);
-        if (res > 0) {
-            System.out.printf("RESISTOR: %e\n", res);
-        }
     }
 
     private double processKandM(String s) {
@@ -84,7 +80,7 @@ public class CapCalc {
             }
             s = s.substring(0, s.length() - 1);
         }
-        double ret = (double) Integer.parseInt(s);
+        double ret = Double.parseDouble(s);
         ret *= multiplier;
         return ret;
     }
@@ -103,7 +99,7 @@ public class CapCalc {
         char unit = s.charAt(len - 1);
         String num = s.substring(0, len - 1); //strip unit off
         //System.out.println("CAP: " + num + unit);
-        cap = (double) Integer.parseInt(num);
+        cap = Double.parseDouble(num);
         switch (unit) {
             case 'p':
             case 'P':
@@ -120,7 +116,6 @@ public class CapCalc {
             default:
                 throw new RuntimeException("unknown capacitor unit");
         }
-        System.out.printf("CAP: %e\n", cap);
     }
 
     private boolean isNum(char c) {
@@ -145,4 +140,29 @@ public class CapCalc {
     private double freq;
     private double res;
     private final Map<String, String> params;
+
+    private void calculate() {
+        // makes no sense to specify all 3!
+        if(res > 0 && freq > 0 && cap > 0) {
+            throw new RuntimeException("\n\n **** Cap, Res and Freq were all specified.  I have no idea what to do!");
+        }
+        if(res > 0 && freq > 0) { // Whats the -3dB capacitance?
+            // calculate cap...
+            cap = 1 / (2 * Math.PI * freq * res);
+        }
+        else if(cap > 0 && freq > 0) {  // calculate impedance of capacitor
+            res = 1 / (2 * Math.PI * freq * cap);
+        }
+        else {
+            throw new RuntimeException("You must specify 2 values");
+        }
+    }
+
+    private void report() {
+        // cap stored as FARADS
+        System.out.printf("Capacitance: %e pF\n", cap * 1e12);
+        System.out.printf("Impedance: %e ohms\n", res);
+        System.out.printf("Frequency: %e Hz\n", freq);
+
+    }
 }
