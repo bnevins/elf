@@ -9,7 +9,6 @@ import com.elf.args.Arg;
 import com.elf.args.ArgProcessor;
 import com.elf.args.BoolArg;
 import com.elf.io.TreeGrep;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -47,12 +46,26 @@ public class CapCalc {
     private void processArgs() {
         processCap(params.get("cap"));
         processResistance(params.get("res"));
+        processFrequency(params.get("freq"));
+    }
+
+    private void processFrequency(String s) {
+        freq = processKandM(s);
+        if (freq > 0) {
+            System.out.printf("FREQUENCY: %e\n", freq);
+        }
     }
 
     private void processResistance(String s) {
+        res = processKandM(s);
+        if (res > 0) {
+            System.out.printf("RESISTOR: %e\n", res);
+        }
+    }
+
+    private double processKandM(String s) {
         if (!StringUtils.ok(s)) {
-            res = -1;
-            return;
+            return -1;
         }
         int multiplier = 1;
         char unit = s.charAt(s.length() - 1);
@@ -67,14 +80,13 @@ public class CapCalc {
                     multiplier = 1000000;
                     break;
                 default:
-                    throw new RuntimeException("Unknown resistor format");
+                    throw new RuntimeException("Unknown resistor/frequency format");
             }
             s = s.substring(0, s.length() - 1);
         }
-        res = (double) Integer.parseInt(s);
-        res *= multiplier;
-
-        System.out.printf("RESISTOR: %e\n", res);
+        double ret = (double) Integer.parseInt(s);
+        ret *= multiplier;
+        return ret;
     }
 
     private void processCap(String s) {
@@ -123,7 +135,7 @@ public class CapCalc {
         //new BoolArg("regexp", "r", false, "Regular Expression"),
         new Arg("cap", "c", false, "Capacitor"),
         new Arg("freq", "f", false, "Frequency"),
-        new Arg("res", "r", false, "Frequency"),};
+        new Arg("res", "r", false, "Resistor"),};
     //new Arg("exact", "e", false, "Exact Filename"),
     //new BoolArg("ic", null, true, "Case Insensitive"),
     //new BoolArg("filenameonly", "f", false, "Return Filenames Only"),
@@ -133,5 +145,4 @@ public class CapCalc {
     private double freq;
     private double res;
     private final Map<String, String> params;
-
 }
