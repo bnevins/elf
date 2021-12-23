@@ -46,33 +46,75 @@ public class CapCalc {
 
     private void processArgs() {
         processCap(params.get("cap"));
+        processResistance(params.get("res"));
     }
-    private void processCap(String capS) {
-        if(!StringUtils.ok(capS)) {
+
+    private void processResistance(String s) {
+        if (!StringUtils.ok(s)) {
+            res = -1;
+            return;
+        }
+        int multiplier = 1;
+        char unit = s.charAt(s.length() - 1);
+        if (!isNum(unit)) {
+            switch (unit) {
+                case 'k':
+                case 'K':
+                    multiplier = 1000;
+                    break;
+                case 'm':
+                case 'M':
+                    multiplier = 1000000;
+                    break;
+                default:
+                    throw new RuntimeException("Unknown resistor format");
+            }
+            s = s.substring(0, s.length() - 1);
+        }
+        res = (double) Integer.parseInt(s);
+        res *= multiplier;
+
+        System.out.printf("RESISTOR: %e\n", res);
+    }
+
+    private void processCap(String s) {
+        if (!StringUtils.ok(s)) {
             cap = -1;
             return;
         }
-        int len = capS.length();
-        if(len < 2)
+        int len = s.length();
+        if (len < 2) {
             throw new RuntimeException("Expected at least 2 characters for capacitance!");
+        }
         // must end in unit since no such thing as Farad capacitors!
-        
-        char unit = capS.charAt(len - 1);
-        String num = capS.substring(0, len - 1); //strip unit off
+
+        char unit = s.charAt(len - 1);
+        String num = s.substring(0, len - 1); //strip unit off
         //System.out.println("CAP: " + num + unit);
-        cap = (double)Integer.parseInt(num);
-        switch(unit) {
+        cap = (double) Integer.parseInt(num);
+        switch (unit) {
             case 'p':
-            case 'P': cap *= 1E-12; break;
+            case 'P':
+                cap *= 1E-12;
+                break;
             case 'n':
-            case 'N': cap *= 1E-9; break;
+            case 'N':
+                cap *= 1E-9;
+                break;
             case 'u':
-            case 'U': cap *= 1E-6; break;
+            case 'U':
+                cap *= 1E-6;
+                break;
             default:
-            throw new RuntimeException("unknown capacitor unit");
+                throw new RuntimeException("unknown capacitor unit");
         }
         System.out.printf("CAP: %e\n", cap);
     }
+
+    private boolean isNum(char c) {
+        return (c >= '0' && c <= '9');
+    }
+
     private static void usage() {
         System.out.println("USAGE: ");
         System.out.println(Arg.toHelp(argDescriptions));
