@@ -9,8 +9,12 @@ const int temperatureDataPin = A0;  // A5 == 19, A0 == 14
 const int redPin = 3;
 const int greenPin = 5;
 const int bluePin = 6;
+
+//currently not using...
 const int locationSwitchPin = 7;
 const int seasonSwitchPin = 8;
+
+
 const boolean debug = true;
 //enum Season { indoor_winter, outdoor_winter, indoor_summer, outdoor_summer };
 
@@ -62,6 +66,9 @@ void loop() {
       lowestTemp = 60; 
       highestTemp = 95; 
     }
+    // 12/24/21 -- try one scale for the whole year!
+    lowestTemp = 20;
+    highestTemp = 95;
  }
 int getTemperature() {
   int degF = 0;
