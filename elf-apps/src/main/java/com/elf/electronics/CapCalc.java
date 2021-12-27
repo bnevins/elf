@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.elf.electronics;
 
 import com.elf.args.Arg;
@@ -152,6 +147,18 @@ public class CapCalc {
         }
         else if(cap > 0 && freq > 0) {  // calculate impedance of capacitor
             res = 1 / (2 * Math.PI * freq * cap);
+        }
+        else if(res > 0 && cap > 0) {  // what to do?
+         throw new RuntimeException("Cap and Res -- what should I do?!?");   
+        }
+        else if(cap > 0) {
+            // cap only -- print a table
+            //long frequency = 1;
+            System.out.printf("%10s%14s\n", "Frequency", "Impedance");
+            for(double frequency = 1.0; frequency < 1.0E9; frequency *= 10.0) {
+                double impedance = 1 / (2 * Math.PI * frequency * cap);
+                System.out.printf("%-10.0f    %-8.0f\n", frequency, impedance);
+            }
         }
         else {
             throw new RuntimeException("You must specify 2 values");
