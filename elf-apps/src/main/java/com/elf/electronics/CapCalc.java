@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import com.elf.util.StringUtils;
 
 /**
- *
  * @author bnevins
  */
 public class CapCalc {
