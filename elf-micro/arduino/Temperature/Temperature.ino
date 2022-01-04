@@ -21,8 +21,8 @@ const boolean debug = true;
 // change this for indoor vs. oudoor, seasons, etc.
 //const Season seasonAndLocation = indoor_winter;
 
-int lowestTemp = 20; 
-int highestTemp = 70;
+int lowestTemp = 10; 
+int highestTemp = 95;
 const int brightness = 255; // 255 is maximum brightness
 const boolean invert = false; // common cathode:false, common anode:true
 
@@ -35,9 +35,8 @@ void setup() {
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
-  pinMode(seasonSwitchPin, INPUT_PULLUP);
-  pinMode(locationSwitchPin, INPUT_PULLUP);
-  setSeasonAndLocation();
+  //pinMode(seasonSwitchPin, INPUT_PULLUP);
+  //pinMode(locationSwitchPin, INPUT_PULLUP);
 }
 
 
@@ -50,6 +49,7 @@ void loop() {
  }
 
  void setSeasonAndLocation(){
+  /***
     bool indoor = digitalRead(locationSwitchPin); // switch OPEN (HIGH) == indoor
     bool winter = digitalRead(seasonSwitchPin);   // switch OPEN (HIGH) == winter
 
@@ -66,8 +66,9 @@ void loop() {
       lowestTemp = 60; 
       highestTemp = 95; 
     }
+    *****/
     // 12/24/21 -- try one scale for the whole year!
-    lowestTemp = 20;
+    lowestTemp = 10;
     highestTemp = 95;
  }
 int getTemperature() {
