@@ -21,8 +21,8 @@ const boolean debug = true;
 // change this for indoor vs. oudoor, seasons, etc.
 //const Season seasonAndLocation = indoor_winter;
 
-int lowestTemp = 20; 
-int highestTemp = 70;
+int lowestTemp = 15; 
+int highestTemp = 95;
 const int brightness = 255; // 255 is maximum brightness
 const boolean invert = false; // common cathode:false, common anode:true
 
@@ -67,7 +67,7 @@ void loop() {
       highestTemp = 95; 
     }
     // 12/24/21 -- try one scale for the whole year!
-    lowestTemp = 20;
+    lowestTemp = 15;
     highestTemp = 95;
  }
 int getTemperature() {
