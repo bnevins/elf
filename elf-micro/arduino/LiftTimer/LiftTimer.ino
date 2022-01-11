@@ -23,85 +23,36 @@
 #include "pitches.h"
 
 const int     speakerPin    = 9;
-const int     timeSwitchPin = 7;
-const int     redLED        = 3;
-const int     greenLED      = 5;
-const int     speakerTime   = 650;
+const int     speakerTime   = 2000;
 const int     note1         = NOTE_C6;   
 const int     note2         = NOTE_G6;   
 const int     note3         = NOTE_C7;   
-int           getReadyTime;
-unsigned long interval;
-bool          longInterval = false;
+int           liftTime = 60000;  //msec
+unsigned long restTime = 180000; // msec
+bool          longRestTime = true;
 
 
 void setup() {
-  pinMode(timeSwitchPin, INPUT_PULLUP);
-  pinMode(redLED, OUTPUT);
-  pinMode(13, OUTPUT);
-  digitalWrite(redLED, LOW);
-  digitalWrite(13, HIGH);
-  //playNotes();
 }
 
 void loop() {
-    setTimes();
-    tone(speakerPin, note1, speakerTime * 2);
-    digitalWrite(greenLED, LOW); 
-    digitalWrite(redLED, HIGH); 
-      digitalWrite(13, LOW);
-
-    //delay(getReadyTime);
-    //tone(speakerPin, note2, speakerTime);
-    digitalWrite(greenLED, HIGH); 
-    digitalWrite(redLED, LOW);   
-    digitalWrite(13, HIGH);
-
-    if(longInterval)      
+    myTone(note1, speakerTime);
+    
+    if(longRestTime)      
       reminderDelay();
     else
-      delay(interval + speakerTime * 2);
-}
-void setTimes() {
-    interval = 180000;
-    getReadyTime = 2500;
-    longInterval = false;
-     
-}
-void setTimesx() {
-   if (digitalRead(timeSwitchPin) == HIGH) {
-    interval = 5000;
-    getReadyTime = 2500;
-    longInterval = false;
-   }
-   else {
-    interval = 30000;
-    getReadyTime = 5000;
-    longInterval = true;
-   }  
+      delay(restTime);
 }
 
 void reminderDelay() {
   for(int i = 0; i < 2; i++) {
-    delay(interval / 3);
+    delay(restTime / 3);
     tone(speakerPin, note3, speakerTime / 2);   
   }
-  delay(interval / 3);
+  delay(restTime / 3);
 }
 
-void playNotes() {
-  tone(speakerPin, NOTE_C1, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_C2, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_C3, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_C4, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_C6, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_C7, speakerTime);
-  delay(speakerTime * 2);
-  tone(speakerPin, NOTE_C8, speakerTime);
-  delay(speakerTime * 2);
+void myTone(int note, int time) {
+  tone(speakerPin, note, time);
+  delay(time);
 }
