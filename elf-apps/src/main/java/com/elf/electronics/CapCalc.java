@@ -137,38 +137,79 @@ public class CapCalc {
 
     private void calculate() {
         // makes no sense to specify all 3!
-        if(res > 0 && freq > 0 && cap > 0) {
+        if (res > 0 && freq > 0 && cap > 0) {
             throw new RuntimeException("\n\n **** Cap, Res and Freq were all specified.  I have no idea what to do!");
         }
-        if(res > 0 && freq > 0) { // Whats the -3dB capacitance?
+        if (res > 0 && freq > 0) { // Whats the -3dB capacitance?
             // calculate cap...
             cap = 1 / (2 * Math.PI * freq * res);
-        }
-        else if(cap > 0 && freq > 0) {  // calculate impedance of capacitor
+        } else if (cap > 0 && freq > 0) {  // calculate impedance of capacitor
             res = 1 / (2 * Math.PI * freq * cap);
-        }
-        else if(res > 0 && cap > 0) {  // what to do?
-         throw new RuntimeException("Cap and Res -- what should I do?!?");   
-        }
-        else if(cap > 0) {
+        } else if (res > 0 && cap > 0) {  // what to do?
+            // Calculate the -3dB frequency
+            freq = 1 / (2 * Math.PI * res * cap);
+        } else if (cap > 0) {
             // cap only -- print a table
             //long frequency = 1;
             System.out.printf("%10s%14s\n", "Frequency", "Impedance");
-            for(double frequency = 1.0; frequency < 1.0E9; frequency *= 10.0) {
+            for (double frequency = 1.0; frequency < 1.0E9; frequency *= 10.0) {
                 double impedance = 1 / (2 * Math.PI * frequency * cap);
                 System.out.printf("%-10.0f    %-8.0f\n", frequency, impedance);
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("You must specify 2 values");
         }
     }
 
     private void report() {
         // cap stored as FARADS
+        System.out.printf("Capacitance: %sF\n", convert(cap));
+        System.out.printf("Impedance: %sohms\n", convert(res));
+        System.out.printf("Frequency: %sHz\n", convert(freq));
+
+    }
+    private void reportOld() {
+        // cap stored as FARADS
         System.out.printf("Capacitance: %e pF\n", cap * 1e12);
         System.out.printf("Impedance: %e ohms\n", res);
         System.out.printf("Frequency: %e Hz\n", freq);
 
+    }
+
+    private final static int PREFIX_OFFSET = 5;
+    private final static String[] PREFIX_ARRAY = {"f", "p", "n", "µ", "m", "", "k", "M", "G", "T"};
+
+    public static String convert(double val) {
+        return convert(val, 0);
+    }
+    public static String convert(double val, int dp) {
+        // If the value is zero, then simply return 0 with the correct number of dp
+        if (val == 0) {
+            return String.format("%." + dp + "f", 0.0);
+        }
+
+        // If the value is negative, make it positive so the log10 works
+        if(val < 0)
+            throw new RuntimeException("Can't handle negative values");
+        
+        //double posVal = (val < 0) ? -val : val;
+        double log10 = Math.log10(val);
+
+        // Determine how many orders of 3 magnitudes the value is
+        int count = (int) Math.floor(log10 / 3);
+
+        // Calculate the index of the prefix symbol
+        int index = count + PREFIX_OFFSET;
+
+        // Scale the value into the range 1<=val<1000
+        val /= Math.pow(10, count * 3);
+
+        if (index >= 0 && index < PREFIX_ARRAY.length) {
+            // If a prefix exists use it to create the correct string
+            return String.format("%." + dp + "f %s", val, PREFIX_ARRAY[index]);
+        } else {
+            // If no prefix exists just make a string of the form 000e000
+            return String.format("%." + dp + "fe%d", val, count * 3);
+        }
     }
 }
