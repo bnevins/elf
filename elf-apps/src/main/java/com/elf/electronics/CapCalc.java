@@ -163,11 +163,12 @@ public class CapCalc {
 
     private void report() {
         // cap stored as FARADS
-        System.out.printf("Capacitance: %sF\n", convert(cap));
-        System.out.printf("Impedance: %sohms\n", convert(res));
-        System.out.printf("Frequency: %sHz\n", convert(freq));
+        System.out.printf("Capacitance: %s\n", convertCap(cap));
+        System.out.printf("Impedance: %sohms\n", convert(res, 1));
+        System.out.printf("Frequency: %sHz\n", convert(freq, 4));
 
     }
+
     private void reportOld() {
         // cap stored as FARADS
         System.out.printf("Capacitance: %e pF\n", cap * 1e12);
@@ -176,12 +177,23 @@ public class CapCalc {
 
     }
 
-    private final static int PREFIX_OFFSET = 5;
-    private final static String[] PREFIX_ARRAY = {"f", "p", "n", "µ", "m", "", "k", "M", "G", "T"};
+    /**
+     * caps are special. 2 sig figs. ANything >= 0.001 uF stay as uF. Anything
+     * less is pF
+     */
+    public static String convertCap(double val) {
+        if (val < 1.0e-9) {
+            return String.format("%.0f pF", val * 1.0e12);
+        } else {
+            return String.format("%.3f uF", val * 1.0e6);
+        }
+
+    }
 
     public static String convert(double val) {
         return convert(val, 0);
     }
+
     public static String convert(double val, int dp) {
         // If the value is zero, then simply return 0 with the correct number of dp
         if (val == 0) {
@@ -189,9 +201,10 @@ public class CapCalc {
         }
 
         // If the value is negative, make it positive so the log10 works
-        if(val < 0)
+        if (val < 0) {
             throw new RuntimeException("Can't handle negative values");
-        
+        }
+
         //double posVal = (val < 0) ? -val : val;
         double log10 = Math.log10(val);
 
@@ -212,4 +225,7 @@ public class CapCalc {
             return String.format("%." + dp + "fe%d", val, count * 3);
         }
     }
+    private final static int PREFIX_OFFSET = 5;
+    private final static String[] PREFIX_ARRAY = {"f", "p", "n", "µ", "m", "", "k", "M", "G", "T"};
+
 }
