@@ -151,10 +151,6 @@ public class ResonanceCalc {
     //new BoolArg("filenameonly", "f", false, "Return Filenames Only"),
     //new Arg("prevline", "p", false, "Find on previous line"),};  
 
-    private double cap;
-    private double freq = 1;
-    private double ind;
-    private final Map<String, String> params;
 
     private void calculate() {
         // makes no sense to specify all 3!
@@ -180,6 +176,8 @@ public class ResonanceCalc {
         } else {
             throw new RuntimeException("You must specify 2 values");
         }
+        impedance = 2 * Math.PI * freq * ind;
+        //quality = Math.sqrt(ind / cap) / impedance;
     }
 
     private void report() {
@@ -187,6 +185,8 @@ public class ResonanceCalc {
         System.out.printf("Capacitance: %s\n", convertCap(cap));
         System.out.printf("Inductance: %sHenrys\n", convert(ind, 1));
         System.out.printf("Frequency: %sHz\n", convert(freq, 4));
+        System.out.printf("Impedance at resonance = %sohms\n", convert(impedance, 1));
+        //System.out.printf("Quality Factor = %.1f", quality );
 
     }
 
@@ -241,6 +241,11 @@ public class ResonanceCalc {
     }
     private final static int PREFIX_OFFSET = 5;
     private final static String[] PREFIX_ARRAY = {"f", "p", "n", "µ", "m", "", "k", "M", "G", "T"};
-
+    private double cap;
+    private double freq = 1;
+    private double ind;
+    private final Map<String, String> params;
+    private double impedance;
+    private double quality;
 }
 
