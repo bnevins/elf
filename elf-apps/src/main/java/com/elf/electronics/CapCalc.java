@@ -145,7 +145,7 @@ public class CapCalc {
             cap = 1 / (2 * Math.PI * freq * res);
         } else if (cap > 0 && freq > 0) {  // calculate impedance of capacitor
             res = 1 / (2 * Math.PI * freq * cap);
-        } else if (res > 0 && cap > 0) {  // what to do?
+        } else if (res > 0 && cap > 0) {  
             // Calculate the -3dB frequency
             freq = 1 / (2 * Math.PI * res * cap);
         } else if (cap > 0) {
