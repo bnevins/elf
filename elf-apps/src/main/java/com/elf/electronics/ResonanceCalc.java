@@ -2,22 +2,16 @@ package com.elf.electronics;
 
 import com.elf.args.Arg;
 import com.elf.args.ArgProcessor;
-//import com.elf.args.BoolArg;
-import com.elf.io.TreeGrep;
+import com.elf.util.StringUtils;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.elf.util.StringUtils;
 
 /**
+ *
  * @author bnevins
  */
-public class CapCalc {
 
-    /**
-     * @param args the command line arguments
-     */
+public class ResonanceCalc {
     public static void main(String[] args) {
         if (args.length == 0) {
             usage();
@@ -26,22 +20,24 @@ public class CapCalc {
             ArgProcessor proc = new ArgProcessor(argDescriptions, args);
             Map<String, String> params = proc.getParams();
             List<String> operands = proc.getOperands();
-            CapCalc cc = new CapCalc(params, operands);
-            cc.processArgs();
-            cc.calculate();
-            cc.report();
-        } catch (Exception ex) {
+            ResonanceCalc rc = new ResonanceCalc(params, operands);
+            rc.processArgs();
+            rc.calculate();
+            rc.report();
+        
+        //} catch (RuntimeException ex) {
+        }catch (Exception ex) {
             System.out.println(ex);
         }
     }
 
-    CapCalc(Map<String, String> params, List<String> operands) {
+    ResonanceCalc(Map<String, String> params, List<String> operands) {
         this.params = params;
     }
 
     private void processArgs() {
         processCap(params.get("cap"));
-        processResistance(params.get("res"));
+        processInductance(params.get("ind"));
         processFrequency(params.get("freq"));
     }
 
@@ -49,8 +45,8 @@ public class CapCalc {
         freq = processKandM(s);
     }
 
-    private void processResistance(String s) {
-        res = processKandM(s);
+    private void processInductance(String s) {
+        ind = process_u_and_m(s);
     }
 
     private double processKandM(String s) {
@@ -77,6 +73,31 @@ public class CapCalc {
         double ret = Double.parseDouble(s);
         ret *= multiplier;
         return ret;
+    }
+
+    // FIXME -- very lazy copy&paste&edit of processKandM
+    private double process_u_and_m(String s) {
+        if (!StringUtils.ok(s)) {
+            return -1;
+        }
+        double divisor = 1;
+        char unit = s.charAt(s.length() - 1);
+        if (!isNum(unit)) {
+            switch (unit) {
+                case 'u':
+                    divisor = 1000000;
+                    break;
+                case 'm':
+                    divisor = 1000;
+                    break;
+                default:
+                    throw new RuntimeException("Unknown resistor/frequency format");
+            }
+            s = s.substring(0, s.length() - 1);
+        }
+        double ret = Double.parseDouble(s);
+        ret /= divisor;
+        return ret; 
     }
 
     private void processCap(String s) {
@@ -124,30 +145,30 @@ public class CapCalc {
         //new BoolArg("regexp", "r", false, "Regular Expression"),
         new Arg("cap", "c", false, "Capacitor"),
         new Arg("freq", "f", false, "Frequency"),
-        new Arg("res", "r", false, "Resistor"),};
+        new Arg("ind", "i", false, "Inductor"),};
     //new Arg("exact", "e", false, "Exact Filename"),
     //new BoolArg("ic", null, true, "Case Insensitive"),
     //new BoolArg("filenameonly", "f", false, "Return Filenames Only"),
     //new Arg("prevline", "p", false, "Find on previous line"),};  
 
     private double cap;
-    private double freq;
-    private double res;
+    private double freq = 1;
+    private double ind;
     private final Map<String, String> params;
 
     private void calculate() {
         // makes no sense to specify all 3!
-        if (res > 0 && freq > 0 && cap > 0) {
-            throw new RuntimeException("\n\n **** Cap, Res and Freq were all specified.  I have no idea what to do!");
+        if (ind > 0 && freq > 0 && cap > 0) {
+            throw new RuntimeException("\n\n **** Cap, Ind and Freq were all specified.  I have no idea what to do!");
         }
-        if (res > 0 && freq > 0) { // Whats the -3dB capacitance?
+        if (ind > 0 && freq > 0) { 
             // calculate cap...
-            cap = 1 / (2 * Math.PI * freq * res);
-        } else if (cap > 0 && freq > 0) {  // calculate impedance of capacitor
-            res = 1 / (2 * Math.PI * freq * cap);
-        } else if (res > 0 && cap > 0) {  
-            // Calculate the -3dB frequency
-            freq = 1 / (2 * Math.PI * res * cap);
+            cap = 1 / (Math.pow(2 * Math.PI * freq, 2) * ind);
+        } else if (cap > 0 && freq > 0) {  // calculate inductor
+            ind = 1 / (Math.pow(2 * Math.PI * freq, 2) * cap);
+        } else if (ind > 0 && cap > 0) {  
+            // Calculate the resonant frequency
+            freq = 1 / ( (2 * Math.PI) * Math.sqrt(ind * cap) );
         } else if (cap > 0) {
             // cap only -- print a table
             //long frequency = 1;
@@ -164,21 +185,14 @@ public class CapCalc {
     private void report() {
         // cap stored as FARADS
         System.out.printf("Capacitance: %s\n", convertCap(cap));
-        System.out.printf("Impedance: %sohms\n", convert(res, 1));
+        System.out.printf("Inductance: %sHenrys\n", convert(ind, 1));
         System.out.printf("Frequency: %sHz\n", convert(freq, 4));
 
     }
 
-    private void reportOld() {
-        // cap stored as FARADS
-        System.out.printf("Capacitance: %e pF\n", cap * 1e12);
-        System.out.printf("Impedance: %e ohms\n", res);
-        System.out.printf("Frequency: %e Hz\n", freq);
-
-    }
 
     /**
-     * caps are special. 2 sig figs. ANything >= 0.001 uF stay as uF. Anything
+     * caps are special. 2 sig figs. Anything >= 0.001 uF stay as uF. Anything
      * less is pF
      */
     public static String convertCap(double val) {
@@ -229,3 +243,4 @@ public class CapCalc {
     private final static String[] PREFIX_ARRAY = {"f", "p", "n", "µ", "m", "", "k", "M", "G", "T"};
 
 }
+
