@@ -14,11 +14,14 @@ void setup()
 {
   boolean up = digitalRead(keyer); // +5V == key UP, Ground is key down
 
-  if(up)
+  if(up) {
+    noTone(speakerPin);
     digitalWrite(ledPin, LOW);
-  else
+  }
+  else {
+    tone(speakerPin, pitch);
     digitalWrite(ledPin, HIGH);
-   
+  }
    delay(10);  
  }
 
