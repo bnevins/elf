@@ -2,7 +2,7 @@
 Temperature meaurement with a TMP37
 20 mV/ degree C
 This is an electronic galileo thermometer. 
-Very simple with 5 colors and 5 temperature ranges
+Very simple with 8 colors and 8 temperature ranges
 */
 
 const int temperatureDataPin = A0;  // A5 == 19, A0 == 14
@@ -12,10 +12,9 @@ const int bluePin = 6;
 const boolean debug = true;
 const boolean invert = false; // common cathode:false, common anode:true
 int R, G, B;
-// Centigrade temp ranges - each number is the top temp for the range
-// "100" means fucking hot!!
-int tempRanges[] = { -1, 7, 15, 24, 29, 100};
-int colorTable[][3] = { {1,2,3}, {1,2,3}, {1,2,3}, {9,9,9}, {9,9,9}, {9,9,9} };
+// Fahrenheit temp ranges - each number is the bottom temp for the range
+int tempRanges[] = { -100, 30, 40, 50, 60, 70, 80, 90};
+int colorTable[][3] = { {1,2,3}, {1,2,3}, {1,2,3}, {9,9,9}, {9,9,9}, {9,9,9}, {9,9,9}, {9,9,9} };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,13 +39,13 @@ void loop() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void printRanges() {
-  Serial.println("Here is the top temperature for each range along with its RGB color");
+  Serial.println("Here is the low temperature for each range along with its RGB color");
   
   for(int i = 0; i < sizeof(tempRanges)/sizeof(int); i++) {
     Serial.print(i);
     Serial.print("  ");
     Serial.print(tempRanges[i]);
-    Serial.print("C     RGB= ");
+    Serial.print("F     RGB= ");
     Serial.print(colorTable[i][0]);
     Serial.print(":::");
     Serial.print(colorTable[i][1]);
@@ -104,4 +103,12 @@ void setRGBColor(int tempC) {
   analogWrite(redPin, R);
   analogWrite(greenPin, G);
   analogWrite(bluePin, B);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void debugPrint(String s) {
+  if (debug) {
+    Serial.print(s);
+  }
 }
