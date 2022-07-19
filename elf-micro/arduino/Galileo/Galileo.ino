@@ -15,8 +15,8 @@ const boolean debug = true;
 const boolean invert = false; // common cathode:false, common anode:true
 int R = 0, G = 0, B = 255; // very non-OOP but WTF!  Simple.  Use these variables at runtime to set the color values so I don't have to mess with passing an object around...
 // Fahrenheit temp ranges - each number is the bottom temp for the range
-int tempRanges[] = { -100, 30, 40, 50, 60, 70, 80, 90};
-int colorTable[][3] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}, {13, 14, 15}, {16, 17, 18}, {19, 20, 21}, {22, 23, 24} };
+int tempRanges[] = { -3000, 30, 40, 50, 60, 70, 80, 90};
+int colorTable[][3] = { {255, 0, 255}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}, {13, 14, 15}, {0, 255, 0}, {19, 20, 21}, {255, 0, 0} };
 int numRanges;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ void setRGBColor(int tempF) {
   // start with checking against hottest temp range and work down to coldest
 
   for (int i = numRanges - 1; i >= 0; i--) {
-    if (tempF > tempRanges[i]) {
+    if (tempF >= tempRanges[i]) {
       R = colorTable[i][0];
       G = colorTable[i][1];
       B = colorTable[i][2];
@@ -98,27 +98,21 @@ void printRanges() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int getTemperatureC() {
-  int degC = 0;
+int getTemperatureF() {
+  double deg;
 
   // fixme -- input fahrenheit
   // if someone types in a temperature -- use it!
   if (Serial.available()) {
-    degC = fToC(Serial.parseInt());
+    return Serial.parseInt();
   }
   else {
     int sensorValue = analogRead(temperatureDataPin);
-    int mV = map(sensorValue, 0, 1023, 0, 5000);
-    degC = mV / 20;
+    double mV = map(sensorValue, 0, 1023, 0, 5000);
+    deg = mV / 20.0;
+    deg = (deg * 9.0 / 5.0) + 32.0;
   }
-  return degC;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-int getTemperatureF() {
-  int degC = getTemperatureC();
-  return cToF(degC);
+  return round(deg);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
