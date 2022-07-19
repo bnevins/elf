@@ -1,9 +1,11 @@
 /**
-Temperature meaurement with a TMP37
-20 mV/ degree C
-This is an electronic galileo thermometer. 
-Very simple with 8 colors and 8 temperature ranges
+  Temperature meaurement with a TMP37
+  20 mV/ degree C
+  This is an electronic galileo thermometer.
+  Very simple with 8 colors and 8 temperature ranges
 */
+
+// FIXME off by 1 when enter F --> C  --> F
 
 const int temperatureDataPin = A0;  // A5 == 19, A0 == 14
 const int redPin = 3;
@@ -11,39 +13,78 @@ const int greenPin = 5;
 const int bluePin = 6;
 const boolean debug = true;
 const boolean invert = false; // common cathode:false, common anode:true
-int R, G, B;
+int R = 0, G = 0, B = 255; // very non-OOP but WTF!  Simple.  Use these variables at runtime to set the color values so I don't have to mess with passing an object around...
 // Fahrenheit temp ranges - each number is the bottom temp for the range
 int tempRanges[] = { -100, 30, 40, 50, 60, 70, 80, 90};
-int colorTable[][3] = { {1,2,3}, {1,2,3}, {1,2,3}, {9,9,9}, {9,9,9}, {9,9,9}, {9,9,9}, {9,9,9} };
+int colorTable[][3] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}, {13, 14, 15}, {16, 17, 18}, {19, 20, 21}, {22, 23, 24} };
+int numRanges;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void setup() {
+  numRanges = sizeof(tempRanges) / sizeof(int);
   Serial.begin(9600);
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   printRanges();
-  Serial.print("Enter a temperature in degrees Centigrade to see the corresponding color");
+  Serial.println("Enter a temperature in degrees Fahrenheit to see the corresponding color");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void loop() {
-  int degC = getTemperatureC();
-  setRGBColor(degC);
+  int degF = getTemperatureF();
+  setRGBColor(degF);
   lightRGB();
   delay(5000);
- }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void setRGBColor(int tempF) {
+  // n temperature ranges.  Each element is the lowest temp for the range
+  // figure out what range we're in and set R,G,B to the values set for that range
+  // start with checking against hottest temp range and work down to coldest
+
+  for (int i = numRanges - 1; i >= 0; i--) {
+    if (tempF > tempRanges[i]) {
+      R = colorTable[i][0];
+      G = colorTable[i][1];
+      B = colorTable[i][2];
+
+      if (debug) {
+        Serial.print("Temp: ");
+        Serial.print(tempF);
+        Serial.print("F");
+        Serial.print("   RGB:  ");
+        Serial.print(R);
+        Serial.print(":::");
+        Serial.print(G);
+        Serial.print(":::");
+        Serial.println(B);
+      }
+      break;
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void lightRGB() {
+  analogWrite(redPin, R);
+  analogWrite(greenPin, G);
+  analogWrite(bluePin, B);
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void printRanges() {
   Serial.println("Here is the low temperature for each range along with its RGB color");
-  
-  for(int i = 0; i < sizeof(tempRanges)/sizeof(int); i++) {
-    Serial.print(i);
-    Serial.print("  ");
+
+  for (int i = 0; i < sizeof(tempRanges) / sizeof(int); i++) {
+    //Serial.print(i);
+    //Serial.print("  ");
     Serial.print(tempRanges[i]);
     Serial.print("F     RGB= ");
     Serial.print(colorTable[i][0]);
@@ -60,9 +101,10 @@ void printRanges() {
 int getTemperatureC() {
   int degC = 0;
 
+  // fixme -- input fahrenheit
   // if someone types in a temperature -- use it!
-  if(Serial.available()) {
-    degC = Serial.parseInt();
+  if (Serial.available()) {
+    degC = fToC(Serial.parseInt());
   }
   else {
     int sensorValue = analogRead(temperatureDataPin);
@@ -74,41 +116,28 @@ int getTemperatureC() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+int getTemperatureF() {
+  int degC = getTemperatureC();
+  return cToF(degC);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int cToF(int degC) {
-    return degC * 1.8 + 32;
- }
-
+  double d = degC;
+  return int((d * 1.8) + 32.0);
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void setRGBColor(int tempC) {
-   // 5 temperature ranges.  Each element is the highest temp for the range
-   
-   
-   if(debug) {
-    Serial.print("Temp: ");
-    Serial.print(tempC);
-    Serial.print("C");
-    Serial.print("   RGB:  ");
-    Serial.print(R);
-    Serial.print(":::");
-    Serial.print(G);
-    Serial.print(":::");
-    Serial.println(B);
-  }
+int fToC(int degF) {
+  double d = degF;
+  return int((d - 32.0) * 5.0/9.0);
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
- void lightRGB() {
-  analogWrite(redPin, R);
-  analogWrite(greenPin, G);
-  analogWrite(bluePin, B);
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void debugPrint(String s) {
   if (debug) {
-    Serial.print(s);
+    Serial.print(" DEBUG ******   ");
+    Serial.println(s);
   }
 }
