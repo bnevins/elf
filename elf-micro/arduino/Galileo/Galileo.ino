@@ -146,7 +146,7 @@ int getTemperatureF() {
     debugPrint("C");
     debugPrint(",  ");
 
-    deg = (deg * 9.0 / 5.0) + 32.0;
+    deg = (deg * 1.8) + 32.0;
     int ret = round(deg);
 
     debugPrint(String(deg));
