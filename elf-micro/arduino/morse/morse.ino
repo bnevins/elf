@@ -1,9 +1,34 @@
-int pin = 13;
+const int keyer = 4;
+const int speakerPin = 9;
+const int ledPin = 13;
+const int pitch = 698;
+
 
 void setup()
 {
-  pinMode(pin, OUTPUT);
+  pinMode(keyer, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
 }
+
+ void loop()
+{
+  boolean up = digitalRead(keyer); // +5V == key UP, Ground is key down
+
+  if(up) {
+    noTone(speakerPin);
+    digitalWrite(ledPin, LOW);
+  }
+  else {
+    tone(speakerPin, pitch);
+    digitalWrite(ledPin, HIGH);
+  }
+   delay(10);  
+ }
+
+
+/***
+ int pin = 13;
+
 
 void loop()
 {
@@ -28,4 +53,4 @@ void dash()
   digitalWrite(pin, LOW);
   delay(250);
 }
-
+***/
