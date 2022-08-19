@@ -1,8 +1,20 @@
 /**
   Temperature meaurement with a TMP37
-  20 mV/ degree C
+  20 mV/ degre
+
   This is an electronic galileo thermometer.
   Very simple with 8 colors and 8 temperature ranges
+
+   Temp Sensor: ????
+   3 color LED is common cathode.  Long lead is cathode.  R-CATHODE-G-B
+   6 connections to Arduino:
+   1. +5V to pin 1 of temp sensor (flat side UP, pins coming out at you, left=1, right = 3)
+   2. A0 goes to pin 2 of temp sensor
+   3. GND goes to Pin 2 of LED and pin 3 of temp sensor
+   4. D3 to 220R to RED pin of LED
+   5. D5 to 220R to green pin of LED
+   6. D6 to to 220R blue pin of led
+
 */
 
 // FIXME off by 1 when enter F --> C  --> F
@@ -14,21 +26,32 @@ const int bluePin = 6;
 const boolean debug = true;
 const boolean invert = false; // common cathode:false, common anode:true
 int R = 0, G = 0, B = 255; // very non-OOP but WTF!  Simple.  Use these variables at runtime to set the color values so I don't have to mess with passing an object around...
+
 // Fahrenheit temp ranges - each number is the bottom temp for the range
 int tempRanges[] = { -3000, 30, 40, 50, 60, 70, 80, 90};
-int colorTable[][3] = { {255, 0, 255}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}, {13, 14, 15}, {0, 255, 0}, {19, 20, 21}, {255, 0, 0} };
-int numRanges;
+const int numRanges = sizeof(tempRanges) / sizeof(int);;
+int colorTable[][3] = {
+  {255, 0, 255}, // Under 30
+  {4, 5, 6},    // 30-39
+  {7, 8, 9},    // 40-49
+  {10, 11, 12}, // 50-59
+  {13, 14, 15}, // 60-69
+  {0, 255, 0},  // 70-79
+  {19, 20, 21}, // 80-89
+  {255, 0, 0}   // 90+
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void setup() {
-  numRanges = sizeof(tempRanges) / sizeof(int);
   Serial.begin(9600);
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   printRanges();
-  Serial.println("Enter a temperature in degrees Fahrenheit to see the corresponding color");
+  Serial.println("**********************************************************************************");
+  Serial.println("***  Enter a temperature in degrees Fahrenheit to see the corresponding color ****");
+  Serial.println("**********************************************************************************\n");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +86,7 @@ void setRGBColor(int tempF) {
         Serial.print(G);
         Serial.print(":::");
         Serial.println(B);
+        Serial.println("");
       }
       break;
     }
@@ -93,7 +117,7 @@ void printRanges() {
     Serial.print(":::");
     Serial.println(colorTable[i][2]);
   }
-  Serial.print("\n\n\n");
+  Serial.print("\n");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,11 +132,30 @@ int getTemperatureF() {
   }
   else {
     int sensorValue = analogRead(temperatureDataPin);
+    debugPrint("sensor value: ");
+    debugPrint(String(sensorValue));
     double mV = map(sensorValue, 0, 1023, 0, 5000);
+    debugPrint(",  ");
+    debugPrint(String(mV));
+    debugPrint("mV");
+    debugPrint(", ");
+
     deg = mV / 20.0;
+
+    debugPrint(String(deg));
+    debugPrint("C");
+    debugPrint(",  ");
+
     deg = (deg * 9.0 / 5.0) + 32.0;
+    int ret = round(deg);
+
+    debugPrint(String(deg));
+    debugPrint("F");
+    debugPrint(",  rounded off: ");
+    debugPrint(String(ret));
+    debugPrint("F\n");
+    return ret;
   }
-  return round(deg);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,13 +168,13 @@ int cToF(int degC) {
 
 int fToC(int degF) {
   double d = degF;
-  return int((d - 32.0) * 5.0/9.0);
+  return int((d - 32.0) * 5.0 / 9.0);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void debugPrint(String s) {
   if (debug) {
-    Serial.print(" DEBUG ******   ");
-    Serial.println(s);
+    //Serial.print(" DEBUG ******   ");
+    Serial.print(s);
   }
 }
