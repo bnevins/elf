@@ -11,9 +11,9 @@
    1. +5V to pin 1 of temp sensor (flat side UP, pins coming out at you, left=1, right = 3)
    2. A0 goes to pin 2 of temp sensor
    3. GND goes to Pin 2 of LED and pin 3 of temp sensor
-   4. D3 to 220R to RED pin of LED
-   5. D5 to 220R to green pin of LED
-   6. D6 to to 220R blue pin of led
+   4. D3 to 220R to RED pin of LED (pin 1)
+   5. D5 to 220R to green pin of LED (pin 3)
+   6. D6 to to 220R blue pin of LED (pin 4)
 
 */
 
