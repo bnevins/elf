@@ -27,8 +27,8 @@ const int     speakerTime   = 2000;
 const int     note1         = NOTE_F5;   
 const int     note2         = NOTE_G6;   
 const int     note3         = NOTE_G4;   
-int           liftTime = 60000;  //msec
-unsigned long restTime = 180000; // msec
+int           liftTime = 40000;  //msec
+unsigned long restTime = 60000; // msec
 bool          longRestTime = true;
 
 
