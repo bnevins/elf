@@ -16,7 +16,8 @@
         <module>elf-raspberry</module>
     	<module>elf-jfx</module>
     	<module>elf-external</module>
-  </modules>
+              <module>JShowart</module>
+       </modules>
 
     <build>
         <defaultGoal>install</defaultGoal>
