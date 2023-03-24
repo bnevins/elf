@@ -13,19 +13,22 @@ import javax.swing.JFrame;
  */
 public class JShowartApp {
 
-    public JShowartApp(int numBuffers, GraphicsDevice gd) {
+    private static JShowartFrame frame;
 
+    public JShowartApp() {
 
     }
 
     public static void main(String args[]) {
-        
-        EventQueue.invokeLater(() ->
-         {
-            JFrame frame = new JShowartFrame();
+
+        JShowartApp app = new JShowartApp();
+
+        EventQueue.invokeLater(()
+                -> {
+            frame = new JShowartFrame();
             frame.setTitle("JShowArt");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
-         });
+        });
     }
 }
