@@ -17,6 +17,7 @@
     	<module>elf-jfx</module>
     	<module>elf-external</module>
               <module>JShowart</module>
+              <module>Calc</module>
        </modules>
 
     <build>
