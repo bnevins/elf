@@ -94,7 +94,8 @@ public class JShowartFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
-        // TODO add your handling code here:
+        AboutDialog about = new AboutDialog(this, true);
+        about.setVisible(true);
     }//GEN-LAST:event_aboutActionPerformed
 
     /**
