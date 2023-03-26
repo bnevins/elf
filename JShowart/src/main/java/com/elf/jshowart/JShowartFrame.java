@@ -6,6 +6,8 @@ package com.elf.JShowart;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -41,21 +43,55 @@ public class JShowartFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        MenuFile = new javax.swing.JMenu();
+        MenuOpen = new javax.swing.JMenuItem();
+        MenuSave = new javax.swing.JMenuItem();
+        MenuSaveAs = new javax.swing.JMenuItem();
+        MenuEdit = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
 
+        jMenu7.setText("jMenu7");
+
+        jMenuItem1.setText("jMenuItem1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        MenuFile.setText("File");
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        MenuOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuOpen.setText("Open...");
+        MenuOpen.setToolTipText("Open Image(s)");
+        MenuOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuOpenActionPerformed(evt);
+            }
+        });
+        MenuFile.add(MenuOpen);
+
+        MenuSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuSave.setText("Save");
+        MenuSave.setToolTipText("Save Image");
+        MenuFile.add(MenuSave);
+
+        MenuSaveAs.setText("Save As...");
+        MenuSaveAs.setToolTipText("Save Image As...");
+        MenuSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSaveAsActionPerformed(evt);
+            }
+        });
+        MenuFile.add(MenuSaveAs);
+
+        jMenuBar1.add(MenuFile);
+
+        MenuEdit.setText("Edit");
+        jMenuBar1.add(MenuEdit);
 
         jMenu3.setText("View");
         jMenuBar1.add(jMenu3);
@@ -98,6 +134,28 @@ public class JShowartFrame extends javax.swing.JFrame {
         about.setVisible(true);
     }//GEN-LAST:event_aboutActionPerformed
 
+    private void MenuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG, BMP, PNG, GIF and TIFF Images", "jpg", "bmp","png", "gif", "tif");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: "
+                    + chooser.getSelectedFile().getName());
+        }
+    }//GEN-LAST:event_MenuOpenActionPerformed
+
+    private void MenuSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveAsActionPerformed
+        
+  JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to save this file: "
+                    + chooser.getSelectedFile().getName());
+        }
+    }//GEN-LAST:event_MenuSaveAsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -134,12 +192,17 @@ public class JShowartFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu MenuEdit;
+    private javax.swing.JMenu MenuFile;
+    private javax.swing.JMenuItem MenuOpen;
+    private javax.swing.JMenuItem MenuSave;
+    private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem about;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
 }
