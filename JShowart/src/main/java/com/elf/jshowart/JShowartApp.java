@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 public class JShowartApp {
 
     private static JShowartFrame frame;
+    private static JShowartView view;
 
     public JShowartApp() {
 
@@ -29,6 +30,9 @@ public class JShowartApp {
             frame.setTitle("JShowArt");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
+            view = new JShowartView();
+            frame.getContentPane().add(view);
+            view.setVisible(true);
         });
     }
 }

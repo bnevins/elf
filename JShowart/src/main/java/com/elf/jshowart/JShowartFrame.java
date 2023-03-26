@@ -5,6 +5,7 @@
 package com.elf.JShowart;
 
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,6 +22,7 @@ public class JShowartFrame extends javax.swing.JFrame {
     public JShowartFrame() {
         initComponents();
         setSizeAndPosition();
+        LayoutManager lm = getContentPane().getLayout();
     }
 
     private void setSizeAndPosition() {
@@ -61,6 +63,8 @@ public class JShowartFrame extends javax.swing.JFrame {
         jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("JShowArt");
+        setAlwaysOnTop(true);
 
         MenuFile.setText("File");
 
@@ -114,17 +118,6 @@ public class JShowartFrame extends javax.swing.JFrame {
         jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 839, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
