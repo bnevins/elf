@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.LayoutManager;
 import java.awt.Panel;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,16 +36,15 @@ public class JShowartView extends JScrollPane {
         //Class c = lm.getClass();
     }
 
+    // TODO set scroll size
     @Override
     public void paint(Graphics g) {
         if(image == null)
             return;
         
-        int h = image.getHeight();
-        int w = image.getWidth();
-
-        //g.drawImage(image, 0, 0, null);
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), 0, 0, w, h, null);
+        Rectangle r = Utils.fitToWindow(new Dimension(getWidth(), getHeight()), new Dimension(image.getWidth(), image.getHeight()));
+        g.drawImage(image, r.x, r.y, r.width, r.height, null);
+        //g.drawImage(image, 0, 0, getWidth(), getHeight(), 0, 0, w, h, null);
     }
 
     void setImage(File f) {
