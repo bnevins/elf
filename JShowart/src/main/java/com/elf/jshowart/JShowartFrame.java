@@ -6,6 +6,7 @@ package com.elf.JShowart;
 
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -16,24 +17,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class JShowartFrame extends javax.swing.JFrame {
 
+    private UserPreferences prefs;
+
     /**
      * Creates new form JShowartFrame
      */
     public JShowartFrame() {
+        prefs = UserPreferences.get();
         initComponents();
-        setSizeAndPosition();
-        LayoutManager lm = getContentPane().getLayout();
-    }
-
-    private void setSizeAndPosition() {
-
-        // TODO get stored last size
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        Dimension screenSize = kit.getScreenSize();
-        int screenWidth = screenSize.width;
-        int screenHeight = screenSize.height;
-        setSize(screenWidth / 2, screenHeight / 2);
-        setLocation(screenWidth / 4, screenHeight / 4);
+        setBounds(prefs.windowBounds);
+        //LayoutManager lm = getContentPane().getLayout();
     }
 
     /**
@@ -65,6 +58,11 @@ public class JShowartFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
         setAlwaysOnTop(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                onWindowClosing(evt);
+            }
+        });
 
         MenuFile.setText("File");
 
@@ -130,7 +128,7 @@ public class JShowartFrame extends javax.swing.JFrame {
     private void MenuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenActionPerformed
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "JPG, BMP, PNG, GIF and TIFF Images", "jpg", "bmp","png", "gif", "tif");
+                "JPG, BMP, PNG, GIF and TIFF Images", "jpg", "bmp", "png", "gif", "tif");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -140,14 +138,19 @@ public class JShowartFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuOpenActionPerformed
 
     private void MenuSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveAsActionPerformed
-        
-  JFileChooser chooser = new JFileChooser();
+
+        JFileChooser chooser = new JFileChooser();
         int returnVal = chooser.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             System.out.println("You chose to save this file: "
                     + chooser.getSelectedFile().getName());
         }
     }//GEN-LAST:event_MenuSaveAsActionPerformed
+
+    private void onWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowClosing
+        prefs.windowBounds = getBounds();
+        prefs.write();
+    }//GEN-LAST:event_onWindowClosing
 
     /**
      * @param args the command line arguments
