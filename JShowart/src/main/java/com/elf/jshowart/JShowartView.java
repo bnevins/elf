@@ -23,25 +23,23 @@ import javax.swing.JScrollPane;
 public class JShowartView extends JScrollPane {
 
     BufferedImage image;
-    //String imageName = "Q:\\P\\_stills\\_sbest\\0007.jpg";
-    String imageName = "C:/Users/bnevins/Desktop/wallpaper/HeartB_Jensen_3925.jpg";
+    File imageFile;
+    UserPreferences prefs = UserPreferences.get();
 
     /**
      * Creates new form JShowartView
      */
     public JShowartView() {
-        //initComponents();
-        try {
-            image = ImageIO.read(new File(imageName));
-        } catch (IOException ex) {
-            Logger.getLogger(JShowartView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            LayoutManager lm = getLayout();
-        Class c = lm.getClass();
+        
+            //LayoutManager lm = getLayout();
+        //Class c = lm.getClass();
     }
 
     @Override
     public void paint(Graphics g) {
+        if(image == null)
+            return;
+        
         int h = image.getHeight();
         int w = image.getWidth();
 
@@ -49,6 +47,18 @@ public class JShowartView extends JScrollPane {
         g.drawImage(image, 0, 0, getWidth(), getHeight(), 0, 0, w, h, null);
     }
 
+    void setImage(File f) {
+        imageFile = f;
+        
+        try {
+            image = ImageIO.read(imageFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JShowartView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        repaint();
+        prefs.previousOpenFolder = imageFile.getParentFile();
+    }
+    
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(500, 500);

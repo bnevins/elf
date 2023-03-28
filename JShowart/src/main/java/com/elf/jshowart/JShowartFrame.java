@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -18,6 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class JShowartFrame extends javax.swing.JFrame {
 
     private UserPreferences prefs;
+    private JShowartView view;
 
     /**
      * Creates new form JShowartFrame
@@ -57,7 +59,6 @@ public class JShowartFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
-        setAlwaysOnTop(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 onWindowClosing(evt);
@@ -126,14 +127,16 @@ public class JShowartFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutActionPerformed
 
     private void MenuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenActionPerformed
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(prefs.previousOpenFolder);
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "JPG, BMP, PNG, GIF and TIFF Images", "jpg", "bmp", "png", "gif", "tif");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("You chose to open this file: "
-                    + chooser.getSelectedFile().getName());
+            File f = chooser.getSelectedFile();
+            System.out.println("You chose to open this file: " + f.getName());
+            view.setImage(f);
+            
         }
     }//GEN-LAST:event_MenuOpenActionPerformed
 
@@ -201,4 +204,8 @@ public class JShowartFrame extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
+
+    void setView(JShowartView view) {
+        this.view = view;
+    }
 }

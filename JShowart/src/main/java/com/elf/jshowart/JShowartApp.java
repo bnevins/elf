@@ -32,6 +32,7 @@ public class JShowartApp {
             frame.setVisible(true);
             view = new JShowartView();
             frame.getContentPane().add(view);
+            frame.setView(view);
             view.setVisible(true);
         });
     }

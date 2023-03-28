@@ -7,6 +7,7 @@ package com.elf.JShowart;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.File;
 import java.util.prefs.Preferences;
 
 /**
@@ -17,6 +18,7 @@ import java.util.prefs.Preferences;
 public final class UserPreferences {
 
     public Rectangle windowBounds;
+    public File previousOpenFolder;
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -32,10 +34,12 @@ public final class UserPreferences {
 
     public void read() {
         windowBounds = readWindowBounds();
+        previousOpenFolder = new File(node.get("previousOpenFolder", "."));
     }
 
     public void write() {
        writeWindowBounds();
+       node.put("previousOpenFolder", previousOpenFolder.getAbsolutePath());
     }
 
     private final Preferences node;
