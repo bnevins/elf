@@ -1,7 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package com.elf.JShowart;
+package com.elf.jshowart;
 
 import java.awt.*;
 //import java.awt.image.BufferStrategy;
