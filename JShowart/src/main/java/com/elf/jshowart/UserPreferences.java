@@ -28,7 +28,7 @@ public final class UserPreferences {
         System.out.println("USER PREFS CTOR HERE!!!!");
     }
 
-    public static UserPreferences get() {
+    public static synchronized UserPreferences get() {
         if (INSTANCE == null) {
             INSTANCE = new UserPreferences();
         }
