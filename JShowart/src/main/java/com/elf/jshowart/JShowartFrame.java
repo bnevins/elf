@@ -4,6 +4,8 @@
  */
 package com.elf.jshowart;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,7 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author bnevins
  */
-public class JShowartFrame extends javax.swing.JFrame {
+public class JShowartFrame extends javax.swing.JFrame{
 
     private final UserPreferences prefs;
     private JShowartView view;
@@ -28,10 +30,10 @@ public class JShowartFrame extends javax.swing.JFrame {
             "jpg", "jpeg", "bmp", "png", "gif", "tif");
         initComponents();
         setBounds(prefs.windowBounds);
-
+        addKeyListener(Globals.view);
+        Globals.frame = this;
         //LayoutManager lm = getContentPane().getLayout();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -143,7 +145,7 @@ public class JShowartFrame extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
             System.out.println("You chose to open this file: " + f.getName());
-            view.setImage(f);
+            //view.setImage(f);
             prefs.previousOpenFileParent = f.getParentFile();
             System.out.println("DEBUG XYZ:  " + f.getPath());
             System.out.println("DEBUG XYZZZZ:  " + f.getAbsolutePath());
