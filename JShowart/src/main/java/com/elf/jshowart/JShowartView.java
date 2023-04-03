@@ -4,31 +4,25 @@
  */
 package com.elf.jshowart;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.LayoutManager;
-import java.awt.Panel;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.JScrollPane;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import java.util.logging.*;
+import javax.imageio.*;
+import javax.swing.*;
 
 /**
  *
  * @author bnevins
  */
-public class JShowartView extends JScrollPane implements KeyListener {
+public class JShowartView extends JPanel implements KeyListener {
 
     private BufferedImage image;
     private File prevImageFile = null;
     private UserPreferences prefs = UserPreferences.get();
     private ArtLib artlib = ArtLib.get();
+    private JScrollPane parentPane;
 
     /**
      * Creates new form JShowartView
@@ -57,27 +51,29 @@ public class JShowartView extends JScrollPane implements KeyListener {
 
     // TODO set scroll size
     @Override
-    public void paint(Graphics g) {
-        if(image == null)
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (image == null)
             return;
-        super.paint(g);
+        //super.paint(g);
         Rectangle r = Utils.fitToWindow(new Dimension(getWidth(), getHeight()), new Dimension(image.getWidth(), image.getHeight()));
-        g.drawImage(image, r.x, r.y, r.width, r.height, null);
-        //g.drawImage(image, 0, 0, getWidth(), getHeight(), 0, 0, w, h, null);
+        //g.drawImage(image, r.x, r.y, r.width, r.height, null);
+        g.drawImage(image, 0, 0, null);
     }
 
     void nextImage() {
         File imageFile = artlib.next();
-        
-        if(imageFile == null) {
+
+        if (imageFile == null) {
             image = null;
             return;
         }
 
         // if we have only 1 file in artlib, don't waste time re-reading it
-        if(imageFile.equals(prevImageFile))
+        if (imageFile.equals(prevImageFile))
             return;
-        
+
         prevImageFile = imageFile;
 
         try {
@@ -86,21 +82,35 @@ public class JShowartView extends JScrollPane implements KeyListener {
             Logger.getLogger(JShowartView.class.getName()).log(Level.SEVERE, null, ex);
             image = null;
         }
+
+        setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+        //invalidate();
+        resetScrollbars();
+        parentPane.revalidate();
         repaint();
-        
         // TODO -- possible junk in window on initial draw.  This doesn't work -->invalidate();
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(500, 500);
-    }
-
+    //@Override
+    //public Dimension getPreferredSize() {
+    //    return new Dimension(500, 500);
+    //}
     void imagesReplaced() {
         // files were just opened
         image = null;
         prevImageFile = null;
         nextImage();
+    }
+
+    void setContainer(JScrollPane jsp) {
+        parentPane = jsp;
+    }
+
+    private void resetScrollbars() {
+        JScrollBar verticalScrollBar = parentPane.getVerticalScrollBar();
+        JScrollBar horizontalScrollBar = parentPane.getHorizontalScrollBar();
+        verticalScrollBar.setValue(verticalScrollBar.getMinimum());
+        horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
     }
 
 }

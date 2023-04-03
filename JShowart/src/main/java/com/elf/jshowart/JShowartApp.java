@@ -5,7 +5,7 @@ package com.elf.jshowart;
 
 import java.awt.*;
 //import java.awt.image.BufferStrategy;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  *
@@ -31,7 +31,11 @@ public class JShowartApp {
             frame.setTitle("JShowArt");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
-            frame.getContentPane().add(view);
+            System.out.println("content pane == " + frame.getContentPane());
+            JScrollPane jsp = new JScrollPane(view);
+            view.setContainer(jsp);
+            frame.setLayout(new BorderLayout());
+            frame.add(jsp, BorderLayout.CENTER);
             frame.setView(view);
             view.setVisible(true);
         });
