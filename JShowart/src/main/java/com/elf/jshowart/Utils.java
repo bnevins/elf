@@ -22,7 +22,7 @@ public class Utils {
         var prefs = UserPreferences.get();
 
         // first figure out width & height of the image
-        if ((windowDim.width != imageDim.width || windowDim.height != imageDim.height) && prefs.stretch) {
+        if ((windowDim.width != imageDim.width || windowDim.height != imageDim.height) && prefs.fitToWindow) {
             // this makes the code MUCH more readable than a bunch of inline casts!!
             double dWindowWidth = windowDim.width;
             double dWindowHeight = windowDim.height;

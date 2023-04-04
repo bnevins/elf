@@ -29,6 +29,7 @@ public class JShowartFrame extends javax.swing.JFrame{
             "JPG, BMP, PNG, GIF and TIFF Images",
             "jpg", "jpeg", "bmp", "png", "gif", "tif");
         initComponents();
+        MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
         addKeyListener(Globals.view);
         Globals.frame = this;
@@ -53,6 +54,7 @@ public class JShowartFrame extends javax.swing.JFrame{
         MenuSaveAs = new javax.swing.JMenuItem();
         MenuEdit = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
+        MenuFitToWindow = new javax.swing.JCheckBoxMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
@@ -109,6 +111,17 @@ public class JShowartFrame extends javax.swing.JFrame{
         jMenuBar1.add(MenuEdit);
 
         jMenu3.setText("View");
+
+        MenuFitToWindow.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuFitToWindow.setSelected(true);
+        MenuFitToWindow.setText("Fit To Window");
+        MenuFitToWindow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuFitToWindowActionPerformed(evt);
+            }
+        });
+        jMenu3.add(MenuFitToWindow);
+
         jMenuBar1.add(jMenu3);
 
         jMenu4.setText("Utilities");
@@ -181,6 +194,11 @@ public class JShowartFrame extends javax.swing.JFrame{
 
     }//GEN-LAST:event_MenuOpenFoldersActionPerformed
 
+    private void MenuFitToWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuFitToWindowActionPerformed
+        System.out.println("FitToWindow: isSelected: " + MenuFitToWindow.isSelected() + "   " + evt);
+        prefs.fitToWindow = MenuFitToWindow.isSelected();
+    }//GEN-LAST:event_MenuFitToWindowActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -219,6 +237,7 @@ public class JShowartFrame extends javax.swing.JFrame{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu MenuEdit;
     private javax.swing.JMenu MenuFile;
+    private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
     private javax.swing.JMenuItem MenuOpenFiles;
     private javax.swing.JMenuItem MenuOpenFolders;
     private javax.swing.JMenuItem MenuSave;

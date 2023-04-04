@@ -20,7 +20,7 @@ public final class UserPreferences {
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousOpenFolder;
-    public boolean stretch;
+    public boolean fitToWindow;
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -39,7 +39,7 @@ public final class UserPreferences {
         windowBounds = readWindowBounds();
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousOpenFolder = new File(node.get("previousOpenFolder", "."));
-        stretch = node.getBoolean("stretch", true);
+        fitToWindow = node.getBoolean("stretch", true);
         System.out.println("READ XXX: " + previousOpenFileParent);
     }
 
@@ -48,8 +48,7 @@ public final class UserPreferences {
         System.out.println("WRITE XXXXX:  " + previousOpenFileParent.getAbsolutePath());
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
         node.put("previousOpenFolder", previousOpenFolder.getAbsolutePath());
-        node.putBoolean("stretch", stretch);
-        node.putBoolean("stretch", true); // TEMP TEMP TEMP!!!!
+        node.putBoolean("stretch", fitToWindow);
     }
 
     private final Preferences node;

@@ -23,6 +23,7 @@ public class JShowartView extends JPanel implements KeyListener {
     private UserPreferences prefs = UserPreferences.get();
     private ArtLib artlib = ArtLib.get();
     private JScrollPane parentPane;
+    private Dimension preferredSize;
 
     /**
      * Creates new form JShowartView
@@ -56,10 +57,22 @@ public class JShowartView extends JPanel implements KeyListener {
 
         if (image == null)
             return;
-        //super.paint(g);
-        Rectangle r = Utils.fitToWindow(new Dimension(getWidth(), getHeight()), new Dimension(image.getWidth(), image.getHeight()));
-        //g.drawImage(image, r.x, r.y, r.width, r.height, null);
-        g.drawImage(image, 0, 0, null);
+        System.out.println("View width = " + getWidth());
+        System.out.println("Scrollpane width = " + parentPane.getWidth());
+        System.out.println("Viewport width = " + parentPane.getViewport().getWidth());
+        System.out.println("");
+
+        if (prefs.fitToWindow) {
+            Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
+            System.out.println("Image Rectangle = " +r);
+            System.out.println("Image width, height = " + image.getWidth() + ", " + image.getHeight());
+            setBounds(r.getBounds());
+            preferredSize=new Dimension(r.width, r.height);
+            g.drawImage(image, r.x, r.y, r.width, r.height, null);
+        } else {
+            g.drawImage(image, 0, 0, null);
+            preferredSize = new Dimension(image.getWidth(), image.getHeight());
+        }
     }
 
     void nextImage() {
@@ -91,10 +104,13 @@ public class JShowartView extends JPanel implements KeyListener {
         // TODO -- possible junk in window on initial draw.  This doesn't work -->invalidate();
     }
 
-    //@Override
-    //public Dimension getPreferredSize() {
-    //    return new Dimension(500, 500);
-    //}
+    @Override
+    public Dimension getPreferredSize() {
+        if(preferredSize == null)
+            return super.getPreferredSize();
+        else
+            return preferredSize;
+    }
     void imagesReplaced() {
         // files were just opened
         image = null;
