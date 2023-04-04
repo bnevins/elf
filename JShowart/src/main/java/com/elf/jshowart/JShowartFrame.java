@@ -197,6 +197,10 @@ public class JShowartFrame extends javax.swing.JFrame{
     private void MenuFitToWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuFitToWindowActionPerformed
         System.out.println("FitToWindow: isSelected: " + MenuFitToWindow.isSelected() + "   " + evt);
         prefs.fitToWindow = MenuFitToWindow.isSelected();
+        //revalidate();
+        //view.invalidate();
+        //view.repaint();
+        repaint();
     }//GEN-LAST:event_MenuFitToWindowActionPerformed
 
     /**
