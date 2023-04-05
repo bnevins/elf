@@ -27,6 +27,7 @@ public class JShowartApp {
         EventQueue.invokeLater(()
                 -> {
             view = new JShowartView(); // this MUST be created before frame for setting up key handler?
+            view.setBackground(Color.black);
             frame = new JShowartFrame();
             frame.setTitle("JShowArt");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

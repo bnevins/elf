@@ -4,21 +4,23 @@
  */
 package com.elf.jshowart;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
-import javax.swing.JFileChooser;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author bnevins
  */
-public class JShowartFrame extends javax.swing.JFrame{
+public class JShowartFrame extends JFrame implements KeyListener{
 
     private final UserPreferences prefs;
     private JShowartView view;
     private final FileNameExtensionFilter filter;
+    private static GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+    private boolean currentFullScreen = false;
 
     /**
      * Creates new form JShowartFrame
@@ -32,9 +34,53 @@ public class JShowartFrame extends javax.swing.JFrame{
         MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
         addKeyListener(Globals.view);
+        addKeyListener(this);
         Globals.frame = this;
         //LayoutManager lm = getContentPane().getLayout();
     }
+    
+    void toggleFullScreen() {
+        System.out.println("TOGGLE FULL SCREEN = " + currentFullScreen);
+        currentFullScreen = !currentFullScreen;
+
+        if (currentFullScreen) {
+            // TODO remove menubar
+            setVisible(false);
+            dispose();
+            setUndecorated(true);
+            setResizable(false);
+            //setExtendedState(JFrame.MAXIMIZED_BOTH); 
+            graphicsDevice.setFullScreenWindow(this);
+            setAlwaysOnTop(true);
+            setVisible(true);
+        } else {
+            graphicsDevice.setFullScreenWindow(null);
+            dispose();
+            setUndecorated(false);
+            setResizable(true);
+            setExtendedState(JFrame.NORMAL);
+            setBounds(prefs.windowBounds);
+            setAlwaysOnTop(false);
+            setVisible(true);
+        }
+    }
+     /***
+         * addWindowListener WindowAdapter
+         * @Override
+protected void processWindowEvent(WindowEvent e)
+{
+    if (e.getID() == WindowEvent.WINDOW_DEACTIVATED)
+    {
+        // windowState is set in my set full screen code
+        if (windowState == WindowState.FULL_SCREEN)
+        {
+            return;
+        }
+    }        
+
+    super.processWindowEvent(e);        
+}  
+         */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -257,5 +303,22 @@ public class JShowartFrame extends javax.swing.JFrame{
 
     void setView(JShowartView view) {
         this.view = view;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+         char key = e.getKeyChar();
+        switch (key) {
+            case KeyEvent.VK_ESCAPE ->
+                toggleFullScreen();
+        }
+   }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

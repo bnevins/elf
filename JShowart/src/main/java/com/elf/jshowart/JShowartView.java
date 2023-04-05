@@ -16,7 +16,7 @@ import javax.swing.*;
  *
  * @author bnevins
  */
-public class JShowartView extends JPanel implements KeyListener, ComponentListener {
+public class JShowartView extends JPanel implements KeyListener {
 
     private BufferedImage image;
     private File prevImageFile = null;
@@ -24,6 +24,7 @@ public class JShowartView extends JPanel implements KeyListener, ComponentListen
     private ArtLib artlib = ArtLib.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
+    
 
     /**
      * Creates new form JShowartView
@@ -35,9 +36,12 @@ public class JShowartView extends JPanel implements KeyListener, ComponentListen
 
     public void keyTyped(KeyEvent e) {
         //System.out.println("KEY TYPED" + e); 
-        if (e.getKeyChar() == ' ') {
-            System.out.println("SPACE PRESSED!!!!");
-            nextImage();
+        char key = e.getKeyChar();
+        switch (key) {
+            case ' ' ->
+                nextImage();
+            //case KeyEvent.VK_ESCAPE ->
+                //Globals.frame.toggleFullScreen();
         }
     }
 
@@ -61,13 +65,13 @@ public class JShowartView extends JPanel implements KeyListener, ComponentListen
 //        System.out.println("Scrollpane width = " + parentPane.getWidth());
 //        System.out.println("Viewport width = " + parentPane.getViewport().getWidth());
 //        System.out.println("");
-
+        System.out.println("COLOR is: " + g.getColor());
         if (prefs.fitToWindow) {
             Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
             //System.out.println("Image Rectangle = " +r);
             //System.out.println("Image width, height = " + image.getWidth() + ", " + image.getHeight());
             setBounds(r.getBounds());
-            preferredSize=new Dimension(r.width, r.height);
+            preferredSize = new Dimension(r.width, r.height);
             g.drawImage(image, r.x, r.y, r.width, r.height, null);
         } else {
             g.drawImage(image, 0, 0, null);
@@ -106,11 +110,12 @@ public class JShowartView extends JPanel implements KeyListener, ComponentListen
 
     @Override
     public Dimension getPreferredSize() {
-        if(preferredSize == null)
+        if (preferredSize == null)
             return super.getPreferredSize();
         else
             return preferredSize;
     }
+
     void imagesReplaced() {
         // files were just opened
         image = null;
@@ -129,28 +134,7 @@ public class JShowartView extends JPanel implements KeyListener, ComponentListen
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
     }
 
-    @Override
-    public void componentResized(ComponentEvent e) {
-        System.out.println("COMPONENT RESIZED!!!");
-        System.out.println("View width = " + getWidth());
-        System.out.println("Scrollpane width = " + parentPane.getWidth());
-        System.out.println("Viewport width = " + parentPane.getViewport().getWidth());
-        System.out.println("");    
+    
+       
     }
 
-    @Override
-    public void componentMoved(ComponentEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-}
