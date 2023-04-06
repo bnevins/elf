@@ -46,7 +46,8 @@ public class JShowartView extends JPanel implements KeyListener {
         switch (key) {
             case VK_SPACE, VK_RIGHT ->
                 nextImage();
-
+            case VK_LEFT ->
+                prevImage();
             //case KeyEvent.VK_ESCAPE ->
             //Globals.frame.toggleFullScreen();
         }
@@ -82,8 +83,13 @@ public class JShowartView extends JPanel implements KeyListener {
     }
 
     void nextImage() {
-        File imageFile = artlib.next();
+       setupImage(artlib.next());
+    }
+    void prevImage() {
+       setupImage(artlib.prev());
+    }
 
+    private void setupImage(File imageFile) {
         if (imageFile == null) {
             image = null;
             return;
@@ -109,7 +115,6 @@ public class JShowartView extends JPanel implements KeyListener {
         repaint();
         // TODO -- possible junk in window on initial draw.  This doesn't work -->invalidate();
     }
-
     @Override
     public Dimension getPreferredSize() {
         if (preferredSize == null)
