@@ -21,16 +21,41 @@ import java.util.stream.Stream;
 public class ArtLib {
 
     public File next() {
-        int num = files.size();
-        
-        if(num <= 0)
+        if(isEmpty())
             return null;
         
-        if(++currentImage >= num) {
-            currentImage = 0;
+        int num = files.size();
+        
+        if(++currentImageNum >= num) {
+            currentImageNum = 0;
         }
-        return files.get(currentImage);
+        return files.get(currentImageNum);
     }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    public File prev() {
+        if(isEmpty())
+            return null;
+        
+        int num = files.size();
+        
+        if(--currentImageNum < 0) {
+            currentImageNum = num - 1;
+        }
+        return files.get(currentImageNum);
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    public File curr() {
+        if(currentImageNum <= 0)
+            return null;
+        
+        return files.get(currentImageNum);
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
     
     public static synchronized ArtLib get() {
         if (INSTANCE == null) {
@@ -38,7 +63,9 @@ public class ArtLib {
         }
         return INSTANCE;
     }
-
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     public int add(Path path) {
         if (Files.isDirectory(path)) {
             try (Stream<Path> stream = Files.list(path)) {
@@ -53,21 +80,40 @@ public class ArtLib {
         }
         return files.size();
     }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     public int replace(Path path) {
         clear();
         int numFiles = add(path);
         Globals.view.imagesReplaced();
         return numFiles;
     }
-
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  private below
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private ArtLib() {
         files = new ArrayList<File>();
     }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private void clear() {
-        currentImage = -1;
+        currentImageNum = -1;
         files.clear();
     }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    private boolean isEmpty() {
+        return files.size() <= 0;
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private static ArtLib INSTANCE = null;
     private ArrayList<File> files;
-    private int currentImage = -1;
+    private int currentImageNum = -1;
 }

@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.logging.*;
 import javax.imageio.*;
 import javax.swing.*;
+import static java.awt.event.KeyEvent.*;
 
 /**
  *
@@ -24,7 +25,6 @@ public class JShowartView extends JPanel implements KeyListener {
     private ArtLib artlib = ArtLib.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
-    
 
     /**
      * Creates new form JShowartView
@@ -36,18 +36,19 @@ public class JShowartView extends JPanel implements KeyListener {
 
     public void keyTyped(KeyEvent e) {
         //System.out.println("KEY TYPED" + e); 
-        char key = e.getKeyChar();
-        switch (key) {
-            case ' ' ->
-                nextImage();
-            //case KeyEvent.VK_ESCAPE ->
-                //Globals.frame.toggleFullScreen();
-        }
+
     }
 
     public void keyPressed(KeyEvent e) {
-        //System.out.println("KEY PRESSED:  " + e); 
+        int key = e.getKeyCode();
+        System.out.println("KEY PRESSED == " + key);
+        switch (key) {
+            case VK_SPACE, VK_RIGHT ->
+                nextImage();
 
+            //case KeyEvent.VK_ESCAPE ->
+            //Globals.frame.toggleFullScreen();
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -65,7 +66,7 @@ public class JShowartView extends JPanel implements KeyListener {
 //        System.out.println("Scrollpane width = " + parentPane.getWidth());
 //        System.out.println("Viewport width = " + parentPane.getViewport().getWidth());
 //        System.out.println("");
-        System.out.println("COLOR is: " + g.getColor());
+//        System.out.println("COLOR is: " + g.getColor());
         if (prefs.fitToWindow) {
             Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
             //System.out.println("Image Rectangle = " +r);
@@ -134,7 +135,4 @@ public class JShowartView extends JPanel implements KeyListener {
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
     }
 
-    
-       
-    }
-
+}

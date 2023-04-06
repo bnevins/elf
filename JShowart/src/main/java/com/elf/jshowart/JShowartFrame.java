@@ -143,6 +143,11 @@ protected void processWindowEvent(WindowEvent e)
         MenuSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuSave.setText("Save");
         MenuSave.setToolTipText("Save Image");
+        MenuSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSaveActionPerformed(evt);
+            }
+        });
         MenuFile.add(MenuSave);
 
         MenuSaveAs.setText("Save As...");
@@ -251,6 +256,10 @@ protected void processWindowEvent(WindowEvent e)
         //view.repaint();
         repaint();
     }//GEN-LAST:event_MenuFitToWindowActionPerformed
+
+    private void MenuSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MenuSaveActionPerformed
 
     /**
      * @param args the command line arguments
