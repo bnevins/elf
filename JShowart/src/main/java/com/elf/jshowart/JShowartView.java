@@ -144,34 +144,45 @@ public class JShowartView extends JPanel implements KeyListener {
     }
 
     public void save() {
-        if (image == null)
+        String saveDialogTitle = "Image Save";
+
+        if (image == null) {
+            errorMessage("No files loaded.", saveDialogTitle);
             return;
+        }
 
 //        for (String name : ImageIO.getReaderFormatNames())
 //            System.out.println(name);
-
         File currentImageFile = artlib.curr();
 
-        if (currentImageFile == null)
-            return; //can't happen because image is not null!
-
-        String ext = Utils.getFileExtension(currentImageFile.getName());
-        String newFilename = "copy_" + currentImageFile.getName();
-        
-// TODO use Path!!!!
-        String newPath = currentImageFile.getParent() + "/" + newFilename;
-        newPath = newPath.replace('\\', '/');
-        File newFile = new File(newPath);
-        System.out.println("NEW FILENAME TO SAVE: " + newPath);
-        
-        try {
-            ImageIO.write(image, ext, newFile);
-        } catch (IOException ex) {
-            Logger.getLogger(JShowartView.class.getName()).log(Level.SEVERE, null, ex);
+        if (currentImageFile == null) {
+            errorMessage("No files loaded.", saveDialogTitle); //can't happen because image is not null!
+            return;
         }
+        
+        String ext = Utils.getFileExtension(currentImageFile.getName());
 
+        if (isOkToOverwrite(currentImageFile)) {
+            try {
+                ImageIO.write(image, ext, currentImageFile);
+            } catch (IOException ex) {
+                errorMessage(ex.toString(), saveDialogTitle);
+            }
+        }
+        successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
     }
 
+    private boolean isOkToOverwrite(File f) {
+        int selection = JOptionPane.showConfirmDialog(Globals.frame, "Overwrite " + f.getName(), "Overwrite File",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        return selection == JOptionPane.YES_OPTION;
+    }
+
+    private void errorMessage(String msg, String title) {
+        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void successMessage(String msg, String title) {
+        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
+    }
 }
-
-
