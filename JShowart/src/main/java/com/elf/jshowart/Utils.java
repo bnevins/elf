@@ -57,7 +57,14 @@ public class Utils {
     static public boolean isArtFile(File f) {
         return isArtFile(f.getAbsolutePath());
     }
-
+    static public String getFileExtension(String fname) {
+        int dot = fname.lastIndexOf('.');
+        if(dot <= 0)
+            return null;
+        
+        return(fname.substring(dot + 1));
+        
+    }
     static final Pattern artFilePattern;
 
     static {

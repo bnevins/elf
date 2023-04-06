@@ -49,7 +49,7 @@ public class ArtLib {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     
     public File curr() {
-        if(currentImageNum <= 0)
+        if(currentImageNum < 0)
             return null;
         
         return files.get(currentImageNum);

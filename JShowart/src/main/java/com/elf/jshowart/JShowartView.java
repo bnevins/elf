@@ -83,10 +83,11 @@ public class JShowartView extends JPanel implements KeyListener {
     }
 
     void nextImage() {
-       setupImage(artlib.next());
+        setupImage(artlib.next());
     }
+
     void prevImage() {
-       setupImage(artlib.prev());
+        setupImage(artlib.prev());
     }
 
     private void setupImage(File imageFile) {
@@ -115,6 +116,7 @@ public class JShowartView extends JPanel implements KeyListener {
         repaint();
         // TODO -- possible junk in window on initial draw.  This doesn't work -->invalidate();
     }
+
     @Override
     public Dimension getPreferredSize() {
         if (preferredSize == null)
@@ -141,4 +143,35 @@ public class JShowartView extends JPanel implements KeyListener {
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
     }
 
+    public void save() {
+        if (image == null)
+            return;
+
+//        for (String name : ImageIO.getReaderFormatNames())
+//            System.out.println(name);
+
+        File currentImageFile = artlib.curr();
+
+        if (currentImageFile == null)
+            return; //can't happen because image is not null!
+
+        String ext = Utils.getFileExtension(currentImageFile.getName());
+        String newFilename = "copy_" + currentImageFile.getName();
+        
+// TODO use Path!!!!
+        String newPath = currentImageFile.getParent() + "/" + newFilename;
+        newPath = newPath.replace('\\', '/');
+        File newFile = new File(newPath);
+        System.out.println("NEW FILENAME TO SAVE: " + newPath);
+        
+        try {
+            ImageIO.write(image, ext, newFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JShowartView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 }
+
+

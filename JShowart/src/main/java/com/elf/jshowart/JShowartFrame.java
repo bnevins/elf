@@ -259,6 +259,9 @@ protected void processWindowEvent(WindowEvent e)
 
     private void MenuSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveActionPerformed
         // TODO add your handling code here:
+        assert(view != null);
+        view.save();
+        System.out.println("TODO -- save file");
     }//GEN-LAST:event_MenuSaveActionPerformed
 
     /**
