@@ -30,7 +30,7 @@ public class JShowartView extends JPanel implements KeyListener {
      * Creates new form JShowartView
      */
     public JShowartView() {
-        System.out.println("Layout Manager = " + getLayout());
+        System.out.println("JShowartView Layout Manager = " + getLayout());
         Globals.view = this;
     }
 

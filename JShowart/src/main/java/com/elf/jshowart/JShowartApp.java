@@ -35,6 +35,7 @@ public class JShowartApp {
             System.out.println("content pane == " + frame.getContentPane());
             JScrollPane jsp = new JScrollPane(view);
             view.setContainer(jsp);
+            System.out.println("Frame Original Layout Manager:  " + frame.getLayout());
             frame.setLayout(new BorderLayout());
             frame.add(jsp, BorderLayout.CENTER);
             frame.setView(view);

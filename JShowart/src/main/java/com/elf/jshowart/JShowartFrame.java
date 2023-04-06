@@ -14,6 +14,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author bnevins
  */
+
+// TODO BUG check location from prefs and make sure it isn't off-screen!  E.g. going from 2 monitors to 1
+
 public class JShowartFrame extends JFrame implements KeyListener{
 
     private final UserPreferences prefs;
