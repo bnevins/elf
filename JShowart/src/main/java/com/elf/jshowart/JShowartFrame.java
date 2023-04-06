@@ -42,7 +42,11 @@ public class JShowartFrame extends JFrame implements KeyListener{
         //LayoutManager lm = getContentPane().getLayout();
     }
     
-    void toggleFullScreen() {
+    public void enableSaveImages(boolean enable) {
+        MenuSave.setEnabled(enable);
+        MenuSaveAs.setEnabled(enable);
+    }
+    public void toggleFullScreen() {
         System.out.println("TOGGLE FULL SCREEN = " + currentFullScreen);
         currentFullScreen = !currentFullScreen;
 
@@ -143,6 +147,7 @@ protected void processWindowEvent(WindowEvent e)
         MenuSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuSave.setText("Save");
         MenuSave.setToolTipText("Save Image");
+        MenuSave.setEnabled(false);
         MenuSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MenuSaveActionPerformed(evt);
@@ -152,6 +157,7 @@ protected void processWindowEvent(WindowEvent e)
 
         MenuSaveAs.setText("Save As...");
         MenuSaveAs.setToolTipText("Save Image As...");
+        MenuSaveAs.setEnabled(false);
         MenuSaveAs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MenuSaveAsActionPerformed(evt);
@@ -217,6 +223,7 @@ protected void processWindowEvent(WindowEvent e)
             System.out.println("DEBUG XYZ:  " + f.getPath());
             System.out.println("DEBUG XYZZZZ:  " + f.getAbsolutePath());
         }
+        // TODO call enableSaveFiles
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
 
     private void MenuSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveAsActionPerformed
@@ -243,6 +250,10 @@ protected void processWindowEvent(WindowEvent e)
             File f = chooser.getSelectedFile();
             int numFilesAdded = ArtLib.get().replace(f.toPath());
             System.out.println("" + numFilesAdded + " files added");
+            if(numFilesAdded <= 0)
+                enableSaveImages(false);
+            else
+                enableSaveImages(true);
             prefs.previousOpenFolder = f;
         }
 

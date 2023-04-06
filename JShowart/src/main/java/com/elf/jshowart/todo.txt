@@ -1,0 +1,7 @@
+right arrow, left arrow
+
+keylistener added inside View ctor
+name of file in title bar
+
+File Extensions: tif jpg tiff bmp gif png jpeg wbmp
+

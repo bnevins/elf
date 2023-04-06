@@ -159,7 +159,7 @@ public class JShowartView extends JPanel implements KeyListener {
             errorMessage("No files loaded.", saveDialogTitle); //can't happen because image is not null!
             return;
         }
-        
+
         String ext = Utils.getFileExtension(currentImageFile.getName());
 
         if (isOkToOverwrite(currentImageFile)) {
@@ -168,8 +168,8 @@ public class JShowartView extends JPanel implements KeyListener {
             } catch (IOException ex) {
                 errorMessage(ex.toString(), saveDialogTitle);
             }
+            successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
         }
-        successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
     }
 
     private boolean isOkToOverwrite(File f) {
