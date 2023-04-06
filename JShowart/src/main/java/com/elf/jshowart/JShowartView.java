@@ -32,6 +32,7 @@ public class JShowartView extends JPanel implements KeyListener {
     public JShowartView() {
         System.out.println("JShowartView Layout Manager = " + getLayout());
         Globals.view = this;
+        //addKeyListener(this); doesn't work!!
     }
 
     public void keyTyped(KeyEvent e) {
