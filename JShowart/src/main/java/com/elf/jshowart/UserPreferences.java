@@ -20,7 +20,6 @@ public final class UserPreferences {
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousSaveAsFileParent;
-    public File previousOpenFoldersFolder;
     public boolean fitToWindow;
 
     private UserPreferences() {
@@ -40,7 +39,6 @@ public final class UserPreferences {
         windowBounds = readWindowBounds();
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
-        previousOpenFoldersFolder = new File(node.get("previousOpenFolder", "."));
         fitToWindow = node.getBoolean("stretch", true);
     }
 
@@ -48,7 +46,6 @@ public final class UserPreferences {
         writeWindowBounds();
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
         node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
-        node.put("previousOpenFolder", previousOpenFoldersFolder.getAbsolutePath());
         node.putBoolean("stretch", fitToWindow);
     }
 

@@ -190,18 +190,19 @@ public class JShowartFrame extends JFrame implements KeyListener {
     }//GEN-LAST:event_aboutActionPerformed
 
     private void MenuOpenFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenFilesActionPerformed
-        Globals.chooser.setCurrentDirectory(prefs.previousOpenFileParent);
-        int returnVal = Globals.chooser.showOpenDialog(this);
+        Globals.getOpenFileChooser().setCurrentDirectory(prefs.previousOpenFileParent);
+        Globals.getOpenFileChooser().setSelectedFile(new File(""));
+        int returnVal = Globals.getOpenFileChooser().showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File[] files = Globals.chooser.getSelectedFiles();
+            File[] files = Globals.getOpenFileChooser().getSelectedFiles();
             int numFilesAdded = ArtLib.get().replace(files);
 
             if (numFilesAdded <= 0)
                 enableSaveImages(false);
             else {
                 enableSaveImages(true);
-                prefs.previousOpenFileParent = Globals.chooser.getCurrentDirectory();
+                prefs.previousOpenFileParent = Globals.getOpenFileChooser().getCurrentDirectory();
             }
         }
     }//GEN-LAST:event_MenuOpenFilesActionPerformed

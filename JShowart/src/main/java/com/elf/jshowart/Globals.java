@@ -4,6 +4,7 @@
  */
 package com.elf.jshowart;
 
+import java.io.*;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 
@@ -19,8 +20,26 @@ public class Globals {
     static JShowartApp app;
     static JShowartFrame frame;
     static JShowartView view;
-    static final JFileChooser chooser;
+    private static final JFileChooser fileChooser;
 
+    public static JFileChooser getOpenFileChooser() {
+        
+        fileChooser.setCurrentDirectory(UserPreferences.get().previousOpenFileParent);
+        fileChooser.setSelectedFile(new File(""));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setMultiSelectionEnabled(true);
+        
+        return fileChooser;
+    }
+    public static JFileChooser getSaveAsFileChooser() {
+        
+        fileChooser.setCurrentDirectory(UserPreferences.get().previousSaveAsFileParent);
+        fileChooser.setSelectedFile(new File(""));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        
+        return fileChooser;
+    }
     static FileNameExtensionFilter[] filters = {
         // the first filter will be the one set!
         new FileNameExtensionFilter("All Supported Types", "bmp", "gif", "jpg", "jpeg", "png", "tif", "tiff"),
@@ -31,14 +50,10 @@ public class Globals {
         new FileNameExtensionFilter("TIFF images", "tif", "tiff"),};
 
     static {
-         /**
-         *  Metal -- sucks
-            Nimbus -- nice!
-            CDE/Motif - very different
-            Windows -- NICE!
-            Windows Classic
+        /**
+         * Metal -- sucks Nimbus -- nice! CDE/Motif - very different Windows -- NICE! Windows Classic
          */
-         try {
+        try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -48,16 +63,14 @@ public class Globals {
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(JShowartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        chooser.setMultiSelectionEnabled(true);
+        fileChooser = new JFileChooser();
 
         int numFilters = filters.length;
 
         // set the first one -- All Image Types -- then add the other ones
-        chooser.setFileFilter(filters[0]);
+        fileChooser.setFileFilter(filters[0]);
 
         for (int i = 1; i < numFilters; i++)
-            chooser.addChoosableFileFilter(Globals.filters[i]);
+            fileChooser.addChoosableFileFilter(Globals.filters[i]);
     }
 }

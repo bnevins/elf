@@ -25,7 +25,6 @@ public class JShowartView extends JPanel implements KeyListener {
     private ArtLib artlib = ArtLib.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
-    private JFileChooser fileChooser = new JFileChooser();
 
     /**
      * Creates new form JShowartView
@@ -173,24 +172,12 @@ public class JShowartView extends JPanel implements KeyListener {
     }
 
     void saveAs() {
-        fileChooser.setCurrentDirectory(prefs.previousSaveAsFileParent);
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                // TODO isDir really needed?
-                return Utils.isArtFile(f) || f.isDirectory();
-            }
+        Globals.getOpenFileChooser().setCurrentDirectory(prefs.previousSaveAsFileParent);
 
-            @Override
-            public String getDescription() {
-                return "All supported Image Types";
-            }
-        });
-
-        if (fileChooser.showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
+        if (Globals.getOpenFileChooser().showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
             return;
 
-        File outfile = fileChooser.getSelectedFile();
+        File outfile = Globals.getOpenFileChooser().getSelectedFile();
         
         if(!Utils.isArtFile(outfile)) {
             errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
