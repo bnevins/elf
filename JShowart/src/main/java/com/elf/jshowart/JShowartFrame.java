@@ -227,13 +227,9 @@ protected void processWindowEvent(WindowEvent e)
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
 
     private void MenuSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveAsActionPerformed
-
-        JFileChooser chooser = new JFileChooser();
-        int returnVal = chooser.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("You chose to save this file: "
-                    + chooser.getSelectedFile().getName());
-        }
+       assert(view != null);
+        view.saveAs();
+        
     }//GEN-LAST:event_MenuSaveAsActionPerformed
 
     private void onWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowClosing
@@ -242,7 +238,7 @@ protected void processWindowEvent(WindowEvent e)
     }//GEN-LAST:event_onWindowClosing
 
     private void MenuOpenFoldersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenFoldersActionPerformed
-        JFileChooser chooser = new JFileChooser(prefs.previousOpenFolder);
+        JFileChooser chooser = new JFileChooser(prefs.previousOpenFoldersFolder);
         //chooser.setFileFilter(filter);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = chooser.showOpenDialog(this);
@@ -254,7 +250,7 @@ protected void processWindowEvent(WindowEvent e)
                 enableSaveImages(false);
             else
                 enableSaveImages(true);
-            prefs.previousOpenFolder = f;
+            prefs.previousOpenFoldersFolder = f;
         }
 
     }//GEN-LAST:event_MenuOpenFoldersActionPerformed
@@ -272,7 +268,6 @@ protected void processWindowEvent(WindowEvent e)
         // TODO add your handling code here:
         assert(view != null);
         view.save();
-        System.out.println("TODO -- save file");
     }//GEN-LAST:event_MenuSaveActionPerformed
 
     /**

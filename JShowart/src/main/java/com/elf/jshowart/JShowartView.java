@@ -25,6 +25,7 @@ public class JShowartView extends JPanel implements KeyListener {
     private ArtLib artlib = ArtLib.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
+    private JFileChooser fileChooser = new JFileChooser();
 
     /**
      * Creates new form JShowartView
@@ -109,6 +110,7 @@ public class JShowartView extends JPanel implements KeyListener {
             image = null;
         }
 
+        Globals.frame.setTitle(imageFile.getName());
         setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         //invalidate();
         resetScrollbars();
@@ -151,8 +153,6 @@ public class JShowartView extends JPanel implements KeyListener {
             return;
         }
 
-//        for (String name : ImageIO.getReaderFormatNames())
-//            System.out.println(name);
         File currentImageFile = artlib.curr();
 
         if (currentImageFile == null) {
@@ -172,6 +172,43 @@ public class JShowartView extends JPanel implements KeyListener {
         }
     }
 
+    void saveAs() {
+        fileChooser.setCurrentDirectory(prefs.previousSaveAsFileParent);
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                // TODO isDir really needed?
+                return Utils.isArtFile(f) || f.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "All supported Image Types";
+            }
+        });
+
+        if (fileChooser.showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
+            return;
+
+        File outfile = fileChooser.getSelectedFile();
+        
+        if(!Utils.isArtFile(outfile)) {
+            errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
+            return;
+        }
+        prefs.previousSaveAsFileParent = outfile.getParentFile();
+        
+        if(outfile.exists() && ! isOkToOverwrite(outfile))
+            return;
+        String saveDialogTitle = "Image Save As";
+            try {
+                ImageIO.write(image, Utils.getFileExtension(outfile), outfile);
+            } catch (IOException ex) {
+                errorMessage(ex.toString(), saveDialogTitle);
+            }
+            successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
+    }
+
     private boolean isOkToOverwrite(File f) {
         int selection = JOptionPane.showConfirmDialog(Globals.frame, "Overwrite " + f.getName(), "Overwrite File",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -185,4 +222,5 @@ public class JShowartView extends JPanel implements KeyListener {
     private void successMessage(String msg, String title) {
         JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
+
 }

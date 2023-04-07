@@ -47,6 +47,17 @@ public class Utils {
         return new Rectangle(origin, imageDim);
     }
 
+    static public String[] getArtFileExtensions() {
+        return artFileExtensions;
+    }
+    static public String getArtFileExtensionsAsString() {
+        StringBuilder sb = new StringBuilder();
+        
+        for(String ext : artFileExtensions)
+            sb.append(ext).append(" ");
+        
+        return sb.toString();
+    }
     static public boolean isArtFile(String fname) {
         Matcher matcher = artFilePattern.matcher(fname);
         return matcher.matches();
@@ -57,6 +68,9 @@ public class Utils {
     static public boolean isArtFile(File f) {
         return isArtFile(f.getAbsolutePath());
     }
+    static public String getFileExtension(File f) {
+        return getFileExtension(f.getName());
+    }
     static public String getFileExtension(String fname) {
         int dot = fname.lastIndexOf('.');
         if(dot <= 0)
@@ -66,7 +80,7 @@ public class Utils {
         
     }
     static final Pattern artFilePattern;
-
+    static final String[] artFileExtensions = { "bmp", "gif", "tif", "png", "jpg", "jpeg" };
     static {
         //String regex = "([^\\s]+(\\.(?i)(bmp|gif|tif|png|jpg|jpeg))$)";
         String regex = "(.+\\.(bmp|gif|tif|png|jpg|jpeg)$)";

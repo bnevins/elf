@@ -19,7 +19,8 @@ public final class UserPreferences {
 
     public Rectangle windowBounds;
     public File previousOpenFileParent;
-    public File previousOpenFolder;
+    public File previousSaveAsFileParent;
+    public File previousOpenFoldersFolder;
     public boolean fitToWindow;
 
     private UserPreferences() {
@@ -38,16 +39,16 @@ public final class UserPreferences {
     public void read() {
         windowBounds = readWindowBounds();
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
-        previousOpenFolder = new File(node.get("previousOpenFolder", "."));
+        previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
+        previousOpenFoldersFolder = new File(node.get("previousOpenFolder", "."));
         fitToWindow = node.getBoolean("stretch", true);
-        System.out.println("READ XXX: " + previousOpenFileParent);
     }
 
     public void write() {
         writeWindowBounds();
-        System.out.println("WRITE XXXXX:  " + previousOpenFileParent.getAbsolutePath());
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
-        node.put("previousOpenFolder", previousOpenFolder.getAbsolutePath());
+        node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
+        node.put("previousOpenFolder", previousOpenFoldersFolder.getAbsolutePath());
         node.putBoolean("stretch", fitToWindow);
     }
 
