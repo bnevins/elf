@@ -21,98 +21,96 @@ import java.util.stream.Stream;
 public class ArtLib {
 
     public File next() {
-        if(isEmpty())
+        if (isEmpty())
             return null;
-        
+
         int num = files.size();
-        
-        if(++currentImageNum >= num) {
+
+        if (++currentImageNum >= num) {
             currentImageNum = 0;
         }
         return files.get(currentImageNum);
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     public File prev() {
-        if(isEmpty())
+        if (isEmpty())
             return null;
-        
+
         int num = files.size();
-        
-        if(--currentImageNum < 0) {
+
+        if (--currentImageNum < 0) {
             currentImageNum = num - 1;
         }
         return files.get(currentImageNum);
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     public File curr() {
-        if(currentImageNum < 0)
+        if (currentImageNum < 0)
             return null;
-        
+
         return files.get(currentImageNum);
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     public static synchronized ArtLib get() {
         if (INSTANCE == null) {
             INSTANCE = new ArtLib();
         }
         return INSTANCE;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     public int add(Path path) {
+        int numFilesAdded = 0;
         if (Files.isDirectory(path)) {
             try (Stream<Path> stream = Files.list(path)) {
                 stream.forEach(p -> {
                     File f = p.toFile();
-                    if(Utils.isArtFile(f))
+                    if (Utils.isArtFile(f))
                         files.add(f);
                 });
             } catch (IOException ex) {
                 Logger.getLogger(ArtLib.class.getName()).log(Level.SEVERE, null, ex);
             }
+            numFilesAdded = files.size();
+        } else if (Files.isRegularFile(path)) {
+            if (Utils.isArtFile(path)) {
+                files.add(path.toFile());
+                numFilesAdded = 1;
+            }
         }
-        return files.size();
+        return numFilesAdded;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     public int replace(Path path) {
         clear();
         int numFiles = add(path);
         Globals.view.imagesReplaced();
         return numFiles;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     //  private below
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     private ArtLib() {
         files = new ArrayList<File>();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     private void clear() {
         currentImageNum = -1;
         files.clear();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     private boolean isEmpty() {
         return files.size() <= 0;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     private static ArtLib INSTANCE = null;
     private ArrayList<File> files;
     private int currentImageNum = -1;
