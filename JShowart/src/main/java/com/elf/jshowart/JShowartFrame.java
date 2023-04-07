@@ -14,7 +14,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author bnevins
  */
-// TODO BUG check location from prefs and make sure it isn't off-screen!  E.g. going from 2 monitors to 1
 public class JShowartFrame extends JFrame implements KeyListener {
 
     private final UserPreferences prefs;
@@ -22,6 +21,9 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private final FileNameExtensionFilter filter;
     private static GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     private boolean currentFullScreen = false;
+
+    // keep it alive because it can be S-L-O-W to start
+    private JFileChooser chooser;
 
     /**
      * Creates new form JShowartFrame
@@ -37,7 +39,10 @@ public class JShowartFrame extends JFrame implements KeyListener {
         addKeyListener(Globals.view);
         addKeyListener(this);
         Globals.frame = this;
-        //LayoutManager lm = getContentPane().getLayout();
+        chooser = new JFileChooser();
+        chooser.setFileFilter(filter);
+        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        chooser.setMultiSelectionEnabled(true);
     }
 
     public void enableSaveImages(boolean enable) {
@@ -193,23 +198,19 @@ public class JShowartFrame extends JFrame implements KeyListener {
     }//GEN-LAST:event_aboutActionPerformed
 
     private void MenuOpenFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenFilesActionPerformed
-        // It will accept folders too!
-        JFileChooser chooser = new JFileChooser(prefs.previousOpenFileParent);
-        chooser.setFileFilter(filter);
-        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        chooser.setMultiSelectionEnabled(true);
+        chooser.setCurrentDirectory(prefs.previousOpenFileParent);
         int returnVal = chooser.showOpenDialog(this);
-       
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] files = chooser.getSelectedFiles();
-            //prefs.previousOpenFileParent = f.getParentFile();
-            prefs.previousOpenFileParent = chooser.getCurrentDirectory();
             int numFilesAdded = ArtLib.get().replace(files);
 
             if (numFilesAdded <= 0)
                 enableSaveImages(false);
-            else
+            else {
                 enableSaveImages(true);
+                prefs.previousOpenFileParent = chooser.getCurrentDirectory();
+            }
         }
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
 
