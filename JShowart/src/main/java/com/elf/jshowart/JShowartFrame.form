@@ -58,6 +58,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MenuSaveAs">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+U"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Save As..."/>
                 <Property name="toolTipText" type="java.lang.String" value="Save Image As..."/>
                 <Property name="enabled" type="boolean" value="false"/>

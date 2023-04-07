@@ -155,6 +155,7 @@ protected void processWindowEvent(WindowEvent e)
         });
         MenuFile.add(MenuSave);
 
+        MenuSaveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuSaveAs.setText("Save As...");
         MenuSaveAs.setToolTipText("Save Image As...");
         MenuSaveAs.setEnabled(false);
