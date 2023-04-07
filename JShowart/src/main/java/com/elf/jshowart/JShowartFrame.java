@@ -18,7 +18,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
 
     private final UserPreferences prefs;
     private JShowartView view;
-    private final FileNameExtensionFilter filter;
     private static GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     private boolean currentFullScreen = false;
 
@@ -30,9 +29,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
      */
     public JShowartFrame() {
         prefs = UserPreferences.get();
-        filter = new FileNameExtensionFilter(
-                "JPG, BMP, PNG, GIF and TIFF Images",
-                "jpg", "jpeg", "bmp", "png", "gif", "tif");
         initComponents();
         MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
@@ -40,9 +36,16 @@ public class JShowartFrame extends JFrame implements KeyListener {
         addKeyListener(this);
         Globals.frame = this;
         chooser = new JFileChooser();
-        chooser.setFileFilter(filter);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
+        
+        int numFilters = Globals.filters.length;
+        
+        // set the first one -- All Image Types -- then add the other ones
+        chooser.setFileFilter(Globals.filters[0]);
+        
+        for(int i = 1; i < numFilters; i++)
+            chooser.addChoosableFileFilter(Globals.filters[i]);
     }
 
     public void enableSaveImages(boolean enable) {
