@@ -172,12 +172,11 @@ public class JShowartView extends JPanel implements KeyListener {
     }
 
     void saveAs() {
-        Globals.getOpenFileChooser().setCurrentDirectory(prefs.previousSaveAsFileParent);
 
-        if (Globals.getOpenFileChooser().showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
+        if (Globals.getSaveAsFileChooser().showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
             return;
 
-        File outfile = Globals.getOpenFileChooser().getSelectedFile();
+        File outfile = Globals.getSaveAsFileChooser().getSelectedFile();
         
         if(!Utils.isArtFile(outfile)) {
             errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");

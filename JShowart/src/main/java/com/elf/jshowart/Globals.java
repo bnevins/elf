@@ -34,7 +34,6 @@ public class Globals {
     public static JFileChooser getSaveAsFileChooser() {
         
         fileChooser.setCurrentDirectory(UserPreferences.get().previousSaveAsFileParent);
-        fileChooser.setSelectedFile(new File(""));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setMultiSelectionEnabled(false);
         
