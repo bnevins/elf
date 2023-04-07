@@ -22,7 +22,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private boolean currentFullScreen = false;
 
     // keep it alive because it can be S-L-O-W to start
-    private JFileChooser chooser;
 
     /**
      * Creates new form JShowartFrame
@@ -35,17 +34,7 @@ public class JShowartFrame extends JFrame implements KeyListener {
         addKeyListener(Globals.view);
         addKeyListener(this);
         Globals.frame = this;
-        chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        chooser.setMultiSelectionEnabled(true);
         
-        int numFilters = Globals.filters.length;
-        
-        // set the first one -- All Image Types -- then add the other ones
-        chooser.setFileFilter(Globals.filters[0]);
-        
-        for(int i = 1; i < numFilters; i++)
-            chooser.addChoosableFileFilter(Globals.filters[i]);
     }
 
     public void enableSaveImages(boolean enable) {
@@ -201,18 +190,18 @@ public class JShowartFrame extends JFrame implements KeyListener {
     }//GEN-LAST:event_aboutActionPerformed
 
     private void MenuOpenFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenFilesActionPerformed
-        chooser.setCurrentDirectory(prefs.previousOpenFileParent);
-        int returnVal = chooser.showOpenDialog(this);
+        Globals.chooser.setCurrentDirectory(prefs.previousOpenFileParent);
+        int returnVal = Globals.chooser.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File[] files = chooser.getSelectedFiles();
+            File[] files = Globals.chooser.getSelectedFiles();
             int numFilesAdded = ArtLib.get().replace(files);
 
             if (numFilesAdded <= 0)
                 enableSaveImages(false);
             else {
                 enableSaveImages(true);
-                prefs.previousOpenFileParent = chooser.getCurrentDirectory();
+                prefs.previousOpenFileParent = Globals.chooser.getCurrentDirectory();
             }
         }
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
