@@ -91,7 +91,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
         jMenuBar1 = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuOpenFiles = new javax.swing.JMenuItem();
-        MenuOpenFolders = new javax.swing.JMenuItem();
         MenuSave = new javax.swing.JMenuItem();
         MenuSaveAs = new javax.swing.JMenuItem();
         MenuEdit = new javax.swing.JMenu();
@@ -116,7 +115,7 @@ public class JShowartFrame extends JFrame implements KeyListener {
         MenuFile.setText("File");
 
         MenuOpenFiles.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        MenuOpenFiles.setText("Open File(s)...");
+        MenuOpenFiles.setText("Open Files and Folders");
         MenuOpenFiles.setToolTipText("Open Image(s)");
         MenuOpenFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,14 +123,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
             }
         });
         MenuFile.add(MenuOpenFiles);
-
-        MenuOpenFolders.setText("Open Folder(s)...");
-        MenuOpenFolders.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuOpenFoldersActionPerformed(evt);
-            }
-        });
-        MenuFile.add(MenuOpenFolders);
 
         MenuSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuSave.setText("Save");
@@ -203,15 +194,17 @@ public class JShowartFrame extends JFrame implements KeyListener {
 
     private void MenuOpenFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenFilesActionPerformed
         // It will accept folders too!
-        //FileNameExtensionFilter
         JFileChooser chooser = new JFileChooser(prefs.previousOpenFileParent);
         chooser.setFileFilter(filter);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        chooser.setMultiSelectionEnabled(true);
         int returnVal = chooser.showOpenDialog(this);
+       
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File f = chooser.getSelectedFile();
-            prefs.previousOpenFileParent = f.getParentFile();
-            int numFilesAdded = ArtLib.get().replace(f.toPath());
+            File[] files = chooser.getSelectedFiles();
+            //prefs.previousOpenFileParent = f.getParentFile();
+            prefs.previousOpenFileParent = chooser.getCurrentDirectory();
+            int numFilesAdded = ArtLib.get().replace(files);
 
             if (numFilesAdded <= 0)
                 enableSaveImages(false);
@@ -230,24 +223,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
         prefs.windowBounds = getBounds();
         prefs.write();
     }//GEN-LAST:event_onWindowClosing
-
-    private void MenuOpenFoldersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpenFoldersActionPerformed
-        JFileChooser chooser = new JFileChooser(prefs.previousOpenFoldersFolder);
-        //chooser.setFileFilter(filter);
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = chooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File f = chooser.getSelectedFile();
-            int numFilesAdded = ArtLib.get().replace(f.toPath());
-            System.out.println("" + numFilesAdded + " files added");
-            if (numFilesAdded <= 0)
-                enableSaveImages(false);
-            else
-                enableSaveImages(true);
-            prefs.previousOpenFoldersFolder = f;
-        }
-
-    }//GEN-LAST:event_MenuOpenFoldersActionPerformed
 
     private void MenuFitToWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuFitToWindowActionPerformed
         System.out.println("FitToWindow: isSelected: " + MenuFitToWindow.isSelected() + "   " + evt);
@@ -304,7 +279,6 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
     private javax.swing.JMenuItem MenuOpenFiles;
-    private javax.swing.JMenuItem MenuOpenFolders;
     private javax.swing.JMenuItem MenuSave;
     private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem about;

@@ -8,3 +8,5 @@ Add a seperate FileNameExtensionFilter for each image type?
 Organize the file ext filters into one place
 
 Use ONE open dialog for directories AND files?!?
+
+SAVE the JFileChooser in frame instead of creating a new one each time

@@ -60,9 +60,23 @@ public class ArtLib {
         }
         return INSTANCE;
     }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public int replace(File[] files) {
+        clear();
+        int numFiles = 0;
+        
+        for(File f : files) {
+            numFiles += add(f.toPath());
+        }
+        Globals.view.imagesReplaced();
+        return numFiles;
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public int add(Path path) {
+    //  private below
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    private int add(Path path) {
         int numFilesAdded = 0;
         if (Files.isDirectory(path)) {
             try (Stream<Path> stream = Files.list(path)) {
@@ -84,16 +98,6 @@ public class ArtLib {
         return numFilesAdded;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public int replace(Path path) {
-        clear();
-        int numFiles = add(path);
-        Globals.view.imagesReplaced();
-        return numFiles;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    //  private below
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     private ArtLib() {
         files = new ArrayList<File>();

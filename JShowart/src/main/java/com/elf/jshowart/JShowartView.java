@@ -110,7 +110,7 @@ public class JShowartView extends JPanel implements KeyListener {
             image = null;
         }
 
-        Globals.frame.setTitle(imageFile.getName());
+        Globals.frame.setTitle("JShowArt    " +  imageFile.getAbsolutePath());
         setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         //invalidate();
         resetScrollbars();
