@@ -22,7 +22,7 @@ public class Globals {
     static JShowartView view;
     private static final JFileChooser fileChooser;
 
-    public static JFileChooser getOpenFileChooser() {
+    public static JFileChooser setupAndGetOpenFileChooser() {
         
         fileChooser.setCurrentDirectory(UserPreferences.get().previousOpenFileParent);
         fileChooser.setSelectedFile(new File(""));
@@ -31,7 +31,7 @@ public class Globals {
         
         return fileChooser;
     }
-    public static JFileChooser getSaveAsFileChooser() {
+    public static JFileChooser setupAndGetSaveAsFileChooser() {
         
         fileChooser.setCurrentDirectory(UserPreferences.get().previousSaveAsFileParent);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
