@@ -12,6 +12,7 @@ import java.util.logging.*;
 import javax.imageio.*;
 import javax.swing.*;
 import static java.awt.event.KeyEvent.*;
+import java.awt.geom.*;
 
 /**
  *
@@ -42,7 +43,7 @@ public class JShowartView extends JPanel implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        System.out.println("KEY PRESSED == " + key);
+        //System.out.println("KEY PRESSED == " + key);
         switch (key) {
             case VK_SPACE, VK_RIGHT ->
                 nextImage();
@@ -109,7 +110,7 @@ public class JShowartView extends JPanel implements KeyListener {
             image = null;
         }
 
-        Globals.frame.setTitle("JShowArt    " +  imageFile.getAbsolutePath());
+        Globals.frame.setTitle("JShowArt    " + imageFile.getAbsolutePath());
         setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         //invalidate();
         resetScrollbars();
@@ -177,22 +178,22 @@ public class JShowartView extends JPanel implements KeyListener {
             return;
 
         File outfile = Globals.getSaveAsFileChooser().getSelectedFile();
-        
-        if(!Utils.isArtFile(outfile)) {
+
+        if (!Utils.isArtFile(outfile)) {
             errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
             return;
         }
         prefs.previousSaveAsFileParent = outfile.getParentFile();
-        
-        if(outfile.exists() && ! isOkToOverwrite(outfile))
+
+        if (outfile.exists() && !isOkToOverwrite(outfile))
             return;
         String saveDialogTitle = "Image Save As";
-            try {
-                ImageIO.write(image, Utils.getFileExtension(outfile), outfile);
-            } catch (IOException ex) {
-                errorMessage(ex.toString(), saveDialogTitle);
-            }
-            successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
+        try {
+            ImageIO.write(image, Utils.getFileExtension(outfile), outfile);
+        } catch (IOException ex) {
+            errorMessage(ex.toString(), saveDialogTitle);
+        }
+        successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
     }
 
     private boolean isOkToOverwrite(File f) {
@@ -208,5 +209,84 @@ public class JShowartView extends JPanel implements KeyListener {
     private void successMessage(String msg, String title) {
         JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
+
+    void rotate(int degrees) {
+        if (image == null)
+            return;
+
+        image = rotateImage(image, degrees / 90);
+        repaint();
+    }
+
+
+    public BufferedImage rotateImage(BufferedImage image, int quadrants) {
+
+        int w0 = image.getWidth();
+        int h0 = image.getHeight();
+        int centerX = w0 / 2;
+        int centerY = h0 / 2;
+
+        if (quadrants % 4 == 1) {
+            centerX = centerY;
+        } else if (quadrants % 4 == 3) {
+            centerY = centerX;
+        }
+        AffineTransform affineTransform = new AffineTransform();
+        affineTransform.setToQuadrantRotation(quadrants, centerX, centerY);
+        AffineTransformOp opRotated = new AffineTransformOp(affineTransform,
+                AffineTransformOp.TYPE_BILINEAR);
+
+        BufferedImage transformedImage = opRotated.filter(image, null);
+        return transformedImage;
+    }
+//    public static BufferedImage rotateImageTest(BufferedImage theImage, int quadrants) {
+//
+//        int w0 = theImage.getWidth();
+//        int h0 = theImage.getHeight();
+//        int w1 = w0;
+//        int h1 = h0;
+//        int centerX = w0 / 2;
+//        int centerY = h0 / 2;
+//
+//        if (quadrants % 2 == 1) {
+//            w1 = h0;
+//            h1 = w0;
+//        }
+//
+//        if (quadrants % 4 == 1) {
+//            centerX = h0 / 2;
+//            centerY = h0 / 2;
+//        } else if (quadrants % 4 == 3) {
+//            centerX = w0 / 2;
+//            centerY = w0 / 2;
+//        }
+//
+//        AffineTransform affineTransform = new AffineTransform();
+//        affineTransform.setToQuadrantRotation(quadrants, centerX, centerY);
+//        AffineTransformOp opRotated = new AffineTransformOp(affineTransform,
+//                AffineTransformOp.TYPE_BILINEAR);
+//        BufferedImage transformedImage = new BufferedImage(w1, h1,
+//                theImage.getType());
+//        transformedImage = opRotated.filter(theImage, transformedImage);
+//
+//        return transformedImage;
+//
+//    }
+//    void rotatex(int degrees) {
+//        if (image == null)
+//            return;
+//        int w = image.getWidth();
+//        int h = image.getHeight();
+//
+//        var transform = AffineTransform.getRotateInstance(Math.toRadians(degrees), w / 2, h / 2);
+//        var op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC);
+//        image = op.filter(image, null);
+//        repaint();
+//
+//        /**
+//         * var newImage = new BufferedImage(h, w, image.getType()); Graphics2D g2 = newImage.createGraphics(); g2.rotate(Math.toRadians(degrees), w/2, h/2);
+//         * g2.drawImage(image, null, 0, 0); image=newImage; **
+//         */
+//    }
 
 }

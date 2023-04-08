@@ -85,6 +85,7 @@ public class JShowartFrame extends JFrame implements KeyListener {
 
         jMenu7 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuOpenFiles = new javax.swing.JMenuItem();
@@ -93,6 +94,9 @@ public class JShowartFrame extends JFrame implements KeyListener {
         MenuEdit = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         MenuFitToWindow = new javax.swing.JCheckBoxMenuItem();
+        MenuRotate90 = new javax.swing.JMenuItem();
+        MenuRotate180 = new javax.swing.JMenuItem();
+        MenuRotate270 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
@@ -100,6 +104,8 @@ public class JShowartFrame extends JFrame implements KeyListener {
         jMenu7.setText("jMenu7");
 
         jMenuItem1.setText("jMenuItem1");
+
+        jMenuItem3.setText("jMenuItem3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
@@ -159,6 +165,35 @@ public class JShowartFrame extends JFrame implements KeyListener {
             }
         });
         jMenu3.add(MenuFitToWindow);
+
+        MenuRotate90.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuRotate90.setText("Rotate 90 CW");
+        MenuRotate90.setToolTipText("Rotate 90 CW and Save");
+        MenuRotate90.setActionCommand("rotate90");
+        MenuRotate90.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rotate90(evt);
+            }
+        });
+        jMenu3.add(MenuRotate90);
+
+        MenuRotate180.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuRotate180.setText("Rotate 180 CW");
+        MenuRotate180.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuRotate180ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(MenuRotate180);
+
+        MenuRotate270.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuRotate270.setText("Rotate 270 CW");
+        MenuRotate270.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuRotate270ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(MenuRotate270);
 
         jMenuBar1.add(jMenu3);
 
@@ -231,6 +266,18 @@ public class JShowartFrame extends JFrame implements KeyListener {
         view.save();
     }//GEN-LAST:event_MenuSaveActionPerformed
 
+    private void rotate90(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotate90
+        view.rotate(90);
+    }//GEN-LAST:event_rotate90
+
+    private void MenuRotate180ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuRotate180ActionPerformed
+        view.rotate(180);
+    }//GEN-LAST:event_MenuRotate180ActionPerformed
+
+    private void MenuRotate270ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuRotate270ActionPerformed
+        view.rotate(270);
+    }//GEN-LAST:event_MenuRotate270ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -271,6 +318,9 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
     private javax.swing.JMenuItem MenuOpenFiles;
+    private javax.swing.JMenuItem MenuRotate180;
+    private javax.swing.JMenuItem MenuRotate270;
+    private javax.swing.JMenuItem MenuRotate90;
     private javax.swing.JMenuItem MenuSave;
     private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem about;
@@ -280,6 +330,7 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem3;
     // End of variables declaration//GEN-END:variables
 
     void setView(JShowartView view) {
