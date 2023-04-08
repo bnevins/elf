@@ -216,6 +216,7 @@ public class JShowartView extends JPanel implements KeyListener {
             return;
 
         image = rotateImage(image, degrees / 90);
+        save();
         repaint();
     }
 
