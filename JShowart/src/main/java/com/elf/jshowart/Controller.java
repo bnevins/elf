@@ -81,10 +81,7 @@ public class Controller extends JFrame implements KeyListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu7 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        MenuBar = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuOpenFiles = new javax.swing.JMenuItem();
         MenuSave = new javax.swing.JMenuItem();
@@ -102,12 +99,6 @@ public class Controller extends JFrame implements KeyListener {
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
 
-        jMenu7.setText("jMenu7");
-
-        jMenuItem1.setText("jMenuItem1");
-
-        jMenuItem3.setText("jMenuItem3");
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -117,6 +108,15 @@ public class Controller extends JFrame implements KeyListener {
         });
 
         MenuFile.setText("File");
+        MenuFile.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                MenuFileMenuSelected(evt);
+            }
+        });
 
         MenuOpenFiles.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuOpenFiles.setText("Open Files and Folders");
@@ -158,12 +158,21 @@ public class Controller extends JFrame implements KeyListener {
         });
         MenuFile.add(MenuSaveCurrentSize);
 
-        jMenuBar1.add(MenuFile);
+        MenuBar.add(MenuFile);
 
         MenuEdit.setText("Edit");
-        jMenuBar1.add(MenuEdit);
+        MenuBar.add(MenuEdit);
 
         MenuView.setText("View");
+        MenuView.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                MenuViewMenuSelected(evt);
+            }
+        });
 
         MenuFitToWindow.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuFitToWindow.setSelected(true);
@@ -213,10 +222,10 @@ public class Controller extends JFrame implements KeyListener {
         });
         MenuView.add(MenuShrinkHalf);
 
-        jMenuBar1.add(MenuView);
+        MenuBar.add(MenuView);
 
         MenuUtilities.setText("Utilities");
-        jMenuBar1.add(MenuUtilities);
+        MenuBar.add(MenuUtilities);
 
         MenuHelp.setText("Help");
 
@@ -230,9 +239,9 @@ public class Controller extends JFrame implements KeyListener {
         });
         MenuHelp.add(about);
 
-        jMenuBar1.add(MenuHelp);
+        MenuBar.add(MenuHelp);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(MenuBar);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -273,9 +282,6 @@ public class Controller extends JFrame implements KeyListener {
     private void MenuFitToWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuFitToWindowActionPerformed
         System.out.println("FitToWindow: isSelected: " + MenuFitToWindow.isSelected() + "   " + evt);
         prefs.fitToWindow = MenuFitToWindow.isSelected();
-        //revalidate();
-        //view.invalidate();
-        //view.repaint();
         repaint();
     }//GEN-LAST:event_MenuFitToWindowActionPerformed
 
@@ -304,6 +310,22 @@ public class Controller extends JFrame implements KeyListener {
     private void MenuShrinkHalfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfActionPerformed
         view.saveScaled(0.5);
     }//GEN-LAST:event_MenuShrinkHalfActionPerformed
+
+    private void MenuFileMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuFileMenuSelected
+        boolean hasImage = view.hasImageLoaded();
+        MenuSave.setEnabled(hasImage);
+        MenuSaveAs.setEnabled(hasImage);
+        MenuSaveCurrentSize.setEnabled(hasImage && prefs.fitToWindow);
+    }//GEN-LAST:event_MenuFileMenuSelected
+
+    private void MenuViewMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuViewMenuSelected
+        boolean hasImage = view.hasImageLoaded();
+        MenuFitToWindow.setEnabled(hasImage);
+        MenuRotate90.setEnabled(hasImage);
+        MenuRotate180.setEnabled(hasImage);
+        MenuRotate270.setEnabled(hasImage);
+        MenuShrinkHalf.setEnabled(hasImage);
+    }//GEN-LAST:event_MenuViewMenuSelected
 
     /**
      * @param args the command line arguments
@@ -342,6 +364,7 @@ public class Controller extends JFrame implements KeyListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar MenuBar;
     private javax.swing.JMenu MenuEdit;
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
@@ -357,10 +380,6 @@ public class Controller extends JFrame implements KeyListener {
     private javax.swing.JMenu MenuUtilities;
     private javax.swing.JMenu MenuView;
     private javax.swing.JMenuItem about;
-    private javax.swing.JMenu jMenu7;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     // End of variables declaration//GEN-END:variables
 

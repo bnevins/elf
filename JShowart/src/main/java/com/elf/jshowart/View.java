@@ -326,4 +326,8 @@ public class View extends JPanel implements KeyListener {
 //         * g2.drawImage(image, null, 0, 0); image=newImage; **
 //         */
 //    }
+
+    boolean hasImageLoaded() {
+        return image != null;
+    }
 }
