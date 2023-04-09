@@ -259,7 +259,7 @@ public class Controller extends JFrame implements KeyListener {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] files = chooser.getSelectedFiles();
-            int numFilesAdded = ArtLib.get().replace(files);
+            int numFilesAdded = Model.get().replace(files);
 
             if (numFilesAdded <= 0)
                 enableSaveImages(false);

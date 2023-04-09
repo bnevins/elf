@@ -23,7 +23,7 @@ public class JShowartView extends JPanel implements KeyListener {
     private BufferedImage image;
     private File prevImageFile = null;
     private UserPreferences prefs = UserPreferences.get();
-    private ArtLib artlib = ArtLib.get();
+    private Model artlib = Model.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
 

@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @author bnevins
  */
 // SINGLETON class
-public class ArtLib {
+public class Model {
 
     public File next() {
         if (isEmpty())
@@ -54,9 +54,9 @@ public class ArtLib {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static synchronized ArtLib get() {
+    public static synchronized Model get() {
         if (INSTANCE == null) {
-            INSTANCE = new ArtLib();
+            INSTANCE = new Model();
         }
         return INSTANCE;
     }
@@ -86,7 +86,7 @@ public class ArtLib {
                         files.add(f);
                 });
             } catch (IOException ex) {
-                Logger.getLogger(ArtLib.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
             }
             numFilesAdded = files.size();
         } else if (Files.isRegularFile(path)) {
@@ -99,7 +99,7 @@ public class ArtLib {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-    private ArtLib() {
+    private Model() {
         files = new ArrayList<File>();
     }
 
@@ -115,7 +115,7 @@ public class ArtLib {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static ArtLib INSTANCE = null;
+    private static Model INSTANCE = null;
     private ArrayList<File> files;
     private int currentImageNum = -1;
 }
