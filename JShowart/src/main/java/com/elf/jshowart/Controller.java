@@ -308,7 +308,7 @@ public class Controller extends JFrame implements KeyListener {
     }//GEN-LAST:event_MenuSaveCurrentSizeActionPerformed
 
     private void MenuShrinkHalfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfActionPerformed
-        view.saveScaled(0.5);
+        view.showScaled(0.5);
     }//GEN-LAST:event_MenuShrinkHalfActionPerformed
 
     private void MenuFileMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuFileMenuSelected

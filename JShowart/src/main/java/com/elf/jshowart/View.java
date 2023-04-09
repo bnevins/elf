@@ -246,7 +246,7 @@ public class View extends JPanel implements KeyListener {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void saveScaled(double scalingFactor) {
+    void showScaled(double scalingFactor) {
         if (image == null)
             return;
 
@@ -254,12 +254,24 @@ public class View extends JPanel implements KeyListener {
         double dh = image.getHeight();
         int width = (int) (dw * scalingFactor);
         int height = (int) (dh * scalingFactor);
-
+        
         var scaledImage = new BufferedImage(width, height, image.getType());
         AffineTransform at = AffineTransform.getScaleInstance(scalingFactor, scalingFactor);
         AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
         scaledImage = ato.filter(image, scaledImage);
-        saveAs(scaledImage);
+        image = scaledImage;
+        String scaledMessage = " -- TEMPORARILY SCALED";
+        String title = Globals.frame.getTitle();
+        if(title.endsWith(scaledMessage))
+            title += " AGAIN";
+        else if(title.endsWith(" AGAIN"))
+            title += " AND AGAIN";
+        else
+            title += scaledMessage;
+            
+        repaint();
+        Globals.frame.setTitle(title);
+        //saveAs(scaledImage);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,9 +283,12 @@ public class View extends JPanel implements KeyListener {
        }
         Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
         double scalingFactor = (double) r.width / (double) image.getWidth();
-        saveScaled(scalingFactor);
+        showScaled(scalingFactor);
     }
-
+    boolean hasImageLoaded() {
+        // used for enabling/disabling menu items
+        return image != null;
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     //                     CODE DUMP 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,7 +342,5 @@ public class View extends JPanel implements KeyListener {
 //         */
 //    }
 
-    boolean hasImageLoaded() {
-        return image != null;
-    }
+
 }
