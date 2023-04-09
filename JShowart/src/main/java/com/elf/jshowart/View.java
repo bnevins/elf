@@ -271,7 +271,6 @@ public class View extends JPanel implements KeyListener {
             
         repaint();
         Globals.frame.setTitle(title);
-        //saveAs(scaledImage);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
