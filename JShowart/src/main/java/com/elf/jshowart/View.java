@@ -245,10 +245,6 @@ public class View extends JPanel implements KeyListener {
         return transformedImage;
     }
 
-    void saveThisSize() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     void saveScaled(double scalingFactor) {
         if (image == null)
@@ -268,9 +264,9 @@ public class View extends JPanel implements KeyListener {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     void saveCurrentSize() {
-        if (!prefs.fitToWindow) {
+        if (!prefs.fitToWindow || image == null) {
             // TODO: Simply disable the menu item!
-            errorMessage("Image is full size!", "Save Current Size");
+            errorMessage("Image is full size -- or there is no image loaded", "Save Current Size");
             return; 
        }
         Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));

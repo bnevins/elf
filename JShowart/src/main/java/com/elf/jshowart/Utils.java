@@ -4,9 +4,7 @@
  */
 package com.elf.jshowart;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
@@ -78,6 +76,20 @@ public class Utils {
         
         return(fname.substring(dot + 1));
         
+    }
+    static public void recursiveGetComponent(Container container, String leading) {
+       Component[] components = container.getComponents();
+       
+       for(Component c : components) {
+           try {
+           System.out.println(leading + c.getClass() + "\n");
+           recursiveGetComponent((Container)c, leading + "    ");}
+           catch(Exception e) { 
+               System.out.println(e);
+           }
+               
+       }
+       
     }
     static final Pattern artFilePattern;
     static final String[] artFileExtensions = { "bmp", "gif", "tif", "png", "jpg", "jpeg" };
