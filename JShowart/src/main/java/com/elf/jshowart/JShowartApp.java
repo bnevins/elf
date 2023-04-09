@@ -13,7 +13,7 @@ import javax.swing.*;
  */
 public class JShowartApp {
 
-    private static JShowartFrame frame;
+    private static Controller frame;
     private static JShowartView view;
 
     public JShowartApp() {
@@ -29,7 +29,7 @@ public class JShowartApp {
                 -> {
             view = new JShowartView(); // this MUST be created before frame for setting up key handler?
             view.setBackground(Color.black);
-            frame = new JShowartFrame();
+            frame = new Controller();
             frame.setTitle("JShowArt");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);

@@ -18,7 +18,7 @@ public class Globals {
     }
 
     static JShowartApp app;
-    static JShowartFrame frame;
+    static Controller frame;
     static JShowartView view;
     private static final JFileChooser fileChooser;
 
@@ -60,7 +60,7 @@ public class Globals {
                 }
             }
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(JShowartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Controller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         fileChooser = new JFileChooser();
 

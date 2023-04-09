@@ -14,7 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author bnevins
  */
-public class JShowartFrame extends JFrame implements KeyListener {
+public class Controller extends JFrame implements KeyListener {
 
     private final UserPreferences prefs;
     private JShowartView view;
@@ -26,7 +26,7 @@ public class JShowartFrame extends JFrame implements KeyListener {
     /**
      * Creates new form JShowartFrame
      */
-    public JShowartFrame() {
+    public Controller() {
         prefs = UserPreferences.get();
         initComponents();
         MenuFitToWindow.setSelected(prefs.fitToWindow);
@@ -337,20 +337,21 @@ public class JShowartFrame extends JFrame implements KeyListener {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JShowartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Controller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JShowartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Controller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JShowartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Controller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JShowartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Controller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JShowartFrame().setVisible(true);
+                new Controller().setVisible(true);
             }
         });
     }
