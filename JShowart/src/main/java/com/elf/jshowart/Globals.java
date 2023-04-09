@@ -17,7 +17,7 @@ public class Globals {
     private Globals() {
     }
 
-    static JShowartApp app;
+    static App app;
     static Controller frame;
     static JShowartView view;
     private static final JFileChooser fileChooser;

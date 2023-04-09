@@ -15,7 +15,5 @@ name of file in title bar
 Use ONE open dialog for directories AND files?!?
 SAVE the JFileChooser in frame instead of creating a new one each time
 
-Save scaled -->
-BufferedImage bi = ImageIO.read(input);
-  Image newResizedImage = bi.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-
+XX Save scaled -->
+Info Dialog

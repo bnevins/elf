@@ -11,18 +11,18 @@ import javax.swing.*;
  *
  * @author bnevins
  */
-public class JShowartApp {
+public class App {
 
     private static Controller frame;
     private static JShowartView view;
 
-    public JShowartApp() {
+    public App() {
         Globals.app = this;
     }
 
     public static void main(String args[]) {
 
-        JShowartApp app = new JShowartApp();
+        App app = new App();
        
 
         EventQueue.invokeLater(()
