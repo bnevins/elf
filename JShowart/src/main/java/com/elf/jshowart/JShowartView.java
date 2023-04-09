@@ -172,7 +172,11 @@ public class JShowartView extends JPanel implements KeyListener {
         }
     }
 
-    void saveAs() {
+    public void saveAs() {
+        saveAs(image);
+    }
+
+    private void saveAs(BufferedImage theImage) {
 
         var chooser = Globals.setupAndGetSaveAsFileChooser();
         if (chooser.showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
@@ -190,7 +194,7 @@ public class JShowartView extends JPanel implements KeyListener {
             return;
         String saveDialogTitle = "Image Save As";
         try {
-            ImageIO.write(image, Utils.getFileExtension(outfile), outfile);
+            ImageIO.write(theImage, Utils.getFileExtension(outfile), outfile);
         } catch (IOException ex) {
             errorMessage(ex.toString(), saveDialogTitle);
         }
@@ -220,7 +224,6 @@ public class JShowartView extends JPanel implements KeyListener {
         repaint();
     }
 
-
     public BufferedImage rotateImage(BufferedImage image, int quadrants) {
 
         int w0 = image.getWidth();
@@ -241,6 +244,43 @@ public class JShowartView extends JPanel implements KeyListener {
         BufferedImage transformedImage = opRotated.filter(image, null);
         return transformedImage;
     }
+
+    void saveThisSize() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void saveScaled(double scalingFactor) {
+        if (image == null)
+            return;
+
+        double dw = image.getWidth();
+        double dh = image.getHeight();
+        int width = (int) (dw * scalingFactor);
+        int height = (int) (dh * scalingFactor);
+
+        var scaledImage = new BufferedImage(width, height, image.getType());
+        AffineTransform at = AffineTransform.getScaleInstance(scalingFactor, scalingFactor);
+        AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
+        scaledImage = ato.filter(image, scaledImage);
+        saveAs(scaledImage);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void saveCurrentSize() {
+        if (!prefs.fitToWindow) {
+            // TODO: Simply disable the menu item!
+            errorMessage("Image is full size!", "Save Current Size");
+            return; 
+       }
+        Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
+        double scalingFactor = (double) r.width / (double) image.getWidth();
+        saveScaled(scalingFactor);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                     CODE DUMP 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    public static BufferedImage rotateImageTest(BufferedImage theImage, int quadrants) {
 //
 //        int w0 = theImage.getWidth();
@@ -290,5 +330,4 @@ public class JShowartView extends JPanel implements KeyListener {
 //         * g2.drawImage(image, null, 0, 0); image=newImage; **
 //         */
 //    }
-
 }

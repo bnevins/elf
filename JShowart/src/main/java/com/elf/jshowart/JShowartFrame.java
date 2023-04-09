@@ -91,12 +91,16 @@ public class JShowartFrame extends JFrame implements KeyListener {
         MenuOpenFiles = new javax.swing.JMenuItem();
         MenuSave = new javax.swing.JMenuItem();
         MenuSaveAs = new javax.swing.JMenuItem();
+        MenuSaveThisSize = new javax.swing.JMenuItem();
         MenuEdit = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         MenuFitToWindow = new javax.swing.JCheckBoxMenuItem();
         MenuRotate90 = new javax.swing.JMenuItem();
         MenuRotate180 = new javax.swing.JMenuItem();
         MenuRotate270 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        MenuShrinkHalf = new javax.swing.JMenuItem();
+        MenuSaveCurrentSize = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
@@ -149,6 +153,14 @@ public class JShowartFrame extends JFrame implements KeyListener {
         });
         MenuFile.add(MenuSaveAs);
 
+        MenuSaveThisSize.setText("Save This Size");
+        MenuSaveThisSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSaveThisSizeActionPerformed(evt);
+            }
+        });
+        MenuFile.add(MenuSaveThisSize);
+
         jMenuBar1.add(MenuFile);
 
         MenuEdit.setText("Edit");
@@ -194,6 +206,23 @@ public class JShowartFrame extends JFrame implements KeyListener {
             }
         });
         jMenu3.add(MenuRotate270);
+        jMenu3.add(jSeparator1);
+
+        MenuShrinkHalf.setText("Shrink 1/2");
+        MenuShrinkHalf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuShrinkHalfActionPerformed(evt);
+            }
+        });
+        jMenu3.add(MenuShrinkHalf);
+
+        MenuSaveCurrentSize.setText("Save Current Size");
+        MenuSaveCurrentSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSaveCurrentSizeActionPerformed(evt);
+            }
+        });
+        jMenu3.add(MenuSaveCurrentSize);
 
         jMenuBar1.add(jMenu3);
 
@@ -279,6 +308,18 @@ public class JShowartFrame extends JFrame implements KeyListener {
         view.rotate(270);
     }//GEN-LAST:event_MenuRotate270ActionPerformed
 
+    private void MenuSaveThisSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveThisSizeActionPerformed
+        view.saveThisSize();
+    }//GEN-LAST:event_MenuSaveThisSizeActionPerformed
+
+    private void MenuShrinkHalfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfActionPerformed
+        view.saveScaled(0.5);
+    }//GEN-LAST:event_MenuShrinkHalfActionPerformed
+
+    private void MenuSaveCurrentSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveCurrentSizeActionPerformed
+        view.saveCurrentSize();
+    }//GEN-LAST:event_MenuSaveCurrentSizeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -324,6 +365,9 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private javax.swing.JMenuItem MenuRotate90;
     private javax.swing.JMenuItem MenuSave;
     private javax.swing.JMenuItem MenuSaveAs;
+    private javax.swing.JMenuItem MenuSaveCurrentSize;
+    private javax.swing.JMenuItem MenuSaveThisSize;
+    private javax.swing.JMenuItem MenuShrinkHalf;
     private javax.swing.JMenuItem about;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -332,6 +376,7 @@ public class JShowartFrame extends JFrame implements KeyListener {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     // End of variables declaration//GEN-END:variables
 
     void setView(JShowartView view) {

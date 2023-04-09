@@ -1,5 +1,9 @@
-keylistener added inside View ctor
+*************   BUGS  *******************
+BUG(?) save as - don't enter a file extension - automatically add one!
 
+*********************************************
+keylistener added inside View ctor
+Figure out a clean way to disable menu items dynamically e.g. SaveAsNow
 File Extensions: tif jpg tiff bmp gif png jpeg wbmp  Add a seperate FileNameExtensionFilter for each image type?
 Organize the file ext filters into one place
 SAVE the JFileChooser in view instead of creating a new one each time
@@ -10,4 +14,8 @@ right arrow, left arrow
 name of file in title bar
 Use ONE open dialog for directories AND files?!?
 SAVE the JFileChooser in frame instead of creating a new one each time
+
+Save scaled -->
+BufferedImage bi = ImageIO.read(input);
+  Image newResizedImage = bi.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 
