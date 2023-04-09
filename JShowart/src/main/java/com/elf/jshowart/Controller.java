@@ -17,7 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Controller extends JFrame implements KeyListener {
 
     private final UserPreferences prefs;
-    private JShowartView view;
+    private View view;
     private static GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     private boolean currentFullScreen = false;
 
@@ -380,7 +380,7 @@ public class Controller extends JFrame implements KeyListener {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     // End of variables declaration//GEN-END:variables
 
-    void setView(JShowartView view) {
+    void setView(View view) {
         this.view = view;
     }
 

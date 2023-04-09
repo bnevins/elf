@@ -19,7 +19,7 @@ public class Globals {
 
     static App app;
     static Controller frame;
-    static JShowartView view;
+    static View view;
     private static final JFileChooser fileChooser;
 
     public static JFileChooser setupAndGetOpenFileChooser() {

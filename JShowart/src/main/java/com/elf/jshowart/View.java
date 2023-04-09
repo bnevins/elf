@@ -18,7 +18,7 @@ import java.awt.geom.*;
  *
  * @author bnevins
  */
-public class JShowartView extends JPanel implements KeyListener {
+public class View extends JPanel implements KeyListener {
 
     private BufferedImage image;
     private File prevImageFile = null;
@@ -30,7 +30,7 @@ public class JShowartView extends JPanel implements KeyListener {
     /**
      * Creates new form JShowartView
      */
-    public JShowartView() {
+    public View() {
         System.out.println("JShowartView Layout Manager = " + getLayout());
         Globals.view = this;
         //addKeyListener(this); doesn't work!!
@@ -106,7 +106,7 @@ public class JShowartView extends JPanel implements KeyListener {
         try {
             image = ImageIO.read(imageFile);
         } catch (IOException ex) {
-            Logger.getLogger(JShowartView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
             image = null;
         }
 
