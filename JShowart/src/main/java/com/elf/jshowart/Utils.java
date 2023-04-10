@@ -99,6 +99,13 @@ public class Utils {
         artFilePattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
 
+    static Point centerImageInWindow(Dimension vpDimension, Dimension iDimension) {
+        
+        int x = (vpDimension.width - iDimension.width) / 2;
+        int y = (vpDimension.height - iDimension.height) / 2;
+        return new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+    }
+
     private Utils() {
     }
 

@@ -65,20 +65,21 @@ public class View extends JPanel implements KeyListener {
 
         if (image == null)
             return;
-//        System.out.println("View width = " + getWidth());
-//        System.out.println("Scrollpane width = " + parentPane.getWidth());
-//        System.out.println("Viewport width = " + parentPane.getViewport().getWidth());
-//        System.out.println("");
+        
+        var vp = parentPane.getViewport();
+        var vpDimension = new Dimension(vp.getWidth(), vp.getHeight());
+        var iDimension = new Dimension(image.getWidth(), image.getHeight());
+        
 //        System.out.println("COLOR is: " + g.getColor());
         if (prefs.fitToWindow) {
-            Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
-            //System.out.println("Image Rectangle = " +r);
-            //System.out.println("Image width, height = " + image.getWidth() + ", " + image.getHeight());
+            Rectangle r = Utils.fitToWindow(vpDimension, iDimension);
             setBounds(r.getBounds());
             preferredSize = new Dimension(r.width, r.height);
             g.drawImage(image, r.x, r.y, r.width, r.height, null);
         } else {
-            g.drawImage(image, 0, 0, null);
+            // if smaller then window -- center it.  If larger put upper-left in viewport upper-left
+            Point p = Utils.centerImageInWindow(vpDimension, iDimension);
+            g.drawImage(image, p.x, p.y, null);
             preferredSize = new Dimension(image.getWidth(), image.getHeight());
         }
     }
