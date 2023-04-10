@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.*;
 
 /**
  *
@@ -48,51 +49,59 @@ public class Utils {
     static public String[] getArtFileExtensions() {
         return artFileExtensions;
     }
+
     static public String getArtFileExtensionsAsString() {
         StringBuilder sb = new StringBuilder();
-        
-        for(String ext : artFileExtensions)
+
+        for (String ext : artFileExtensions)
             sb.append(ext).append(" ");
-        
+
         return sb.toString();
     }
+
     static public boolean isArtFile(String fname) {
         Matcher matcher = artFilePattern.matcher(fname);
         return matcher.matches();
     }
+
     static public boolean isArtFile(Path p) {
         return isArtFile(p.toFile());
     }
+
     static public boolean isArtFile(File f) {
         return isArtFile(f.getAbsolutePath());
     }
+
     static public String getFileExtension(File f) {
         return getFileExtension(f.getName());
     }
+
     static public String getFileExtension(String fname) {
         int dot = fname.lastIndexOf('.');
-        if(dot <= 0)
+        if (dot <= 0)
             return null;
-        
-        return(fname.substring(dot + 1));
-        
+
+        return (fname.substring(dot + 1));
+
     }
+
     static public void recursiveGetComponent(Container container, String leading) {
-       Component[] components = container.getComponents();
-       
-       for(Component c : components) {
-           try {
-           System.out.println(leading + c.getClass() + "\n");
-           recursiveGetComponent((Container)c, leading + "    ");}
-           catch(Exception e) { 
-               System.out.println(e);
-           }
-               
-       }
-       
+        Component[] components = container.getComponents();
+
+        for (Component c : components) {
+            try {
+                System.out.println(leading + c.getClass() + "\n");
+                recursiveGetComponent((Container) c, leading + "    ");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        }
+
     }
     static final Pattern artFilePattern;
-    static final String[] artFileExtensions = { "bmp", "gif", "tif", "png", "jpg", "jpeg" };
+    static final String[] artFileExtensions = {"bmp", "gif", "tif", "png", "jpg", "jpeg"};
+
     static {
         //String regex = "([^\\s]+(\\.(?i)(bmp|gif|tif|png|jpg|jpeg))$)";
         String regex = "(.+\\.(bmp|gif|tif|png|jpg|jpeg)$)";
@@ -100,10 +109,29 @@ public class Utils {
     }
 
     static Point centerImageInWindow(Dimension vpDimension, Dimension iDimension) {
-        
+
         int x = (vpDimension.width - iDimension.width) / 2;
         int y = (vpDimension.height - iDimension.height) / 2;
         return new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+    }
+
+    static int compare(long n1, long n2) {
+        // for sorting...
+        return (n1 > n2) ? 1 : (n1 < n2) ? -1 : 0;
+    }
+
+    static void errorMessage(String msg) {
+        errorMessage(msg, "ERROR");
+    }
+    static void errorMessage(String msg, String title) {
+        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    static void successMessage(String msg) {
+        successMessage(msg, "JShowArt");
+    }
+    static void successMessage(String msg, String title) {
+        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     private Utils() {

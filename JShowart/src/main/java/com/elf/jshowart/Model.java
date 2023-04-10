@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import javax.swing.*;
 
 /**
  *
@@ -19,13 +20,13 @@ import java.util.stream.Stream;
  */
 // SINGLETON class
 public class Model {
+
     private Model() {
         prefs = UserPreferences.get();
         files = new ArrayList<File>();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public File next() {
         if (isEmpty())
             return null;
@@ -66,13 +67,13 @@ public class Model {
         }
         return INSTANCE;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     public int replace(File[] files) {
         clear();
         int numFiles = 0;
-        
-        for(File f : files) {
+
+        for (File f : files) {
             numFiles += add(f.toPath());
         }
         sort();
@@ -109,6 +110,7 @@ public class Model {
     private void clear() {
         currentImageNum = -1;
         files.clear();
+        prevSortType = null;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,24 +126,71 @@ public class Model {
 // TODO get sort types from prefs        
 // TODO get sort types from prefs        
         System.out.println("BEFORE SORT:");
-        System.out.println("PREFS SORT TYPE: " + prefs.getSortType() + "   PREFS DIRECTION: " + (prefs.isSortAscending() ? "ascending" : "descending"));
-       
+
+        if (prevSortType != null)
+            System.out.println("PREFS OLD SORT TYPE: " + prevSortType + "   PREFS DIRECTION: " + (prevSortAscending ? "ascending" : "descending"));
+
+        System.out.println("PREFS NEW SORT TYPE: " + prefs.getSortType() + "   PREFS DIRECTION: " + (prefs.isSortAscending() ? "ascending" : "descending"));
+
+        String sortType = prefs.getSortType();
+        boolean sortAscending = prefs.isSortAscending();
+
+        if (prevSortType != null && sortType.equals(prevSortType) && prevSortAscending == sortAscending) {
+            System.out.println("SORT TYPES DID NOT ACTUALLY CHANGE!");
+            return;
+        }
+
+        // optimization -- I don't care about the sorting time.  It's the resetting to image #0 I want to avoid
+        prevSortType = sortType;
+        prevSortAscending = sortAscending;
+
+        System.out.println("BEFORE SORT");
         files.forEach(file -> {
-            System.out.println(file.getName());
-            });
-        
-        Collections.sort(files, (f1, f2) -> {
-            String fname1 = f1.getName();
-            String fname2 = f2.getName();
-            return fname1.compareToIgnoreCase(fname2);});
-        
+            System.out.println("      " + file.getName() + "   Date: " + file.lastModified() + "    SIZE: " + file.length());
+        });
+
+        switch (sortType) {
+            case "Name" -> {
+                if (sortAscending)
+                    Collections.sort(files, (f1, f2) -> {
+                        return f1.getName().compareToIgnoreCase(f2.getName());
+                    });
+                else
+                    Collections.sort(files, (f1, f2) -> {
+                        return f2.getName().compareToIgnoreCase(f1.getName());
+                    });
+            }
+            case "Date" -> {
+                if (sortAscending)
+                    Collections.sort(files, (f1, f2) -> {
+                        return Utils.compare(f1.lastModified(), f2.lastModified());
+                    });
+                else
+                    Collections.sort(files, (f1, f2) -> {
+                        return Utils.compare(f2.lastModified(), f1.lastModified());
+                    });
+            }
+            case "Size" -> {
+                if (sortAscending)
+                    Collections.sort(files, (f1, f2) -> {
+                        return Utils.compare(f1.length(), f2.length());
+                    });
+                else
+                    Collections.sort(files, (f1, f2) -> {
+                        return Utils.compare(f2.lastModified(), f1.lastModified());
+                    });
+            }
+                case "Random" -> Collections.shuffle(files);
+        }
+
         System.out.println("AFTER SORT:");
         files.forEach(file -> {
-            System.out.println(file.getName());
-            });
-        
-       // TODO resets to first image.  Caller needs to call view.next() -- or just leave it and the next call to next() or prev() will start at begin or end
+            System.out.println("      " + file.getName() + "   Date: " + file.lastModified() + "    SIZE: " + file.length());
+        });
+
+        // TODO resets to first image.  Caller needs to call view.next() -- or just leave it and the next call to next() or prev() will start at begin or end
         currentImageNum = -1;
+        firstSort = false;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,8 +198,7 @@ public class Model {
     private ArrayList<File> files;
     private int currentImageNum = -1;
     private UserPreferences prefs;
-    void setSortAscending(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
+    private boolean firstSort = true;
+    private String prevSortType;
+    private boolean prevSortAscending;
 }

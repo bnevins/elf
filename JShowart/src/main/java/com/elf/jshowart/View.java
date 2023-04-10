@@ -150,14 +150,14 @@ public class View extends JPanel implements KeyListener {
         String saveDialogTitle = "Image Save";
 
         if (image == null) {
-            errorMessage("No files loaded.", saveDialogTitle);
+            Utils.errorMessage("No files loaded.", saveDialogTitle);
             return;
         }
 
         File currentImageFile = model.curr();
 
         if (currentImageFile == null) {
-            errorMessage("No files loaded.", saveDialogTitle); //can't happen because image is not null!
+            Utils.errorMessage("No files loaded.", saveDialogTitle); //can't happen because image is not null!
             return;
         }
 
@@ -167,9 +167,9 @@ public class View extends JPanel implements KeyListener {
             try {
                 ImageIO.write(image, ext, currentImageFile);
             } catch (IOException ex) {
-                errorMessage(ex.toString(), saveDialogTitle);
+                Utils.errorMessage(ex.toString(), saveDialogTitle);
             }
-            successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
+            Utils.successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
         }
     }
 
@@ -186,7 +186,7 @@ public class View extends JPanel implements KeyListener {
         File outfile = chooser.getSelectedFile();
 
         if (!Utils.isArtFile(outfile)) {
-            errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
+            Utils.errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
             return;
         }
         prefs.previousSaveAsFileParent = outfile.getParentFile();
@@ -197,9 +197,9 @@ public class View extends JPanel implements KeyListener {
         try {
             ImageIO.write(theImage, Utils.getFileExtension(outfile), outfile);
         } catch (IOException ex) {
-            errorMessage(ex.toString(), saveDialogTitle);
+            Utils.errorMessage(ex.toString(), saveDialogTitle);
         }
-        successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
+        Utils.successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
     }
 
     private boolean isOkToOverwrite(File f) {
@@ -208,13 +208,6 @@ public class View extends JPanel implements KeyListener {
         return selection == JOptionPane.YES_OPTION;
     }
 
-    private void errorMessage(String msg, String title) {
-        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void successMessage(String msg, String title) {
-        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
-    }
 
     void rotate(int degrees) {
         if (image == null)
@@ -278,7 +271,7 @@ public class View extends JPanel implements KeyListener {
     void saveCurrentSize() {
         if (!prefs.fitToWindow || image == null) {
             // TODO: Simply disable the menu item!
-            errorMessage("Image is full size -- or there is no image loaded", "Save Current Size");
+            Utils.errorMessage("Image is full size -- or there is no image loaded", "Save Current Size");
             return; 
        }
         Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));

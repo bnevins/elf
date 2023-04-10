@@ -123,8 +123,8 @@ public class Controller extends JFrame implements KeyListener {
         MenuRotate90 = new javax.swing.JMenuItem();
         MenuRotate180 = new javax.swing.JMenuItem();
         MenuRotate270 = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         MenuShrinkHalf = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         MenuSort = new javax.swing.JMenu();
         MenuSortName = new javax.swing.JRadioButtonMenuItem();
         MenuSortSize = new javax.swing.JRadioButtonMenuItem();
@@ -252,7 +252,6 @@ public class Controller extends JFrame implements KeyListener {
             }
         });
         MenuView.add(MenuRotate270);
-        MenuView.add(jSeparator1);
 
         MenuShrinkHalf.setText("Shrink 1/2");
         MenuShrinkHalf.addActionListener(new java.awt.event.ActionListener() {
@@ -261,6 +260,7 @@ public class Controller extends JFrame implements KeyListener {
             }
         });
         MenuView.add(MenuShrinkHalf);
+        MenuView.add(jSeparator1);
 
         MenuSort.setText("Sort");
 
