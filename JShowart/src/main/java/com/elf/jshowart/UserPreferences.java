@@ -17,10 +17,40 @@ import java.util.prefs.Preferences;
  */
 public final class UserPreferences {
 
+    /**
+     * @return the sortType
+     */
+    public String getSortType() {
+        return sortType;
+    }
+
+    /**
+     * @param sortType the sortType to set
+     */
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+    /**
+     * @return the sortAscending
+     */
+    public boolean isSortAscending() {
+        return sortAscending;
+    }
+
+    /**
+     * @param sortAscending the sortAscending to set
+     */
+    public void setSortAscending(boolean sortAscending) {
+        this.sortAscending = sortAscending;
+    }
+
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousSaveAsFileParent;
     public boolean fitToWindow;
+    private String sortType;
+    private boolean sortAscending; // descending == false!
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -40,6 +70,8 @@ public final class UserPreferences {
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
         fitToWindow = node.getBoolean("stretch", true);
+        setSortType(node.get("sortType", "Name"));
+        setSortAscending(node.getBoolean("sortAscending", isSortAscending()));
     }
 
     public void write() {
@@ -47,6 +79,8 @@ public final class UserPreferences {
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
         node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
         node.putBoolean("stretch", fitToWindow);
+        node.put("sortType", getSortType());
+        node.putBoolean("sortAscending", isSortAscending());
     }
 
     private final Preferences node;

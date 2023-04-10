@@ -27,6 +27,33 @@ public class Controller extends JFrame implements KeyListener {
     public Controller() {
         prefs = UserPreferences.get();
         initComponents();
+        clearAllSortButtons();
+        
+        switch (prefs.getSortType()) {
+            case "Name" ->
+                MenuSortName.setSelected(true);
+            case "Date" ->
+                MenuSortDate.setSelected(true);
+            case "Size" ->
+                MenuSortSize.setSelected(true);
+            case "Random" ->
+                MenuSortRandom.setSelected(true);
+            default -> { // can't happen
+                MenuSortName.setSelected(true);
+                prefs.setSortType("Name");
+            }
+        }
+        if(prefs.isSortAscending()) 
+            MenuSortAscending.setSelected(true);
+        else
+            MenuSortDescending.setSelected(true);
+            
+        sortTypeGroup.add(MenuSortName);
+        sortTypeGroup.add(MenuSortDate);
+        sortTypeGroup.add(MenuSortSize);
+        sortTypeGroup.add(MenuSortRandom);
+        sortDirectionGroup.add(MenuSortAscending);
+        sortDirectionGroup.add(MenuSortDescending);
         MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
         addKeyListener(Globals.view);
@@ -81,6 +108,8 @@ public class Controller extends JFrame implements KeyListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        sortTypeGroup = new javax.swing.ButtonGroup();
+        sortDirectionGroup = new javax.swing.ButtonGroup();
         MenuBar = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuOpenFiles = new javax.swing.JMenuItem();
@@ -90,11 +119,21 @@ public class Controller extends JFrame implements KeyListener {
         MenuEdit = new javax.swing.JMenu();
         MenuView = new javax.swing.JMenu();
         MenuFitToWindow = new javax.swing.JCheckBoxMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
         MenuRotate90 = new javax.swing.JMenuItem();
         MenuRotate180 = new javax.swing.JMenuItem();
         MenuRotate270 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         MenuShrinkHalf = new javax.swing.JMenuItem();
+        MenuSort = new javax.swing.JMenu();
+        MenuSortName = new javax.swing.JRadioButtonMenuItem();
+        MenuSortSize = new javax.swing.JRadioButtonMenuItem();
+        MenuSortDate = new javax.swing.JRadioButtonMenuItem();
+        MenuSortRandom = new javax.swing.JRadioButtonMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        MenuSortAscending = new javax.swing.JRadioButtonMenuItem();
+        MenuSortDescending = new javax.swing.JRadioButtonMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
         MenuUtilities = new javax.swing.JMenu();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
@@ -183,6 +222,7 @@ public class Controller extends JFrame implements KeyListener {
             }
         });
         MenuView.add(MenuFitToWindow);
+        MenuView.add(jSeparator7);
 
         MenuRotate90.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
         MenuRotate90.setText("Rotate 90 CW");
@@ -221,6 +261,60 @@ public class Controller extends JFrame implements KeyListener {
             }
         });
         MenuView.add(MenuShrinkHalf);
+
+        MenuSort.setText("Sort");
+
+        MenuSortName.setText("Name");
+        MenuSortName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSortNameActionPerformed(evt);
+            }
+        });
+        MenuSort.add(MenuSortName);
+
+        MenuSortSize.setText("Size");
+        MenuSortSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSortSizeActionPerformed(evt);
+            }
+        });
+        MenuSort.add(MenuSortSize);
+
+        MenuSortDate.setText("Date");
+        MenuSortDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSortDateActionPerformed(evt);
+            }
+        });
+        MenuSort.add(MenuSortDate);
+
+        MenuSortRandom.setText("Random");
+        MenuSortRandom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSortRandomActionPerformed(evt);
+            }
+        });
+        MenuSort.add(MenuSortRandom);
+        MenuSort.add(jSeparator9);
+
+        MenuSortAscending.setText("Ascending");
+        MenuSortAscending.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSortAscendingActionPerformed(evt);
+            }
+        });
+        MenuSort.add(MenuSortAscending);
+
+        MenuSortDescending.setText("Descending");
+        MenuSortDescending.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSortDescendingActionPerformed(evt);
+            }
+        });
+        MenuSort.add(MenuSortDescending);
+
+        MenuView.add(MenuSort);
+        MenuView.add(jSeparator8);
 
         MenuBar.add(MenuView);
 
@@ -327,6 +421,39 @@ public class Controller extends JFrame implements KeyListener {
         MenuShrinkHalf.setEnabled(hasImage);
     }//GEN-LAST:event_MenuViewMenuSelected
 
+    private void MenuSortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortNameActionPerformed
+        menuSortHelper(evt);
+    }//GEN-LAST:event_MenuSortNameActionPerformed
+
+    private void MenuSortSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortSizeActionPerformed
+        menuSortHelper(evt);
+    }//GEN-LAST:event_MenuSortSizeActionPerformed
+
+    private void MenuSortDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortDateActionPerformed
+        menuSortHelper(evt);
+    }//GEN-LAST:event_MenuSortDateActionPerformed
+
+    private void MenuSortRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortRandomActionPerformed
+        menuSortHelper(evt);
+    }//GEN-LAST:event_MenuSortRandomActionPerformed
+
+    private void MenuSortAscendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortAscendingActionPerformed
+        menuSortDirectionHelper(true);
+    }//GEN-LAST:event_MenuSortAscendingActionPerformed
+
+    private void MenuSortDescendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortDescendingActionPerformed
+        menuSortDirectionHelper(false);
+    }//GEN-LAST:event_MenuSortDescendingActionPerformed
+
+    private void menuSortHelper(java.awt.event.ActionEvent evt) {
+        String type = evt.getActionCommand();
+        prefs.setSortType(type);
+        Model.get().sort();
+    }
+    private void menuSortDirectionHelper(boolean ascending) {
+        prefs.setSortAscending(ascending);
+        Model.get().sort();
+    }
     /**
      * @param args the command line arguments
      */
@@ -377,10 +504,22 @@ public class Controller extends JFrame implements KeyListener {
     private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem MenuSaveCurrentSize;
     private javax.swing.JMenuItem MenuShrinkHalf;
+    private javax.swing.JMenu MenuSort;
+    private javax.swing.JRadioButtonMenuItem MenuSortAscending;
+    private javax.swing.JRadioButtonMenuItem MenuSortDate;
+    private javax.swing.JRadioButtonMenuItem MenuSortDescending;
+    private javax.swing.JRadioButtonMenuItem MenuSortName;
+    private javax.swing.JRadioButtonMenuItem MenuSortRandom;
+    private javax.swing.JRadioButtonMenuItem MenuSortSize;
     private javax.swing.JMenu MenuUtilities;
     private javax.swing.JMenu MenuView;
     private javax.swing.JMenuItem about;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
+    private javax.swing.ButtonGroup sortDirectionGroup;
+    private javax.swing.ButtonGroup sortTypeGroup;
     // End of variables declaration//GEN-END:variables
 
     void setView(View view) {
@@ -402,5 +541,15 @@ public class Controller extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    private void clearAllSortButtons() {
+        // being rigorous.  Setting default in NB Design can foul things up!
+        MenuSortName.setSelected(false);
+        MenuSortDate.setSelected(false);
+        MenuSortSize.setSelected(false);
+        MenuSortRandom.setSelected(false);
+        MenuSortAscending.setSelected(false);
+        MenuSortDescending.setSelected(false);
     }
 }

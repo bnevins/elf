@@ -23,7 +23,7 @@ public class View extends JPanel implements KeyListener {
     private BufferedImage image;
     private File prevImageFile = null;
     private UserPreferences prefs = UserPreferences.get();
-    private Model artlib = Model.get();
+    private Model model = Model.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
 
@@ -85,11 +85,11 @@ public class View extends JPanel implements KeyListener {
     }
 
     void nextImage() {
-        setupImage(artlib.next());
+        setupImage(model.next());
     }
 
     void prevImage() {
-        setupImage(artlib.prev());
+        setupImage(model.prev());
     }
 
     private void setupImage(File imageFile) {
@@ -154,7 +154,7 @@ public class View extends JPanel implements KeyListener {
             return;
         }
 
-        File currentImageFile = artlib.curr();
+        File currentImageFile = model.curr();
 
         if (currentImageFile == null) {
             errorMessage("No files loaded.", saveDialogTitle); //can't happen because image is not null!
