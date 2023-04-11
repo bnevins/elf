@@ -56,6 +56,7 @@ public class Controller extends JFrame implements KeyListener {
         sortDirectionGroup.add(MenuSortDescending);
         MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
+        MenuDebugMode.setSelected(prefs.isDebug());
         addKeyListener(Globals.view);
         addKeyListener(this);
         Globals.frame = this;
@@ -135,6 +136,7 @@ public class Controller extends JFrame implements KeyListener {
         MenuSortDescending = new javax.swing.JRadioButtonMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         MenuUtilities = new javax.swing.JMenu();
+        MenuDebugMode = new javax.swing.JCheckBoxMenuItem();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
 
@@ -319,6 +321,16 @@ public class Controller extends JFrame implements KeyListener {
         MenuBar.add(MenuView);
 
         MenuUtilities.setText("Utilities");
+
+        MenuDebugMode.setSelected(true);
+        MenuDebugMode.setText("Debug Mode");
+        MenuDebugMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuDebugModeActionPerformed(evt);
+            }
+        });
+        MenuUtilities.add(MenuDebugMode);
+
         MenuBar.add(MenuUtilities);
 
         MenuHelp.setText("Help");
@@ -445,6 +457,11 @@ public class Controller extends JFrame implements KeyListener {
         menuSortDirectionHelper(false);
     }//GEN-LAST:event_MenuSortDescendingActionPerformed
 
+    private void MenuDebugModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuDebugModeActionPerformed
+        // TODO add your handling code here:
+        prefs.setDebug(MenuDebugMode.isSelected());
+    }//GEN-LAST:event_MenuDebugModeActionPerformed
+
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
         prefs.setSortType(type);
@@ -492,6 +509,7 @@ public class Controller extends JFrame implements KeyListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar MenuBar;
+    private javax.swing.JCheckBoxMenuItem MenuDebugMode;
     private javax.swing.JMenu MenuEdit;
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;

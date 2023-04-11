@@ -1,6 +1,7 @@
 *************   BUGS  *******************
 BUG(?) save as - don't enter a file extension - automatically add one!
 MenuSaveThisSizeActionPerformed - get rid of it
+Does windows size get saved correctly when  maximized? 
 *********************************************
 keylistener added inside View ctor
 Figure out a clean way to disable menu items dynamically e.g. SaveAsNow

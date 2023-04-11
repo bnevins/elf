@@ -44,13 +44,27 @@ public final class UserPreferences {
     public void setSortAscending(boolean sortAscending) {
         this.sortAscending = sortAscending;
     }
+/**
+     * @return the debug
+     */
+    public boolean isDebug() {
+        return debug;
+    }
 
+    /**
+     * @param debug the debug to set
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+    
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousSaveAsFileParent;
     public boolean fitToWindow;
     private String sortType;
     private boolean sortAscending; // descending == false!
+    private boolean debug;
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -70,7 +84,9 @@ public final class UserPreferences {
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
         fitToWindow = node.getBoolean("stretch", true);
+        setDebug(node.getBoolean("debugMode", false));
         setSortType(node.get("sortType", "Name"));
+        setSortAscending(node.getBoolean("sortAscending", isSortAscending()));
         setSortAscending(node.getBoolean("sortAscending", isSortAscending()));
     }
 
@@ -79,6 +95,7 @@ public final class UserPreferences {
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
         node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
         node.putBoolean("stretch", fitToWindow);
+        node.putBoolean("debugMode", isDebug());
         node.put("sortType", getSortType());
         node.putBoolean("sortAscending", isSortAscending());
     }
@@ -109,4 +126,6 @@ public final class UserPreferences {
         node.putInt("window_width", windowBounds.width);
         node.putInt("window_height", windowBounds.height);
     }
+
+    
 }
