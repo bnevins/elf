@@ -18,7 +18,7 @@ import java.awt.geom.*;
  *
  * @author bnevins
  */
-public class View extends JPanel implements KeyListener {
+public class View extends JPanel {
 
     private BufferedImage image;
     private File prevImageFile = null;
@@ -33,32 +33,8 @@ public class View extends JPanel implements KeyListener {
     public View() {
         System.out.println("JShowartView Layout Manager = " + getLayout());
         Globals.view = this;
-        //addKeyListener(this); doesn't work!!
     }
 
-    public void keyTyped(KeyEvent e) {
-        //System.out.println("KEY TYPED" + e); 
-
-    }
-
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        //System.out.println("KEY PRESSED == " + key);
-        switch (key) {
-            case VK_SPACE, VK_RIGHT ->
-                nextImage();
-            case VK_LEFT ->
-                prevImage();
-            //case KeyEvent.VK_ESCAPE ->
-            //Globals.frame.toggleFullScreen();
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        //System.out.println("KEY RELEASED:  " + e); 
-    }
-
-    // TODO set scroll size
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -12,52 +12,10 @@ import java.util.prefs.Preferences;
 
 /**
  *
- * @author bnevins note: not multi-thread safe turn class into an enum if it
- * becomes a problem...
+ * @author bnevins note: not multi-thread safe turn class into an enum if it becomes a problem...
  */
 public final class UserPreferences {
 
-    /**
-     * @return the sortType
-     */
-    public String getSortType() {
-        return sortType;
-    }
-
-    /**
-     * @param sortType the sortType to set
-     */
-    public void setSortType(String sortType) {
-        this.sortType = sortType;
-    }
-
-    /**
-     * @return the sortAscending
-     */
-    public boolean isSortAscending() {
-        return sortAscending;
-    }
-
-    /**
-     * @param sortAscending the sortAscending to set
-     */
-    public void setSortAscending(boolean sortAscending) {
-        this.sortAscending = sortAscending;
-    }
-/**
-     * @return the debug
-     */
-    public boolean isDebug() {
-        return debug;
-    }
-
-    /**
-     * @param debug the debug to set
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-    
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousSaveAsFileParent;
@@ -65,6 +23,7 @@ public final class UserPreferences {
     private String sortType;
     private boolean sortAscending; // descending == false!
     private boolean debug;
+    private int slideshowSeconds;
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -84,6 +43,7 @@ public final class UserPreferences {
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
         fitToWindow = node.getBoolean("stretch", true);
+        setSlideshowSeconds(node.getInt("slideshowSeconds", 2));
         setDebug(node.getBoolean("debugMode", false));
         setSortType(node.get("sortType", "Name"));
         setSortAscending(node.getBoolean("sortAscending", isSortAscending()));
@@ -98,6 +58,7 @@ public final class UserPreferences {
         node.putBoolean("debugMode", isDebug());
         node.put("sortType", getSortType());
         node.putBoolean("sortAscending", isSortAscending());
+        node.putInt("slideshowSeconds", getSlideshowSeconds());
     }
 
     private final Preferences node;
@@ -126,6 +87,64 @@ public final class UserPreferences {
         node.putInt("window_width", windowBounds.width);
         node.putInt("window_height", windowBounds.height);
     }
-
+    /////////////////////////////////////////////////////////////////////////////////
+    //   Getters and Setters
+    /////////////////////////////////////////////////////////////////////////////////
     
+    /**
+     * @return the sortType
+     */
+    public String getSortType() {
+        return sortType;
+    }
+
+    /**
+     * @param sortType the sortType to set
+     */
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+    /**
+     * @return the sortAscending
+     */
+    public boolean isSortAscending() {
+        return sortAscending;
+    }
+
+    /**
+     * @param sortAscending the sortAscending to set
+     */
+    public void setSortAscending(boolean sortAscending) {
+        this.sortAscending = sortAscending;
+    }
+
+    /**
+     * @return the debug
+     */
+    public boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * @param debug the debug to set
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    /**
+     * @return the slideshowSeconds
+     */
+    public int getSlideshowSeconds() {
+        return slideshowSeconds;
+    }
+
+    /**
+     * @param slideshowSeconds the slideshowSeconds to set
+     */
+    public void setSlideshowSeconds(int slideshowSeconds) {
+        this.slideshowSeconds = slideshowSeconds;
+    }
+
 }

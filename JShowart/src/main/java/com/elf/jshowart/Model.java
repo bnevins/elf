@@ -201,4 +201,8 @@ public class Model {
     private boolean firstSort = true;
     private String prevSortType;
     private boolean prevSortAscending;
+
+    int numImages() {
+        return files.size();
+    }
 }

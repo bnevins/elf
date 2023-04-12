@@ -201,6 +201,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Utilities"/>
           </Properties>
+          <Events>
+            <EventHandler event="menuSelected" listener="javax.swing.event.MenuListener" parameters="javax.swing.event.MenuEvent" handler="MenuUtilitiesMenuSelected"/>
+          </Events>
           <SubComponents>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="MenuDebugMode">
               <Properties>
@@ -209,6 +212,15 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuDebugModeActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="MenuSlideshow">
+              <Properties>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" value="Slideshow"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuSlideshowActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

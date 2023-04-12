@@ -13,21 +13,24 @@ import javax.swing.*;
  *
  * @author bnevins
  */
-public class Controller extends JFrame implements KeyListener {
+public class Controller extends JFrame {
 
     private final UserPreferences prefs;
     private View view;
     private static GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     private boolean currentFullScreen = false;
-
+    private KeyHandler keyHandler;
+    private SlideShow slideshow = null;
     // keep it alive because it can be S-L-O-W to start
     /**
      * Creates new form JShowartFrame
      */
-    public Controller() {
+                                                    
+   public Controller() {
         prefs = UserPreferences.get();
         initComponents();
         clearAllSortButtons();
+        MenuSlideshow.setSelected(false);
         
         switch (prefs.getSortType()) {
             case "Name" ->
@@ -57,8 +60,9 @@ public class Controller extends JFrame implements KeyListener {
         MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
         MenuDebugMode.setSelected(prefs.isDebug());
-        addKeyListener(Globals.view);
-        addKeyListener(this);
+        
+        // note: they get keystrokes in the order that they're added!  View first, then Controller, then KeyHandler
+        addKeyListener(keyHandler = new KeyHandler());
         Globals.frame = this;
 
     }
@@ -137,6 +141,7 @@ public class Controller extends JFrame implements KeyListener {
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         MenuUtilities = new javax.swing.JMenu();
         MenuDebugMode = new javax.swing.JCheckBoxMenuItem();
+        MenuSlideshow = new javax.swing.JCheckBoxMenuItem();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
 
@@ -321,6 +326,15 @@ public class Controller extends JFrame implements KeyListener {
         MenuBar.add(MenuView);
 
         MenuUtilities.setText("Utilities");
+        MenuUtilities.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                MenuUtilitiesMenuSelected(evt);
+            }
+        });
 
         MenuDebugMode.setSelected(true);
         MenuDebugMode.setText("Debug Mode");
@@ -330,6 +344,15 @@ public class Controller extends JFrame implements KeyListener {
             }
         });
         MenuUtilities.add(MenuDebugMode);
+
+        MenuSlideshow.setSelected(true);
+        MenuSlideshow.setText("Slideshow");
+        MenuSlideshow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuSlideshowActionPerformed(evt);
+            }
+        });
+        MenuUtilities.add(MenuSlideshow);
 
         MenuBar.add(MenuUtilities);
 
@@ -462,6 +485,22 @@ public class Controller extends JFrame implements KeyListener {
         prefs.setDebug(MenuDebugMode.isSelected());
     }//GEN-LAST:event_MenuDebugModeActionPerformed
 
+    private void MenuSlideshowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSlideshowActionPerformed
+        if(slideshow == null ) {
+            MenuSlideshow.setSelected(true);
+            slideshow = new SlideShow();
+        }
+        else {
+            MenuSlideshow.setSelected(false);
+            slideshow.stop();
+            slideshow = null;
+        }
+    }//GEN-LAST:event_MenuSlideshowActionPerformed
+
+    private void MenuUtilitiesMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuUtilitiesMenuSelected
+        MenuSlideshow.setEnabled(Model.get().numImages() > 1);
+    }//GEN-LAST:event_MenuUtilitiesMenuSelected
+
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
         prefs.setSortType(type);
@@ -522,6 +561,7 @@ public class Controller extends JFrame implements KeyListener {
     private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem MenuSaveCurrentSize;
     private javax.swing.JMenuItem MenuShrinkHalf;
+    private javax.swing.JCheckBoxMenuItem MenuSlideshow;
     private javax.swing.JMenu MenuSort;
     private javax.swing.JRadioButtonMenuItem MenuSortAscending;
     private javax.swing.JRadioButtonMenuItem MenuSortDate;
@@ -542,23 +582,6 @@ public class Controller extends JFrame implements KeyListener {
 
     void setView(View view) {
         this.view = view;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        char key = e.getKeyChar();
-        switch (key) {
-            case KeyEvent.VK_ESCAPE ->
-                toggleFullScreen();
-        }
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
     }
 
     private void clearAllSortButtons() {
