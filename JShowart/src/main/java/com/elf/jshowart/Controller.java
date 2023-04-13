@@ -30,6 +30,7 @@ public class Controller extends JFrame {
         prefs = UserPreferences.get();
         initComponents();
         clearAllSortButtons();
+        clearAllShrinkButtons();
         MenuSlideshow.setSelected(false);
         
         switch (prefs.getSortType()) {
@@ -57,6 +58,10 @@ public class Controller extends JFrame {
         sortTypeGroup.add(MenuSortRandom);
         sortDirectionGroup.add(MenuSortAscending);
         sortDirectionGroup.add(MenuSortDescending);
+        shrinkGroup.add(MenuNoShrink);
+        shrinkGroup.add(MenuShrinkHalfxxx);
+        shrinkGroup.add(MenuShrinkFourth);
+        shrinkGroup.add(MenuShrinkEighth);
         MenuFitToWindow.setSelected(prefs.fitToWindow);
         setBounds(prefs.windowBounds);
         MenuDebugMode.setSelected(prefs.isDebug());
@@ -115,6 +120,8 @@ public class Controller extends JFrame {
 
         sortTypeGroup = new javax.swing.ButtonGroup();
         sortDirectionGroup = new javax.swing.ButtonGroup();
+        jMenu1 = new javax.swing.JMenu();
+        shrinkGroup = new javax.swing.ButtonGroup();
         MenuBar = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuOpenFiles = new javax.swing.JMenuItem();
@@ -128,7 +135,13 @@ public class Controller extends JFrame {
         MenuRotate90 = new javax.swing.JMenuItem();
         MenuRotate180 = new javax.swing.JMenuItem();
         MenuRotate270 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         MenuShrinkHalf = new javax.swing.JMenuItem();
+        MenuShrink = new javax.swing.JMenu();
+        MenuNoShrink = new javax.swing.JRadioButtonMenuItem();
+        MenuShrinkHalfxxx = new javax.swing.JRadioButtonMenuItem();
+        MenuShrinkFourth = new javax.swing.JRadioButtonMenuItem();
+        MenuShrinkEighth = new javax.swing.JRadioButtonMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         MenuSort = new javax.swing.JMenu();
         MenuSortName = new javax.swing.JRadioButtonMenuItem();
@@ -144,6 +157,8 @@ public class Controller extends JFrame {
         MenuSlideshow = new javax.swing.JCheckBoxMenuItem();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
+
+        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
@@ -259,6 +274,7 @@ public class Controller extends JFrame {
             }
         });
         MenuView.add(MenuRotate270);
+        MenuView.add(jSeparator2);
 
         MenuShrinkHalf.setText("Shrink 1/2");
         MenuShrinkHalf.addActionListener(new java.awt.event.ActionListener() {
@@ -267,6 +283,43 @@ public class Controller extends JFrame {
             }
         });
         MenuView.add(MenuShrinkHalf);
+
+        MenuShrink.setText("Shrink");
+
+        MenuNoShrink.setSelected(true);
+        MenuNoShrink.setText("No Shrink");
+        MenuNoShrink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNoShrinkActionPerformed(evt);
+            }
+        });
+        MenuShrink.add(MenuNoShrink);
+
+        MenuShrinkHalfxxx.setText("Shrink 1/2");
+        MenuShrinkHalfxxx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuShrinkHalfxxxActionPerformed(evt);
+            }
+        });
+        MenuShrink.add(MenuShrinkHalfxxx);
+
+        MenuShrinkFourth.setText("Shrink 1/4");
+        MenuShrinkFourth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuShrinkFourthActionPerformed(evt);
+            }
+        });
+        MenuShrink.add(MenuShrinkFourth);
+
+        MenuShrinkEighth.setText("Shrink 1/8");
+        MenuShrinkEighth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuShrinkEighthActionPerformed(evt);
+            }
+        });
+        MenuShrink.add(MenuShrinkEighth);
+
+        MenuView.add(MenuShrink);
         MenuView.add(jSeparator1);
 
         MenuSort.setText("Sort");
@@ -454,6 +507,7 @@ public class Controller extends JFrame {
         MenuRotate180.setEnabled(hasImage);
         MenuRotate270.setEnabled(hasImage);
         MenuShrinkHalf.setEnabled(hasImage);
+        MenuShrink.setEnabled(hasImage);
     }//GEN-LAST:event_MenuViewMenuSelected
 
     private void MenuSortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortNameActionPerformed
@@ -500,6 +554,21 @@ public class Controller extends JFrame {
     private void MenuUtilitiesMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuUtilitiesMenuSelected
         MenuSlideshow.setEnabled(Model.get().numImages() > 1);
     }//GEN-LAST:event_MenuUtilitiesMenuSelected
+    private void MenuShrinkHalfxxxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfxxxActionPerformed
+        view.setScaleFactor(0.5);
+    }//GEN-LAST:event_MenuShrinkHalfxxxActionPerformed
+
+    private void MenuShrinkFourthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkFourthActionPerformed
+        view.setScaleFactor(0.25);
+    }//GEN-LAST:event_MenuShrinkFourthActionPerformed
+
+    private void MenuShrinkEighthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkEighthActionPerformed
+        view.setScaleFactor(0.125);
+    }//GEN-LAST:event_MenuShrinkEighthActionPerformed
+
+    private void MenuNoShrinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNoShrinkActionPerformed
+        view.setScaleFactor(1.0);
+    }//GEN-LAST:event_MenuNoShrinkActionPerformed
 
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
@@ -553,6 +622,7 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
     private javax.swing.JMenu MenuHelp;
+    private javax.swing.JRadioButtonMenuItem MenuNoShrink;
     private javax.swing.JMenuItem MenuOpenFiles;
     private javax.swing.JMenuItem MenuRotate180;
     private javax.swing.JMenuItem MenuRotate270;
@@ -560,7 +630,11 @@ public class Controller extends JFrame {
     private javax.swing.JMenuItem MenuSave;
     private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem MenuSaveCurrentSize;
+    private javax.swing.JMenu MenuShrink;
+    private javax.swing.JRadioButtonMenuItem MenuShrinkEighth;
+    private javax.swing.JRadioButtonMenuItem MenuShrinkFourth;
     private javax.swing.JMenuItem MenuShrinkHalf;
+    private javax.swing.JRadioButtonMenuItem MenuShrinkHalfxxx;
     private javax.swing.JCheckBoxMenuItem MenuSlideshow;
     private javax.swing.JMenu MenuSort;
     private javax.swing.JRadioButtonMenuItem MenuSortAscending;
@@ -572,10 +646,13 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuUtilities;
     private javax.swing.JMenu MenuView;
     private javax.swing.JMenuItem about;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
+    private javax.swing.ButtonGroup shrinkGroup;
     private javax.swing.ButtonGroup sortDirectionGroup;
     private javax.swing.ButtonGroup sortTypeGroup;
     // End of variables declaration//GEN-END:variables
@@ -592,5 +669,12 @@ public class Controller extends JFrame {
         MenuSortRandom.setSelected(false);
         MenuSortAscending.setSelected(false);
         MenuSortDescending.setSelected(false);
+    }
+
+    private void clearAllShrinkButtons() {
+        MenuNoShrink.setSelected(true);
+        MenuShrinkHalfxxx.setSelected(false);
+        MenuShrinkFourth.setSelected(false);
+        MenuShrinkEighth.setSelected(false);
     }
 }
