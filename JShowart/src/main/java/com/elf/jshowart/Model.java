@@ -120,11 +120,6 @@ public class Model {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     void sort() {
-// TODO get sort types from prefs        
-// TODO get sort types from prefs        
-// TODO get sort types from prefs        
-// TODO get sort types from prefs        
-// TODO get sort types from prefs        
         System.out.println("BEFORE SORT:");
 
         if (prevSortType != null)
