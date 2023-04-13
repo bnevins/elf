@@ -555,19 +555,19 @@ public class Controller extends JFrame {
         MenuSlideshow.setEnabled(Model.get().numImages() > 1);
     }//GEN-LAST:event_MenuUtilitiesMenuSelected
     private void MenuShrinkHalfxxxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfxxxActionPerformed
-        view.setScaleFactor(0.5);
+        view.setShrinkFactor(2);
     }//GEN-LAST:event_MenuShrinkHalfxxxActionPerformed
 
     private void MenuShrinkFourthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkFourthActionPerformed
-        view.setScaleFactor(0.25);
+        view.setShrinkFactor(4);
     }//GEN-LAST:event_MenuShrinkFourthActionPerformed
 
     private void MenuShrinkEighthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkEighthActionPerformed
-        view.setScaleFactor(0.125);
+        view.setShrinkFactor(8);
     }//GEN-LAST:event_MenuShrinkEighthActionPerformed
 
     private void MenuNoShrinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNoShrinkActionPerformed
-        view.setScaleFactor(1.0);
+        view.setShrinkFactor(1);
     }//GEN-LAST:event_MenuNoShrinkActionPerformed
 
     private void menuSortHelper(java.awt.event.ActionEvent evt) {

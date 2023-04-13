@@ -26,8 +26,8 @@ public class View extends JPanel {
     private Model model = Model.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
-    private double scaleFactor = 1.0;
-    private double prevScaleFactor = 1.0;
+    private int shrinkFactor = 1;
+    private int prevShrinkFactor = 1;
 
     /**
      * Creates new form JShowartView
@@ -81,8 +81,8 @@ public class View extends JPanel {
         }
     }
 
-    void setScaleFactor(double newScale) {
-        scaleFactor = newScale;
+    void setShrinkFactor(int newShrink) {
+        shrinkFactor = newShrink;
         setupImage(model.curr());
     }
 
@@ -100,12 +100,12 @@ public class View extends JPanel {
             return;
         }
 
-        // if we have only 1 file in artlib, don't waste time re-reading it -- unless scaleFactor changed!
-        if (imageFile.equals(prevImageFile) && scaleFactor == prevScaleFactor)
+        // if we have only 1 file in artlib, don't waste time re-reading it -- unless shrinkFactor changed!
+        if (imageFile.equals(prevImageFile) && shrinkFactor == prevShrinkFactor)
             return;
 
         prevImageFile = imageFile;
-        prevScaleFactor = scaleFactor;
+        prevShrinkFactor = shrinkFactor;
 
         try {
             image = ImageIO.read(imageFile);
@@ -114,8 +114,14 @@ public class View extends JPanel {
             image = null;
         }
 
-        if (scaleFactor != 1.0)
+        // should never happen but we don't ever want to divide by zero!
+        if (shrinkFactor == 0)
+            shrinkFactor = 1;
+
+        if (shrinkFactor != 1) {
+            double scaleFactor = 1.0 / (double) shrinkFactor;
             image = getScaledImage(image, scaleFactor);
+        }
 
         Globals.frame.setTitle("JShowArt    " + imageFile.getAbsolutePath() + getScaledUIForTitle());
         setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
@@ -131,11 +137,11 @@ public class View extends JPanel {
 
         // can't use double in a switch
         // TODO change to enum
-        if (scaleFactor == 0.5)
+        if (shrinkFactor == 2)
             return base + "Half Size";
-        if (scaleFactor == .25)
+        if (shrinkFactor == 4)
             return base + "Quarter Size";
-        if (scaleFactor == .125)
+        if (shrinkFactor == 8)
             return base + "Eighth Size";
         return "";
     }
