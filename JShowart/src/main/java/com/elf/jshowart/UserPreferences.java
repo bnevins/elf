@@ -46,8 +46,7 @@ public final class UserPreferences {
         setSlideshowSeconds(node.getInt("slideshowSeconds", 2));
         setDebug(node.getBoolean("debugMode", false));
         setSortType(node.get("sortType", "Name"));
-        setSortAscending(node.getBoolean("sortAscending", isSortAscending()));
-        setSortAscending(node.getBoolean("sortAscending", isSortAscending()));
+        setSortAscending(node.getBoolean("sortAscending", true));
     }
 
     public void write() {
@@ -55,10 +54,10 @@ public final class UserPreferences {
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
         node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
         node.putBoolean("stretch", fitToWindow);
+        node.putInt("slideshowSeconds", getSlideshowSeconds());
         node.putBoolean("debugMode", isDebug());
         node.put("sortType", getSortType());
         node.putBoolean("sortAscending", isSortAscending());
-        node.putInt("slideshowSeconds", getSlideshowSeconds());
     }
 
     private final Preferences node;
@@ -90,7 +89,7 @@ public final class UserPreferences {
     /////////////////////////////////////////////////////////////////////////////////
     //   Getters and Setters
     /////////////////////////////////////////////////////////////////////////////////
-    
+
     /**
      * @return the sortType
      */
