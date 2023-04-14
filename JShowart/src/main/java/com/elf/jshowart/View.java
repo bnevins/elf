@@ -153,6 +153,7 @@ public class View extends JPanel {
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
     }
 
+    // TODO automatically add default extension to filename if missing
     public void save() {
         String saveDialogTitle = "Image Save";
 
@@ -210,7 +211,12 @@ public class View extends JPanel {
     }
 
     private boolean isOkToOverwrite(File f) {
-        int selection = JOptionPane.showConfirmDialog(Globals.frame, "Overwrite " + f.getName(), "Overwrite File",
+        String question = "";
+        if(shrinkFactor != 1)
+            question = "WARNING This will save the file Shrunk by 1/" + shrinkFactor +"\n";
+        
+        question += "Overwrite " + f.getName();
+        int selection = JOptionPane.showConfirmDialog(Globals.frame, question, "Overwrite File",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return selection == JOptionPane.YES_OPTION;
     }
@@ -262,35 +268,17 @@ public class View extends JPanel {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void showScaled(double scalingFactor) {
-        if (image == null)
-            return;
-
-        var scaledImage = getScaledImage(image, scalingFactor);
-        image = scaledImage;
-        String scaledMessage = " -- TEMPORARILY SCALED";
-        String title = Globals.frame.getTitle();
-        if (title.endsWith(scaledMessage))
-            title += " AGAIN";
-        else if (title.endsWith(" AGAIN"))
-            title += " AND AGAIN";
-        else
-            title += scaledMessage;
-
-        repaint();
-        Globals.frame.setTitle(title);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void saveCurrentSize() {
+   
+    void saveCurrentSizeAs() {
         if (!prefs.fitToWindow || image == null) {
-            // TODO: Simply disable the menu item!
+            // can't happen!  The menu item is supposed to be disabled
             Utils.errorMessage("Image is full size -- or there is no image loaded", "Save Current Size");
             return;
         }
         Rectangle r = Utils.fitToWindow(new Dimension(parentPane.getViewport().getWidth(), parentPane.getViewport().getHeight()), new Dimension(image.getWidth(), image.getHeight()));
         double scalingFactor = (double) r.width / (double) image.getWidth();
-        showScaled(scalingFactor);
+        var scaledImage = getScaledImage(image, scalingFactor);
+        saveAs(scaledImage);
     }
 
     boolean hasImageLoaded() {

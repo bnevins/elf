@@ -139,14 +139,6 @@
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="MenuShrinkHalf">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Shrink 1/2"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuShrinkHalfActionPerformed"/>
-              </Events>
-            </MenuItem>
             <Menu class="javax.swing.JMenu" name="MenuShrink">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Shrink"/>
@@ -161,12 +153,12 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuNoShrinkActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JRadioButtonMenuItem" name="MenuShrinkHalfxxx">
+                <MenuItem class="javax.swing.JRadioButtonMenuItem" name="MenuShrinkHalf">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Shrink 1/2"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuShrinkHalfxxxActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuShrinkHalfActionPerformed"/>
                   </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JRadioButtonMenuItem" name="MenuShrinkFourth">

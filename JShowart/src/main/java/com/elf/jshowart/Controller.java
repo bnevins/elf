@@ -59,7 +59,7 @@ public class Controller extends JFrame {
         sortDirectionGroup.add(MenuSortAscending);
         sortDirectionGroup.add(MenuSortDescending);
         shrinkGroup.add(MenuNoShrink);
-        shrinkGroup.add(MenuShrinkHalfxxx);
+        shrinkGroup.add(MenuShrinkHalf);
         shrinkGroup.add(MenuShrinkFourth);
         shrinkGroup.add(MenuShrinkEighth);
         MenuFitToWindow.setSelected(prefs.fitToWindow);
@@ -136,10 +136,9 @@ public class Controller extends JFrame {
         MenuRotate180 = new javax.swing.JMenuItem();
         MenuRotate270 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        MenuShrinkHalf = new javax.swing.JMenuItem();
         MenuShrink = new javax.swing.JMenu();
         MenuNoShrink = new javax.swing.JRadioButtonMenuItem();
-        MenuShrinkHalfxxx = new javax.swing.JRadioButtonMenuItem();
+        MenuShrinkHalf = new javax.swing.JRadioButtonMenuItem();
         MenuShrinkFourth = new javax.swing.JRadioButtonMenuItem();
         MenuShrinkEighth = new javax.swing.JRadioButtonMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -276,14 +275,6 @@ public class Controller extends JFrame {
         MenuView.add(MenuRotate270);
         MenuView.add(jSeparator2);
 
-        MenuShrinkHalf.setText("Shrink 1/2");
-        MenuShrinkHalf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuShrinkHalfActionPerformed(evt);
-            }
-        });
-        MenuView.add(MenuShrinkHalf);
-
         MenuShrink.setText("Shrink");
 
         MenuNoShrink.setSelected(true);
@@ -295,13 +286,13 @@ public class Controller extends JFrame {
         });
         MenuShrink.add(MenuNoShrink);
 
-        MenuShrinkHalfxxx.setText("Shrink 1/2");
-        MenuShrinkHalfxxx.addActionListener(new java.awt.event.ActionListener() {
+        MenuShrinkHalf.setText("Shrink 1/2");
+        MenuShrinkHalf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuShrinkHalfxxxActionPerformed(evt);
+                MenuShrinkHalfActionPerformed(evt);
             }
         });
-        MenuShrink.add(MenuShrinkHalfxxx);
+        MenuShrink.add(MenuShrinkHalf);
 
         MenuShrinkFourth.setText("Shrink 1/4");
         MenuShrinkFourth.addActionListener(new java.awt.event.ActionListener() {
@@ -486,12 +477,8 @@ public class Controller extends JFrame {
     }//GEN-LAST:event_MenuRotate270ActionPerformed
 
     private void MenuSaveCurrentSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveCurrentSizeActionPerformed
-        view.saveCurrentSize();
+        view.saveCurrentSizeAs();
     }//GEN-LAST:event_MenuSaveCurrentSizeActionPerformed
-
-    private void MenuShrinkHalfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfActionPerformed
-        view.showScaled(0.5);
-    }//GEN-LAST:event_MenuShrinkHalfActionPerformed
 
     private void MenuFileMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuFileMenuSelected
         boolean hasImage = view.hasImageLoaded();
@@ -506,7 +493,6 @@ public class Controller extends JFrame {
         MenuRotate90.setEnabled(hasImage);
         MenuRotate180.setEnabled(hasImage);
         MenuRotate270.setEnabled(hasImage);
-        MenuShrinkHalf.setEnabled(hasImage);
         MenuShrink.setEnabled(hasImage);
     }//GEN-LAST:event_MenuViewMenuSelected
 
@@ -554,9 +540,9 @@ public class Controller extends JFrame {
     private void MenuUtilitiesMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuUtilitiesMenuSelected
         MenuSlideshow.setEnabled(Model.get().numImages() > 1);
     }//GEN-LAST:event_MenuUtilitiesMenuSelected
-    private void MenuShrinkHalfxxxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfxxxActionPerformed
+    private void MenuShrinkHalfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkHalfActionPerformed
         view.setShrinkFactor(2);
-    }//GEN-LAST:event_MenuShrinkHalfxxxActionPerformed
+    }//GEN-LAST:event_MenuShrinkHalfActionPerformed
 
     private void MenuShrinkFourthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuShrinkFourthActionPerformed
         view.setShrinkFactor(4);
@@ -633,8 +619,7 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuShrink;
     private javax.swing.JRadioButtonMenuItem MenuShrinkEighth;
     private javax.swing.JRadioButtonMenuItem MenuShrinkFourth;
-    private javax.swing.JMenuItem MenuShrinkHalf;
-    private javax.swing.JRadioButtonMenuItem MenuShrinkHalfxxx;
+    private javax.swing.JRadioButtonMenuItem MenuShrinkHalf;
     private javax.swing.JCheckBoxMenuItem MenuSlideshow;
     private javax.swing.JMenu MenuSort;
     private javax.swing.JRadioButtonMenuItem MenuSortAscending;
@@ -673,7 +658,7 @@ public class Controller extends JFrame {
 
     private void clearAllShrinkButtons() {
         MenuNoShrink.setSelected(true);
-        MenuShrinkHalfxxx.setSelected(false);
+        MenuShrinkHalf.setSelected(false);
         MenuShrinkFourth.setSelected(false);
         MenuShrinkEighth.setSelected(false);
     }
