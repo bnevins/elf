@@ -262,10 +262,9 @@ public class View extends JPanel {
         }
         
         // NOTE:  I found out the hard way that the next line is CRITICAL.  You MUST
-        // create an empty BufferedImage.  You can't just use a BufferedImage that filter() returns
-        // with a null second argument!
+        // create an empty BufferedImage.  You can't just use a BufferedImage that the filter() call
+        // returns when given a null second argument!
         var scaledImage = new BufferedImage(width, height, theImage.getType());
-        
         
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.setToQuadrantRotation(quadrants, centerX, centerY);
