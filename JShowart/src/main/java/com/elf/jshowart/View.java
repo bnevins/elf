@@ -203,6 +203,18 @@ public class View extends JPanel {
 
         File outfile = chooser.getSelectedFile();
 
+        // Handle no extension in new filename
+        if(Utils.getFileExtension(outfile) == null) {
+            // let's append the extension of the current file
+            String ext = Utils.getFileExtension(model.curr());
+            
+            if(ext == null || ext.isEmpty())
+                throw new RuntimeException("Current displayed image has no file extension which is impossible");
+            
+            String outfileName = outfile.getAbsolutePath();
+            outfileName = outfileName + "." + ext;
+            outfile = new File(outfileName);
+        }
         if (!Utils.isArtFile(outfile)) {
             Utils.errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
             return;
