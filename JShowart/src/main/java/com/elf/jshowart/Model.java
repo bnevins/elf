@@ -27,28 +27,30 @@ public class Model {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public File next() {
+    public File next(int numForward) {
         if (isEmpty())
             return null;
 
-        int num = files.size();
+        int numFiles = files.size();
 
-        if (++currentImageNum >= num) {
-            currentImageNum = 0;
-        }
+        while (--numForward >= 0)
+            if (++currentImageNum >= numFiles) {
+                currentImageNum = 0;
+            }
         return files.get(currentImageNum);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public File prev() {
+    public File prev(int numBack) {
         if (isEmpty())
             return null;
 
-        int num = files.size();
+        int numFiles = files.size();
 
-        if (--currentImageNum < 0) {
-            currentImageNum = num - 1;
-        }
+        while (--numBack >= 0)
+            if (--currentImageNum < 0) {
+                currentImageNum = numFiles - 1;
+            }
         return files.get(currentImageNum);
     }
 
@@ -175,7 +177,8 @@ public class Model {
                         return Utils.compare(f2.lastModified(), f1.lastModified());
                     });
             }
-                case "Random" -> Collections.shuffle(files);
+            case "Random" ->
+                Collections.shuffle(files);
         }
 
         System.out.println("AFTER SORT:");

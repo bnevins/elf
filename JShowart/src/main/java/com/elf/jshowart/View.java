@@ -87,11 +87,19 @@ public class View extends JPanel {
     }
 
     void nextImage() {
-        setupImage(model.next());
+        nextImage(1);
     }
 
     void prevImage() {
-        setupImage(model.prev());
+        prevImage(1);
+    }
+
+    void nextImage(int numForward) {
+        setupImage(model.next(numForward));
+    }
+
+    void prevImage(int numBack) {
+        setupImage(model.prev(numBack));
     }
 
     private void setupImage(File imageFile) {

@@ -32,13 +32,15 @@ public class KeyHandler implements KeyListener {
         if (prefs.isDebug())
             System.out.print(getKeyInfo(e, "KeyHandler KEY_PRESSED"));
         int key = e.getKeyCode();
-        //System.out.println("KEY PRESSED == " + key);
-        switch (key) {
-            case VK_SPACE, VK_RIGHT ->
-                Globals.view.nextImage();
-            case VK_LEFT ->
-                Globals.view.prevImage();
-        }
+//        int mods = e.getModifiersEx();
+//        if(mods == SHIFT_DOWN_MASK + CTRL_DOWN_MASK)
+//            System.out.println("SHIFT CONTROL!!!!!");
+//        switch (key) {
+//            case VK_SPACE, VK_RIGHT ->
+//                Globals.view.nextImage();
+//            case VK_LEFT ->
+//                Globals.view.prevImage();
+//        }
     }
 
     @Override

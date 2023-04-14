@@ -151,6 +151,13 @@ public class Controller extends JFrame {
         MenuSortAscending = new javax.swing.JRadioButtonMenuItem();
         MenuSortDescending = new javax.swing.JRadioButtonMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        MenuNavigate = new javax.swing.JMenu();
+        MenuNavigateNext = new javax.swing.JMenuItem();
+        MenuNavigateBack = new javax.swing.JMenuItem();
+        MenuNavigateForward5 = new javax.swing.JMenuItem();
+        MenuNavigateBack5 = new javax.swing.JMenuItem();
+        MenuNavigateForward25 = new javax.swing.JMenuItem();
+        MenuNavigateBack25 = new javax.swing.JMenuItem();
         MenuUtilities = new javax.swing.JMenu();
         MenuDebugMode = new javax.swing.JCheckBoxMenuItem();
         MenuSlideshow = new javax.swing.JCheckBoxMenuItem();
@@ -369,6 +376,79 @@ public class Controller extends JFrame {
 
         MenuBar.add(MenuView);
 
+        MenuNavigate.setText("Navigate");
+        MenuNavigate.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                MenuNavigateMenuSelected(evt);
+            }
+        });
+
+        MenuNavigateNext.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0));
+        MenuNavigateNext.setText("Next");
+        MenuNavigateNext.setEnabled(false);
+        MenuNavigateNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNavigateNextActionPerformed(evt);
+            }
+        });
+        MenuNavigate.add(MenuNavigateNext);
+
+        MenuNavigateBack.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0));
+        MenuNavigateBack.setText("Back");
+        MenuNavigateBack.setEnabled(false);
+        MenuNavigateBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNavigateBackActionPerformed(evt);
+            }
+        });
+        MenuNavigate.add(MenuNavigateBack);
+
+        MenuNavigateForward5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuNavigateForward5.setText("Forward 5");
+        MenuNavigateForward5.setEnabled(false);
+        MenuNavigateForward5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNavigateForward5ActionPerformed(evt);
+            }
+        });
+        MenuNavigate.add(MenuNavigateForward5);
+
+        MenuNavigateBack5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuNavigateBack5.setText("Back 5");
+        MenuNavigateBack5.setEnabled(false);
+        MenuNavigateBack5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNavigateBack5ActionPerformed(evt);
+            }
+        });
+        MenuNavigate.add(MenuNavigateBack5);
+
+        MenuNavigateForward25.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuNavigateForward25.setText("Forward 25");
+        MenuNavigateForward25.setEnabled(false);
+        MenuNavigateForward25.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNavigateForward25ActionPerformed(evt);
+            }
+        });
+        MenuNavigate.add(MenuNavigateForward25);
+
+        MenuNavigateBack25.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuNavigateBack25.setText("Back 25");
+        MenuNavigateBack25.setEnabled(false);
+        MenuNavigateBack25.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuNavigateBack25ActionPerformed(evt);
+            }
+        });
+        MenuNavigate.add(MenuNavigateBack25);
+
+        MenuBar.add(MenuNavigate);
+
         MenuUtilities.setText("Utilities");
         MenuUtilities.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuCanceled(javax.swing.event.MenuEvent evt) {
@@ -556,6 +636,41 @@ public class Controller extends JFrame {
         view.setShrinkFactor(1);
     }//GEN-LAST:event_MenuNoShrinkActionPerformed
 
+    private void MenuNavigateMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuNavigateMenuSelected
+        int numImages = Model.get().numImages();
+        MenuNavigateNext.setEnabled(numImages > 1);
+        MenuNavigateBack.setEnabled(numImages > 1);
+        MenuNavigateBack5.setEnabled(numImages > 5);
+        MenuNavigateForward5.setEnabled(numImages > 5);
+        MenuNavigateBack25.setEnabled(numImages > 25);
+        MenuNavigateForward25.setEnabled(numImages > 25);
+        
+    }//GEN-LAST:event_MenuNavigateMenuSelected
+
+    private void MenuNavigateBack25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateBack25ActionPerformed
+        view.prevImage(25);
+    }//GEN-LAST:event_MenuNavigateBack25ActionPerformed
+
+    private void MenuNavigateNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateNextActionPerformed
+        view.nextImage();
+    }//GEN-LAST:event_MenuNavigateNextActionPerformed
+
+    private void MenuNavigateBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateBackActionPerformed
+        view.prevImage();
+    }//GEN-LAST:event_MenuNavigateBackActionPerformed
+
+    private void MenuNavigateForward5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateForward5ActionPerformed
+        view.nextImage(5);
+    }//GEN-LAST:event_MenuNavigateForward5ActionPerformed
+
+    private void MenuNavigateBack5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateBack5ActionPerformed
+        view.prevImage(5);
+    }//GEN-LAST:event_MenuNavigateBack5ActionPerformed
+
+    private void MenuNavigateForward25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateForward25ActionPerformed
+        view.nextImage(25);
+    }//GEN-LAST:event_MenuNavigateForward25ActionPerformed
+
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
         prefs.setSortType(type);
@@ -608,6 +723,13 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
     private javax.swing.JMenu MenuHelp;
+    private javax.swing.JMenu MenuNavigate;
+    private javax.swing.JMenuItem MenuNavigateBack;
+    private javax.swing.JMenuItem MenuNavigateBack25;
+    private javax.swing.JMenuItem MenuNavigateBack5;
+    private javax.swing.JMenuItem MenuNavigateForward25;
+    private javax.swing.JMenuItem MenuNavigateForward5;
+    private javax.swing.JMenuItem MenuNavigateNext;
     private javax.swing.JRadioButtonMenuItem MenuNoShrink;
     private javax.swing.JMenuItem MenuOpenFiles;
     private javax.swing.JMenuItem MenuRotate180;
