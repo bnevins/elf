@@ -6,15 +6,6 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="sortDirectionGroup">
     </Component>
-    <Container class="javax.swing.JMenu" name="jMenu1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jMenu1"/>
-      </Properties>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-        <Property name="useNullLayout" type="boolean" value="true"/>
-      </Layout>
-    </Container>
     <Component class="javax.swing.ButtonGroup" name="shrinkGroup">
     </Component>
     <Menu class="javax.swing.JMenuBar" name="MenuBar">

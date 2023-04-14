@@ -123,7 +123,6 @@ public class Controller extends JFrame {
 
         sortTypeGroup = new javax.swing.ButtonGroup();
         sortDirectionGroup = new javax.swing.ButtonGroup();
-        jMenu1 = new javax.swing.JMenu();
         shrinkGroup = new javax.swing.ButtonGroup();
         MenuBar = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
@@ -166,8 +165,6 @@ public class Controller extends JFrame {
         MenuSlideshow = new javax.swing.JCheckBoxMenuItem();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
-
-        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
@@ -756,7 +753,6 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuUtilities;
     private javax.swing.JMenu MenuView;
     private javax.swing.JMenuItem about;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator7;
