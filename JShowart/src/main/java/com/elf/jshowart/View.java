@@ -131,7 +131,7 @@ public class View extends JPanel {
             image = getScaledImage(image, scaleFactor);
         }
 
-        Globals.frame.setTitle("JShowArt    " + imageFile.getAbsolutePath() + getScaledUIForTitle());
+        Globals.controller.setTitle("JShowArt    " + imageFile.getAbsolutePath() + getScaledUIForTitle());
         setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         //invalidate();
         resetScrollbars();
@@ -181,11 +181,13 @@ public class View extends JPanel {
 
         if (isOkToOverwrite(currentImageFile)) {
             try {
-                ImageIO.write(image, ext, currentImageFile);
+                if (ImageIO.write(image, ext, currentImageFile))
+                    Utils.successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
+                else
+                    Utils.errorMessage("Failed to save " + currentImageFile.toString(), saveDialogTitle);
             } catch (IOException ex) {
-                Utils.errorMessage(ex.toString(), saveDialogTitle);
+                Utils.errorMessage("Failed to save " + currentImageFile.toString(), saveDialogTitle);
             }
-            Utils.successMessage(currentImageFile.toString() + " saved successfully", saveDialogTitle);
         }
     }
 
@@ -196,7 +198,7 @@ public class View extends JPanel {
     private void saveAs(BufferedImage theImage) {
 
         var chooser = Globals.setupAndGetSaveAsFileChooser();
-        if (chooser.showSaveDialog(Globals.frame) != JFileChooser.APPROVE_OPTION)
+        if (chooser.showSaveDialog(Globals.controller) != JFileChooser.APPROVE_OPTION)
             return;
 
         File outfile = chooser.getSelectedFile();
@@ -211,20 +213,23 @@ public class View extends JPanel {
             return;
         String saveDialogTitle = "Image Save As";
         try {
-            ImageIO.write(theImage, Utils.getFileExtension(outfile), outfile);
+            if (ImageIO.write(theImage, Utils.getFileExtension(outfile), outfile))
+                Utils.successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
+            else
+                Utils.errorMessage("Failed to save " + outfile.toString(), saveDialogTitle);
+
         } catch (IOException ex) {
             Utils.errorMessage(ex.toString(), saveDialogTitle);
         }
-        Utils.successMessage(outfile.toString() + " saved successfully", saveDialogTitle);
     }
 
     private boolean isOkToOverwrite(File f) {
         String question = "";
-        if(shrinkFactor != 1)
-            question = "WARNING This will save the file Shrunk by 1/" + shrinkFactor +"\n";
-        
+        if (shrinkFactor != 1)
+            question = "WARNING This will save the file Shrunk by 1/" + shrinkFactor + "\n";
+
         question += "Overwrite " + f.getName();
-        int selection = JOptionPane.showConfirmDialog(Globals.frame, question, "Overwrite File",
+        int selection = JOptionPane.showConfirmDialog(Globals.controller, question, "Overwrite File",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return selection == JOptionPane.YES_OPTION;
     }
@@ -240,23 +245,34 @@ public class View extends JPanel {
 
     public BufferedImage getRotatedImage(BufferedImage theImage, int quadrants) {
 
-        int w0 = theImage.getWidth();
-        int h0 = theImage.getHeight();
-        int centerX = w0 / 2;
-        int centerY = h0 / 2;
+        int width = theImage.getWidth();
+        int height = theImage.getHeight();
+        int centerX = width / 2;
+        int centerY = height / 2;
 
         if (quadrants % 4 == 1) {
             centerX = centerY;
         } else if (quadrants % 4 == 3) {
             centerY = centerX;
         }
+        if ((quadrants % 4 == 1) || (quadrants % 4 == 3))  {
+            int saveWidth = width;
+            width = height;
+            height = saveWidth;
+        }
+        
+        // NOTE:  I found out the hard way that the next line is CRITICAL.  You MUST
+        // create an empty BufferedImage.  You can't just use a BufferedImage that filter() returns
+        // with a null second argument!
+        var scaledImage = new BufferedImage(width, height, theImage.getType());
+        
+        
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.setToQuadrantRotation(quadrants, centerX, centerY);
         AffineTransformOp opRotated = new AffineTransformOp(affineTransform,
                 AffineTransformOp.TYPE_BILINEAR);
 
-        BufferedImage transformedImage = opRotated.filter(theImage, null);
-        return transformedImage;
+        return opRotated.filter(theImage, scaledImage);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,7 +292,6 @@ public class View extends JPanel {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
     void saveCurrentSizeAs() {
         if (!prefs.fitToWindow || image == null) {
             // can't happen!  The menu item is supposed to be disabled

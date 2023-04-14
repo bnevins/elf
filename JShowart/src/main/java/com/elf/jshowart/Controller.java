@@ -68,10 +68,13 @@ public class Controller extends JFrame {
         
         // note: they get keystrokes in the order that they're added!  View first, then Controller, then KeyHandler
         addKeyListener(keyHandler = new KeyHandler());
-        Globals.frame = this;
+        Globals.controller = this;
 
     }
-
+   public void enableNavigationKeys() {
+       // When Model loads files it needs to call this.  Otherwise the nav keys won't work until the Nav menu is selected!
+       MenuNavigateMenuSelected(null);
+   }
     public void enableSaveImages(boolean enable) {
         MenuSave.setEnabled(enable);
         MenuSaveAs.setEnabled(enable);

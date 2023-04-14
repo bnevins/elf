@@ -27,7 +27,7 @@ public class App {
 
         EventQueue.invokeLater(()
                 -> {
-            view = new View(); // this MUST be created before frame for setting up key handler?
+            view = new View(); // this MUST be created before controller for setting up key handler?
             view.setBackground(Color.black);
             frame = new Controller();
             frame.setTitle("JShowArt");

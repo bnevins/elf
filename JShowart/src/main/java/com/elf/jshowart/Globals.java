@@ -18,7 +18,7 @@ public class Globals {
     }
 
     static App app;
-    static Controller frame;
+    static Controller controller;
     static View view;
     private static final JFileChooser fileChooser;
 

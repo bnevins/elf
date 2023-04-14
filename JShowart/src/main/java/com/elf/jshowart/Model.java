@@ -80,6 +80,7 @@ public class Model {
         }
         sort();
         Globals.view.imagesReplaced();
+        Globals.controller.enableNavigationKeys();
         return numFiles;
     }
 

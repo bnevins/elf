@@ -125,14 +125,14 @@ public class Utils {
         errorMessage(msg, "ERROR");
     }
     static void errorMessage(String msg, String title) {
-        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.ERROR_MESSAGE);
     }
 
     static void successMessage(String msg) {
         successMessage(msg, "JShowArt");
     }
     static void successMessage(String msg, String title) {
-        JOptionPane.showMessageDialog(Globals.frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
     
     private Utils() {

@@ -23,7 +23,7 @@ public class KeyHandler implements KeyListener {
         char key = e.getKeyChar();
         switch (key) {
             case KeyEvent.VK_ESCAPE ->
-                Globals.frame.toggleFullScreen();
+                Globals.controller.toggleFullScreen();
         }
     }
 
@@ -32,15 +32,14 @@ public class KeyHandler implements KeyListener {
         if (prefs.isDebug())
             System.out.print(getKeyInfo(e, "KeyHandler KEY_PRESSED"));
         int key = e.getKeyCode();
-//        int mods = e.getModifiersEx();
-//        if(mods == SHIFT_DOWN_MASK + CTRL_DOWN_MASK)
-//            System.out.println("SHIFT CONTROL!!!!!");
-//        switch (key) {
-//            case VK_SPACE, VK_RIGHT ->
-//                Globals.view.nextImage();
-//            case VK_LEFT ->
-//                Globals.view.prevImage();
-//        }
+        int mods = e.getModifiersEx();
+        if (mods == SHIFT_DOWN_MASK + CTRL_DOWN_MASK)
+            if (prefs.isDebug())
+                System.out.println("SHIFT+CONTROL!!!!!");
+        switch (key) {
+            case VK_SPACE ->
+                Globals.view.nextImage();
+        }
     }
 
     @Override
