@@ -65,12 +65,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuSaveAsActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="MenuSaveCurrentSize">
+            <MenuItem class="javax.swing.JMenuItem" name="MenuSaveCurrentSizeAs">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save Current Size"/>
+                <Property name="text" type="java.lang.String" value="Save Current Size As"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuSaveCurrentSizeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuSaveCurrentSizeAsActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

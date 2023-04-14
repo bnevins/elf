@@ -127,7 +127,7 @@ public class Controller extends JFrame {
         MenuOpenFiles = new javax.swing.JMenuItem();
         MenuSave = new javax.swing.JMenuItem();
         MenuSaveAs = new javax.swing.JMenuItem();
-        MenuSaveCurrentSize = new javax.swing.JMenuItem();
+        MenuSaveCurrentSizeAs = new javax.swing.JMenuItem();
         MenuEdit = new javax.swing.JMenu();
         MenuView = new javax.swing.JMenu();
         MenuFitToWindow = new javax.swing.JCheckBoxMenuItem();
@@ -210,13 +210,13 @@ public class Controller extends JFrame {
         });
         MenuFile.add(MenuSaveAs);
 
-        MenuSaveCurrentSize.setText("Save Current Size");
-        MenuSaveCurrentSize.addActionListener(new java.awt.event.ActionListener() {
+        MenuSaveCurrentSizeAs.setText("Save Current Size As");
+        MenuSaveCurrentSizeAs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuSaveCurrentSizeActionPerformed(evt);
+                MenuSaveCurrentSizeAsActionPerformed(evt);
             }
         });
-        MenuFile.add(MenuSaveCurrentSize);
+        MenuFile.add(MenuSaveCurrentSizeAs);
 
         MenuBar.add(MenuFile);
 
@@ -476,15 +476,15 @@ public class Controller extends JFrame {
         view.rotate(270);
     }//GEN-LAST:event_MenuRotate270ActionPerformed
 
-    private void MenuSaveCurrentSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveCurrentSizeActionPerformed
+    private void MenuSaveCurrentSizeAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSaveCurrentSizeAsActionPerformed
         view.saveCurrentSizeAs();
-    }//GEN-LAST:event_MenuSaveCurrentSizeActionPerformed
+    }//GEN-LAST:event_MenuSaveCurrentSizeAsActionPerformed
 
     private void MenuFileMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuFileMenuSelected
         boolean hasImage = view.hasImageLoaded();
         MenuSave.setEnabled(hasImage);
         MenuSaveAs.setEnabled(hasImage);
-        MenuSaveCurrentSize.setEnabled(hasImage && prefs.fitToWindow);
+        MenuSaveCurrentSizeAs.setEnabled(hasImage && prefs.fitToWindow);
     }//GEN-LAST:event_MenuFileMenuSelected
 
     private void MenuViewMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuViewMenuSelected
@@ -615,7 +615,7 @@ public class Controller extends JFrame {
     private javax.swing.JMenuItem MenuRotate90;
     private javax.swing.JMenuItem MenuSave;
     private javax.swing.JMenuItem MenuSaveAs;
-    private javax.swing.JMenuItem MenuSaveCurrentSize;
+    private javax.swing.JMenuItem MenuSaveCurrentSizeAs;
     private javax.swing.JMenu MenuShrink;
     private javax.swing.JRadioButtonMenuItem MenuShrinkEighth;
     private javax.swing.JRadioButtonMenuItem MenuShrinkFourth;
