@@ -39,12 +39,12 @@ public final class UserPreferences {
     }
 
     public void read() {
+        setDebug(node.getBoolean("debugMode", false));
         windowBounds = readWindowBounds();
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
         fitToWindow = node.getBoolean("stretch", true);
         setSlideshowSeconds(node.getInt("slideshowSeconds", 2));
-        setDebug(node.getBoolean("debugMode", false));
         setSortType(node.get("sortType", "Name"));
         setSortAscending(node.getBoolean("sortAscending", true));
     }
@@ -63,24 +63,39 @@ public final class UserPreferences {
     private final Preferences node;
     private static UserPreferences INSTANCE;
 
-    // TODO -- seems wasteful to get default values everytime...
+    /**
+     * Let's be scrupulous to make sure the window doesn't disappear way off-screen
+     * somewhere. A maxed window may give a point slightly off screen.  We're going
+     * to use the default window bounds to be safe.  Tough!
+     * @return the bounds of the frame to create 
+     */
     private Rectangle readWindowBounds() {
 
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
-        int width = screenSize.width / 2;
-        int height = screenSize.height / 2;
-        int x = width / 2;
-        int y = height / 2;
+        int defaultWidth = screenSize.width / 2;
+        int defaultHeight = screenSize.height / 2;
+        int defaultX = defaultWidth / 2;
+        int defaultY = defaultHeight / 2;
 
-        x = node.getInt("window_left", x);
-        y = node.getInt("window_top", y);
-        width = node.getInt("window_width", width);
-        height = node.getInt("window_height", height);
-        return new Rectangle(x, y, width, height);
+        int x = node.getInt("window_left", defaultX);
+        int y = node.getInt("window_top", defaultY);
+        int width = node.getInt("window_width", defaultWidth);
+        int height = node.getInt("window_height", defaultHeight);
+        
+        if(debug)
+            System.out.println("Read in saved window position: " + new Rectangle(x, y, width, height));
+
+        if(Utils.isVisible(x, y))
+            return new Rectangle(x, y, width, height);
+        else
+            return new Rectangle(defaultX, defaultY, defaultWidth, defaultHeight);
     }
 
     private void writeWindowBounds() {
+        if(debug)
+            System.out.println("Writing window position: " + windowBounds);
+        
         node.putInt("window_left", windowBounds.x);
         node.putInt("window_top", windowBounds.y);
         node.putInt("window_width", windowBounds.width);

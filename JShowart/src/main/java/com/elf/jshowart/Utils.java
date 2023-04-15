@@ -124,6 +124,7 @@ public class Utils {
     static void errorMessage(String msg) {
         errorMessage(msg, "ERROR");
     }
+
     static void errorMessage(String msg, String title) {
         JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.ERROR_MESSAGE);
     }
@@ -131,11 +132,37 @@ public class Utils {
     static void successMessage(String msg) {
         successMessage(msg, "JShowArt");
     }
+
     static void successMessage(String msg, String title) {
         JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
+    // Is this point visible on any monitor?
+    public static boolean isVisible(int x, int y) {
+
+        for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+            Rectangle screen = gd.getDefaultConfiguration().getBounds();
+
+            if (screen.contains(x, y))
+                return true;
+        }
+        return false;
+    }
+
     private Utils() {
     }
 
+    /**
+     * ** CODE DUMP public static void foo() { GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); GraphicsDevice[] gs =
+     * ge.getScreenDevices(); for (GraphicsDevice curGs : gs) { GraphicsConfiguration gc = curGs.getDefaultConfiguration(); Rectangle bounds = gc.getBounds();
+     *
+     * System.out.println(bounds.getX() + "," + bounds.getY() + " " + bounds.getWidth() + "x" + bounds.getHeight()); } }
+     *
+     * public static void fooWorks() { var ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); GraphicsDevice[] gs = ge.getScreenDevices(); for
+     * (GraphicsDevice curGs : gs) { GraphicsConfiguration[] gc = curGs.getConfigurations(); for (GraphicsConfiguration curGc : gc) { Rectangle bounds =
+     * curGc.getBounds();
+     *
+     * System.out.println(bounds.getX() + "," + bounds.getY() + " " + bounds.getWidth() + "x" + bounds.getHeight()); } } }
+**
+     */
 }
