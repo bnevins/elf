@@ -26,8 +26,8 @@ public class View extends JPanel {
     private Model model = Model.get();
     private JScrollPane parentPane;
     private Dimension preferredSize;
-    private int shrinkFactor = 1;
-    private int prevShrinkFactor = 1;
+    private double scaleFactor = 1.0;
+    private double prevScaleFactor = 1.0;
 
     /**
      * Creates new form JShowartView
@@ -81,8 +81,8 @@ public class View extends JPanel {
         }
     }
 
-    void setShrinkFactor(int newShrink) {
-        shrinkFactor = newShrink;
+    void setScaleFactor(double newScale) {
+        scaleFactor = newScale;
         setupImage(model.curr());
     }
 
@@ -109,11 +109,11 @@ public class View extends JPanel {
         }
 
         // if we have only 1 file in artlib, don't waste time re-reading it -- unless shrinkFactor changed!
-        if (imageFile.equals(prevImageFile) && shrinkFactor == prevShrinkFactor)
+        if (imageFile.equals(prevImageFile) && scaleFactor == prevScaleFactor)
             return;
 
         prevImageFile = imageFile;
-        prevShrinkFactor = shrinkFactor;
+        prevScaleFactor = scaleFactor;
 
         try {
             image = ImageIO.read(imageFile);
@@ -123,11 +123,10 @@ public class View extends JPanel {
         }
 
         // should never happen but we don't ever want to divide by zero!
-        if (shrinkFactor == 0)
-            shrinkFactor = 1;
+        if (scaleFactor == 0.0)
+            scaleFactor = 1.0;
 
-        if (shrinkFactor != 1) {
-            double scaleFactor = 1.0 / (double) shrinkFactor;
+        if (scaleFactor != 1.0) {
             image = getScaledImage(image, scaleFactor);
         }
 
@@ -145,11 +144,11 @@ public class View extends JPanel {
 
         // can't use double in a switch
         // TODO change to enum
-        if (shrinkFactor == 2)
+        if (scaleFactor == .5)
             return base + "Half Size";
-        if (shrinkFactor == 4)
+        if (scaleFactor == .25)
             return base + "Quarter Size";
-        if (shrinkFactor == 8)
+        if (scaleFactor == .125)
             return base + "Eighth Size";
         return "";
     }
@@ -237,8 +236,8 @@ public class View extends JPanel {
 
     private boolean isOkToOverwrite(File f) {
         String question = "";
-        if (shrinkFactor != 1)
-            question = "WARNING This will save the file Shrunk by 1/" + shrinkFactor + "\n";
+        if (scaleFactor != 1)
+            question = "WARNING This will save the file Scaled by " + scaleFactor + "\n";
 
         question += "Overwrite " + f.getName();
         int selection = JOptionPane.showConfirmDialog(Globals.controller, question, "Overwrite File",
