@@ -626,7 +626,7 @@ public class Controller extends JFrame {
         boolean hasImage = view.hasImageLoaded();
         MenuSave.setEnabled(hasImage);
         MenuSaveAs.setEnabled(hasImage);
-        MenuSaveCurrentSizeAs.setEnabled(hasImage && prefs.fitToWindow);
+        MenuSaveCurrentSizeAs.setEnabled(hasImage && prefs.fitToWindow && view.getScaleFactor() == 1.0);
     }//GEN-LAST:event_MenuFileMenuSelected
 
     private void MenuViewMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuViewMenuSelected

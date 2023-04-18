@@ -45,6 +45,9 @@ public class View extends JPanel {
             return preferredSize;
     }
 
+    double getScaleFactor() {
+        return scaleFactor;
+    }
     void imagesReplaced() {
         // files were just opened
         image = null;
