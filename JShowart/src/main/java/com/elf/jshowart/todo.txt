@@ -1,10 +1,9 @@
 *************   BUGS  *******************
 
-Does windows size get saved correctly when  maximized? 
 BUG:  View/fit to screen ^T doesn't work until View menu is selected!
 BUG: Don't allow "save current size as" when scaling (makes no sense?)
 BUG: check location from prefs and make sure it isn't off-screen!  E.g. going from 2 monitors to 1
-
+Window positioning on startup.  If it was maximized on second monitor it will startup maximized on first monitor - probably not worth the effort to fix
 *********************************************
 Organize the file ext filters into one place
 Put one JFileChooser in globals for save and open ???
@@ -22,3 +21,4 @@ Use ONE open dialog for directories AND files?!?
 SAVE the JFileChooser in frame instead of creating a new one each time
 XX Save scaled -->
 MenuSaveThisSizeActionPerformed - get rid of it
+Does windows size get saved correctly when  maximized? 

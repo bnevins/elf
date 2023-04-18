@@ -16,6 +16,20 @@ import java.util.prefs.Preferences;
  */
 public final class UserPreferences {
 
+    /**
+     * @return the maximized
+     */
+    public boolean isMaximized() {
+        return maximized;
+    }
+
+    /**
+     * @param maximized the maximized to set
+     */
+    public void setMaximized(boolean maximized) {
+        this.maximized = maximized;
+    }
+
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousSaveAsFileParent;
@@ -24,6 +38,7 @@ public final class UserPreferences {
     private boolean sortAscending; // descending == false!
     private boolean debug;
     private int slideshowSeconds;
+    private boolean maximized;
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -40,6 +55,7 @@ public final class UserPreferences {
 
     public void read() {
         setDebug(node.getBoolean("debugMode", false));
+        setMaximized(node.getBoolean("maximized", false));
         windowBounds = readWindowBounds();
         previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
         previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
@@ -58,6 +74,7 @@ public final class UserPreferences {
         node.putBoolean("debugMode", isDebug());
         node.put("sortType", getSortType());
         node.putBoolean("sortAscending", isSortAscending());
+        node.putBoolean("maximized", isMaximized());
     }
 
     private final Preferences node;
@@ -160,5 +177,4 @@ public final class UserPreferences {
     public void setSlideshowSeconds(int slideshowSeconds) {
         this.slideshowSeconds = slideshowSeconds;
     }
-
 }

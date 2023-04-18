@@ -21,18 +21,19 @@ public class Controller extends JFrame {
     private boolean currentFullScreen = false;
     private KeyHandler keyHandler;
     private SlideShow slideshow = null;
+
     // keep it alive because it can be S-L-O-W to start
     /**
      * Creates new form JShowartFrame
      */
-                                                    
-   public Controller() {
+
+    public Controller() {
         prefs = UserPreferences.get();
         initComponents();
         clearAllSortButtons();
         clearAllScaleButtons();
         MenuSlideshow.setSelected(false);
-        
+
         switch (prefs.getSortType()) {
             case "Name" ->
                 MenuSortName.setSelected(true);
@@ -47,11 +48,11 @@ public class Controller extends JFrame {
                 prefs.setSortType("Name");
             }
         }
-        if(prefs.isSortAscending()) 
+        if (prefs.isSortAscending())
             MenuSortAscending.setSelected(true);
         else
             MenuSortDescending.setSelected(true);
-            
+
         sortTypeGroup.add(MenuSortName);
         sortTypeGroup.add(MenuSortDate);
         sortTypeGroup.add(MenuSortSize);
@@ -66,18 +67,25 @@ public class Controller extends JFrame {
         shrinkGroup.add(MenuExpand150);
         shrinkGroup.add(MenuExpand200);
         MenuFitToWindow.setSelected(prefs.fitToWindow);
-        setBounds(prefs.windowBounds);
-        MenuDebugMode.setSelected(prefs.isDebug());
         
+        setBounds(prefs.windowBounds);
+        
+        if(prefs.isMaximized())
+            setExtendedState(MAXIMIZED_BOTH);
+        
+        MenuDebugMode.setSelected(prefs.isDebug());
+
         // note: they get keystrokes in the order that they're added!  View first, then Controller, then KeyHandler
         addKeyListener(keyHandler = new KeyHandler());
         Globals.controller = this;
 
     }
-   public void enableNavigationKeys() {
-       // When Model loads files it needs to call this.  Otherwise the nav keys won't work until the Nav menu is selected!
-       MenuNavigateMenuSelected(null);
-   }
+
+    public void enableNavigationKeys() {
+        // When Model loads files it needs to call this.  Otherwise the nav keys won't work until the Nav menu is selected!
+        MenuNavigateMenuSelected(null);
+    }
+
     public void enableSaveImages(boolean enable) {
         MenuSave.setEnabled(enable);
         MenuSaveAs.setEnabled(enable);
@@ -561,6 +569,17 @@ public class Controller extends JFrame {
     }//GEN-LAST:event_MenuSaveAsActionPerformed
 
     private void onWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowClosing
+//        int state = getExtendedState();
+//        
+//        String stateString = switch(state) {
+//            case NORMAL -> "Normal";
+//            case MAXIMIZED_BOTH -> "Maximized";
+//            case ICONIFIED -> "Iconified";
+//            default -> "Unknown";
+//        };
+//        System.out.println("WINDOW CLOSING -- State is " + stateString);
+
+        prefs.setMaximized(getExtendedState() == MAXIMIZED_BOTH);
         prefs.windowBounds = getBounds();
         prefs.write();
     }//GEN-LAST:event_onWindowClosing
@@ -639,11 +658,10 @@ public class Controller extends JFrame {
     }//GEN-LAST:event_MenuDebugModeActionPerformed
 
     private void MenuSlideshowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSlideshowActionPerformed
-        if(slideshow == null ) {
+        if (slideshow == null) {
             MenuSlideshow.setSelected(true);
             slideshow = new SlideShow();
-        }
-        else {
+        } else {
             MenuSlideshow.setSelected(false);
             slideshow.stop();
             slideshow = null;
@@ -677,7 +695,7 @@ public class Controller extends JFrame {
         MenuNavigateForward5.setEnabled(numImages > 5);
         MenuNavigateBack25.setEnabled(numImages > 25);
         MenuNavigateForward25.setEnabled(numImages > 25);
-        
+
     }//GEN-LAST:event_MenuNavigateMenuSelected
 
     private void MenuNavigateBack25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuNavigateBack25ActionPerformed
@@ -721,10 +739,12 @@ public class Controller extends JFrame {
         prefs.setSortType(type);
         Model.get().sort();
     }
+
     private void menuSortDirectionHelper(boolean ascending) {
         prefs.setSortAscending(ascending);
         Model.get().sort();
     }
+
     /**
      * @param args the command line arguments
      */
