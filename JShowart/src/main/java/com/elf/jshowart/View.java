@@ -35,6 +35,17 @@ public class View extends JPanel {
     public View() {
         System.out.println("JShowartView Layout Manager = " + getLayout());
         Globals.view = this;
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (prefs.isDebug())
+                    System.out.println("Mouse button # " + evt.getButton());
+                int button = evt.getButton();
+                if(button == 1)
+                    prevImage();
+                else if(button == 3)
+                    nextImage();
+            }
+        });
     }
 
     @Override
@@ -48,6 +59,7 @@ public class View extends JPanel {
     double getScaleFactor() {
         return scaleFactor;
     }
+
     void imagesReplaced() {
         // files were just opened
         image = null;
@@ -154,8 +166,8 @@ public class View extends JPanel {
         if (scaleFactor == .125)
             return base + "Eighth Size";
         if (scaleFactor != 1.0) {
-            int scalePercent = (int)(scaleFactor * 100);
-            return  "    Enlarged " + scalePercent + "%";
+            int scalePercent = (int) (scaleFactor * 100);
+            return "    Enlarged " + scalePercent + "%";
         }
         return "";
     }
