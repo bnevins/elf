@@ -202,7 +202,11 @@
             <Menu class="javax.swing.JMenu" name="MenuSort">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Sort"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="menuSelected" listener="javax.swing.event.MenuListener" parameters="javax.swing.event.MenuEvent" handler="MenuSortMenuSelected"/>
+              </Events>
               <SubComponents>
                 <MenuItem class="javax.swing.JRadioButtonMenuItem" name="MenuSortName">
                   <Properties>

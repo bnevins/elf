@@ -150,6 +150,10 @@ public class View extends JPanel {
             return base + "Quarter Size";
         if (scaleFactor == .125)
             return base + "Eighth Size";
+        if (scaleFactor != 1.0) {
+            int scalePercent = (int)(scaleFactor * 100);
+            return  "    Enlarged " + scalePercent + "%";
+        }
         return "";
     }
 
@@ -203,13 +207,13 @@ public class View extends JPanel {
         File outfile = chooser.getSelectedFile();
 
         // Handle no extension in new filename
-        if(Utils.getFileExtension(outfile) == null) {
+        if (Utils.getFileExtension(outfile) == null) {
             // let's append the extension of the current file
             String ext = Utils.getFileExtension(model.curr());
-            
-            if(ext == null || ext.isEmpty())
+
+            if (ext == null || ext.isEmpty())
                 throw new RuntimeException("Current displayed image has no file extension which is impossible");
-            
+
             String outfileName = outfile.getAbsolutePath();
             outfileName = outfileName + "." + ext;
             outfile = new File(outfileName);
@@ -266,17 +270,17 @@ public class View extends JPanel {
         } else if (quadrants % 4 == 3) {
             centerY = centerX;
         }
-        if ((quadrants % 4 == 1) || (quadrants % 4 == 3))  {
+        if ((quadrants % 4 == 1) || (quadrants % 4 == 3)) {
             int saveWidth = width;
             width = height;
             height = saveWidth;
         }
-        
+
         // NOTE:  I found out the hard way that the next line is CRITICAL.  You MUST
         // create an empty BufferedImage.  You can't just use a BufferedImage that the filter() call
         // returns when given a null second argument!
         var scaledImage = new BufferedImage(width, height, theImage.getType());
-        
+
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.setToQuadrantRotation(quadrants, centerX, centerY);
         AffineTransformOp opRotated = new AffineTransformOp(affineTransform,

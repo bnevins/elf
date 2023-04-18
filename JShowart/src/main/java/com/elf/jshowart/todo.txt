@@ -5,6 +5,7 @@ BUG: Don't allow "save current size as" when scaling (makes no sense?)
 BUG: check location from prefs and make sure it isn't off-screen!  E.g. going from 2 monitors to 1
 Window positioning on startup.  If it was maximized on second monitor it will startup maximized on first monitor - probably not worth the effort to fix
 *********************************************
+CLEANUP the setEnable calls to menuitems.  Centralize them nased on call to Model.replace()
 Organize the file ext filters into one place
 Put one JFileChooser in globals for save and open ???
 Add a UI for setting slideshow time

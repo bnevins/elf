@@ -362,6 +362,16 @@ public class Controller extends JFrame {
         MenuView.add(jSeparator1);
 
         MenuSort.setText("Sort");
+        MenuSort.setEnabled(false);
+        MenuSort.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                MenuSortMenuSelected(evt);
+            }
+        });
 
         MenuSortName.setText("Name");
         MenuSortName.addActionListener(new java.awt.event.ActionListener() {
@@ -626,6 +636,13 @@ public class Controller extends JFrame {
         MenuRotate180.setEnabled(hasImage);
         MenuRotate270.setEnabled(hasImage);
         MenuScale.setEnabled(hasImage);
+        MenuSort.setEnabled(hasImage);
+        MenuSortAscending.setEnabled(hasImage);
+        MenuSortDate.setEnabled(hasImage);
+        MenuSortDescending.setEnabled(hasImage);
+        MenuSortName.setEnabled(hasImage);
+        MenuSortRandom.setEnabled(hasImage);
+        MenuSortSize.setEnabled(hasImage);
     }//GEN-LAST:event_MenuViewMenuSelected
 
     private void MenuSortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSortNameActionPerformed
@@ -733,6 +750,10 @@ public class Controller extends JFrame {
     private void MenuExpand200ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuExpand200ActionPerformed
         view.setScaleFactor(2.0);
     }//GEN-LAST:event_MenuExpand200ActionPerformed
+
+    private void MenuSortMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuSortMenuSelected
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MenuSortMenuSelected
 
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
