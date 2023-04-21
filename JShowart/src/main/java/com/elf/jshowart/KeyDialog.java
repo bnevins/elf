@@ -13,8 +13,11 @@ import java.awt.*;
  * @author bnevins
  */
 public class KeyDialog extends JPanel {
-    private final static boolean DEBUG = true;
-    
+
+    private final boolean DEBUG = true;
+    private final int TYPE_COLUMN_NUMBER = 0;
+    private final String TYPES[] = { "Copy", "Move", "List", "Index", };
+
     public KeyDialog() {
         super(new GridLayout(1, 0));
 
@@ -27,35 +30,48 @@ public class KeyDialog extends JPanel {
 
         //Set up column sizes.
         //initColumnSizes(table);
+        //Fiddle with the Type column's cell editors/renderers.
+        setUpTypeColumn(table, table.getColumnModel().getColumn(TYPE_COLUMN_NUMBER));
 
-        //Fiddle with the Sport column's cell editors/renderers.
-        //setUpSportColumn(table, table.getColumnModel().getColumn(2));
-
-        //Add the scroll pane to this panel.
         add(scrollPane);
     }
+
+ 
+    public void setUpTypeColumn(JTable table, TableColumn typeColumn) {
+        //Set up the editor for the Type cells.
+        JComboBox comboBox = new JComboBox(TYPES);
+        typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
+        //Set up tool tips for the sport cells.
+        DefaultTableCellRenderer renderer
+                = new DefaultTableCellRenderer();
+        renderer.setToolTipText("Click for combo box");
+        typeColumn.setCellRenderer(renderer);
+    }
+
     class KeyCommandTableModel extends AbstractTableModel {
+
         private String[] columnNames = {"First Name",
-                                        "Last Name",
-                                        "Sport",
-                                        "# of Years",
-                                        "Vegetarian"};
+            "Last Name",
+            "Type",
+            "# of Years",
+            "Vegetarian"};
         private Object[][] data = {
-	    {"Kathy", "Smith",
-	     "Snowboarding", new Integer(5), new Boolean(false)},
-	    {"John", "Doe",
-	     "Rowing", new Integer(3), new Boolean(true)},
-	    {"Sue", "Black",
-	     "Knitting", new Integer(2), new Boolean(false)},
-	    {"Jane", "White",
-	     "Speed reading", new Integer(20), new Boolean(true)},
-	    {"Joe", "Brown",
-	     "Pool", new Integer(10), new Boolean(false)}
+            {"Copy","Kathy", "Smith",
+                 new Integer(5), new Boolean(false)},
+            {"Move","John", "Doe",
+                 new Integer(3), new Boolean(true)},
+            {"List","Sue", "Black",
+                 new Integer(2), new Boolean(false)},
+            {"Index","Jane", "White",
+                 new Integer(20), new Boolean(true)},
+            {"Copy","Joe", "Brown",
+                 new Integer(10), new Boolean(false)}
         };
 
         public final Object[] longValues = {"Jane", "Kathy",
-                                            "None of the above",
-                                            new Integer(20), Boolean.TRUE};
+            "None of the above",
+            new Integer(20), Boolean.TRUE};
 
         public int getColumnCount() {
             return columnNames.length;
@@ -83,6 +99,7 @@ public class KeyDialog extends JPanel {
             return getValueAt(0, c).getClass();
         }
 
+
         /*
          * Don't need to implement this method unless your table's
          * editable.
@@ -90,11 +107,11 @@ public class KeyDialog extends JPanel {
         public boolean isCellEditable(int row, int col) {
             //Note that the data/cell address is constant,
             //no matter where the cell appears onscreen.
-            if (col < 2) {
-                return false;
-            } else {
+//            if (col < 2) {
+//                return false;
+//            } else {
                 return true;
-            }
+//            }
         }
 
         /*
@@ -104,9 +121,9 @@ public class KeyDialog extends JPanel {
         public void setValueAt(Object value, int row, int col) {
             if (DEBUG) {
                 System.out.println("Setting value at " + row + "," + col
-                                   + " to " + value
-                                   + " (an instance of "
-                                   + value.getClass() + ")");
+                        + " to " + value
+                        + " (an instance of "
+                        + value.getClass() + ")");
             }
 
             data[row][col] = value;
@@ -122,9 +139,9 @@ public class KeyDialog extends JPanel {
             int numRows = getRowCount();
             int numCols = getColumnCount();
 
-            for (int i=0; i < numRows; i++) {
+            for (int i = 0; i < numRows; i++) {
                 System.out.print("    row " + i + ":");
-                for (int j=0; j < numCols; j++) {
+                for (int j = 0; j < numCols; j++) {
                     System.out.print("  " + data[i][j]);
                 }
                 System.out.println();
@@ -132,8 +149,7 @@ public class KeyDialog extends JPanel {
             System.out.println("--------------------------");
         }
     }
-
-    public static void main(String[] args) {
+   public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
