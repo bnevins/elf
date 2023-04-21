@@ -167,7 +167,7 @@ public class KeyDialog extends JPanel {
         var newContentPane = new KeyDialog();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
-
+        frame.setLocation(-3800, 275);
         //Display the window.
         frame.pack();
         frame.setVisible(true);
