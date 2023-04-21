@@ -55,7 +55,7 @@ public class KeyDialog extends JPanel {
     class KeyCommandTableModel extends AbstractTableModel {
 
         private Object[][] data = {
-            {"Copy", "false","false","false", KeyEvent.VK_F, "Root", "_best"},
+            {"Copy", Boolean.FALSE,Boolean.TRUE,Boolean.FALSE, KeyEvent.VK_F, "Root", "_best"},
         };
 
         public final Object[] longValues = {"Jane", "Kathy",
@@ -86,7 +86,7 @@ public class KeyDialog extends JPanel {
         /*
          * JTable uses this method to determine the default renderer/
          * editor for each cell.  If we didn't implement this method,
-         * then the last column would contain text ("true"/"false"),
+         * then the boolean columns would contain text ("true"/"false"),
          * rather than a check box.
          */
         public Class getColumnClass(int c) {
