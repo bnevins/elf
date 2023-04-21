@@ -7,6 +7,7 @@ package com.elf.jshowart;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.*;
 
 /**
  *
@@ -15,8 +16,10 @@ import java.awt.*;
 public class KeyDialog extends JPanel {
 
     private final boolean DEBUG = true;
-    private final int TYPE_COLUMN_NUMBER = 0;
-    private final String TYPES[] = { "Copy", "Move", "List", "Index", };
+    private final int FILE_OPERATION_COLUMN = 0;
+    private final int KEY_COLUMN = 4;
+    private final String FILE_OPERATION_TYPES[] = { "Copy", "Move", "List", "Index", };
+    private final String[] COLUMN_NAMES = {"Type", "Ctrl", "Shift", "Alt", "Key", "RelativeTo", "Target", };
 
     public KeyDialog() {
         super(new GridLayout(1, 0));
@@ -31,7 +34,7 @@ public class KeyDialog extends JPanel {
         //Set up column sizes.
         //initColumnSizes(table);
         //Fiddle with the Type column's cell editors/renderers.
-        setUpTypeColumn(table, table.getColumnModel().getColumn(TYPE_COLUMN_NUMBER));
+        setUpTypeColumn(table, table.getColumnModel().getColumn(FILE_OPERATION_COLUMN));
 
         add(scrollPane);
     }
@@ -39,7 +42,7 @@ public class KeyDialog extends JPanel {
  
     public void setUpTypeColumn(JTable table, TableColumn typeColumn) {
         //Set up the editor for the Type cells.
-        JComboBox comboBox = new JComboBox(TYPES);
+        JComboBox comboBox = new JComboBox(FILE_OPERATION_TYPES);
         typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
 
         //Set up tool tips for the sport cells.
@@ -51,22 +54,8 @@ public class KeyDialog extends JPanel {
 
     class KeyCommandTableModel extends AbstractTableModel {
 
-        private String[] columnNames = {"First Name",
-            "Last Name",
-            "Type",
-            "# of Years",
-            "Vegetarian"};
         private Object[][] data = {
-            {"Copy","Kathy", "Smith",
-                 new Integer(5), new Boolean(false)},
-            {"Move","John", "Doe",
-                 new Integer(3), new Boolean(true)},
-            {"List","Sue", "Black",
-                 new Integer(2), new Boolean(false)},
-            {"Index","Jane", "White",
-                 new Integer(20), new Boolean(true)},
-            {"Copy","Joe", "Brown",
-                 new Integer(10), new Boolean(false)}
+            {"Copy", "false","false","false", KeyEvent.VK_F, "Root", "_best"},
         };
 
         public final Object[] longValues = {"Jane", "Kathy",
@@ -74,7 +63,7 @@ public class KeyDialog extends JPanel {
             new Integer(20), Boolean.TRUE};
 
         public int getColumnCount() {
-            return columnNames.length;
+            return COLUMN_NAMES.length;
         }
 
         public int getRowCount() {
@@ -82,10 +71,15 @@ public class KeyDialog extends JPanel {
         }
 
         public String getColumnName(int col) {
-            return columnNames[col];
+            return COLUMN_NAMES[col];
         }
 
         public Object getValueAt(int row, int col) {
+            if(col == KEY_COLUMN) {
+                // Virtual Keys are just a number.  Return a String...
+                Integer key = (Integer)data[row][col];
+                return KeyEvent.getKeyText(key);
+            }
             return data[row][col];
         }
 
