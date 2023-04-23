@@ -14,16 +14,18 @@ import java.awt.event.*;
  * @author bnevins
  */
 public class KeyDialog extends JPanel {
+
     private UserPreferences prefs = UserPreferences.get();
     private final int FILE_OPERATION_COLUMN = 0;
     private final int RELATIVE_TO_COLUMN = 5;
     private final String FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
     private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
+    private final KeyCommandTableModel model;
 
     public KeyDialog() {
         super(new GridLayout(1, 0));
-
-        JTable table = new JTable(new KeyCommandTableModel());
+        model = new KeyCommandTableModel();
+        JTable table = new JTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
 
@@ -56,47 +58,40 @@ public class KeyDialog extends JPanel {
         renderer.setToolTipText("Click for combo box");
         return renderer;
     }
-private void initColumnSizes(JTable table) {
-        var model = (KeyCommandTableModel)table.getModel();
+
+    private void initColumnSizes(JTable table) {
+        var model = (KeyCommandTableModel) table.getModel();
         TableColumn column = null;
         Component comp = null;
         int headerWidth = 0;
         int cellWidth = 0;
         Object[] longValues = model.longValues;
-        TableCellRenderer headerRenderer =
-            table.getTableHeader().getDefaultRenderer();
+        TableCellRenderer headerRenderer
+                = table.getTableHeader().getDefaultRenderer();
 
         for (int i = 0; i < longValues.length; i++) {
             column = table.getColumnModel().getColumn(i);
 
             comp = headerRenderer.getTableCellRendererComponent(
-                                 null, column.getHeaderValue(),
-                                 false, false, 0, 0);
+                    null, column.getHeaderValue(),
+                    false, false, 0, 0);
             headerWidth = comp.getPreferredSize().width;
 
             Class<?> clazz = model.getColumnClass(i);
             Object longestValue = longValues[i];
-            
-// KLUDGE - special handling for Virtual Key Code - which is the only Integer in the Table
-            // DOES NOT WORK!! if(clazz.equals(Integer.class)) {
-            if(i == KeyCommandTableModel.KEY_COLUMN) {
-                clazz = String.class;
-                longestValue = KeyEvent.getKeyText((Integer)longestValue);
-            }
-            
-            comp = table.getDefaultRenderer(clazz).getTableCellRendererComponent(table, longestValue,false, false, 0, i);
+            comp = table.getDefaultRenderer(clazz).getTableCellRendererComponent(table, longestValue, false, false, 0, i);
             cellWidth = comp.getPreferredSize().width;
 
             if (prefs.isDebug()) {
                 System.out.println("Initializing width of column "
-                                   + i + ". "
-                                   + "headerWidth = " + headerWidth
-                                   + "; cellWidth = " + cellWidth);
+                        + i + ". "
+                        + "headerWidth = " + headerWidth
+                        + "; cellWidth = " + cellWidth);
             }
 
             column.setPreferredWidth(Math.max(headerWidth, cellWidth));
         }
-}
+    }
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
