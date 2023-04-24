@@ -42,6 +42,11 @@ class KeyCommandTableModel extends AbstractTableModel {
         return items.get(row).getColumn(col);
     }
 
+    public void addRow() {
+        items.add(new KeyCommandItem());
+        int newRowNum = items.size() - 1;
+        fireTableRowsInserted(newRowNum, newRowNum);
+    }
     /*
      * JTable uses this method to determine the default renderer/
      * editor for each cell.  If we didn't implement this method,
@@ -104,6 +109,9 @@ class KeyCommandTableModel extends AbstractTableModel {
         String relativeTo;
         String target;
 
+        public KeyCommandItem() {
+            this("Copy", false, false, false, "P", "Root", "foof");
+        }
         public KeyCommandItem(String type, boolean ctrl, boolean shift, boolean alt, String key, String relativeTo, String target) {
             this.type = type;
             this.ctrl = ctrl;

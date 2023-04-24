@@ -60,7 +60,7 @@ public class KeyDialogTable extends JPanel {
     }
 
     private void initColumnSizes(JTable table) {
-        var model = (KeyCommandTableModel) table.getModel();
+        //var model = (KeyCommandTableModel) table.getModel();
         TableColumn column = null;
         Component comp = null;
         int headerWidth = 0;
@@ -105,6 +105,7 @@ public class KeyDialogTable extends JPanel {
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Key Commands");
+        System.out.println("Layout Manager: " + frame.getLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
@@ -115,5 +116,9 @@ public class KeyDialogTable extends JPanel {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
+
+    void addRow() {
+        model.addRow();
     }
 }

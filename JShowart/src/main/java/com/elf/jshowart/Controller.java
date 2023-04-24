@@ -177,6 +177,7 @@ public class Controller extends JFrame {
         MenuUtilities = new javax.swing.JMenu();
         MenuDebugMode = new javax.swing.JCheckBoxMenuItem();
         MenuSlideshow = new javax.swing.JCheckBoxMenuItem();
+        MenuKeyCommands = new javax.swing.JMenuItem();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
 
@@ -529,6 +530,15 @@ public class Controller extends JFrame {
         });
         MenuUtilities.add(MenuSlideshow);
 
+        MenuKeyCommands.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        MenuKeyCommands.setText("Key Commands...");
+        MenuKeyCommands.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuKeyCommandsActionPerformed(evt);
+            }
+        });
+        MenuUtilities.add(MenuKeyCommands);
+
         MenuBar.add(MenuUtilities);
 
         MenuHelp.setText("Help");
@@ -755,6 +765,10 @@ public class Controller extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_MenuSortMenuSelected
 
+    private void MenuKeyCommandsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuKeyCommandsActionPerformed
+        new KeyDialog(this, true);
+    }//GEN-LAST:event_MenuKeyCommandsActionPerformed
+
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
         prefs.setSortType(type);
@@ -812,6 +826,7 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuFile;
     private javax.swing.JCheckBoxMenuItem MenuFitToWindow;
     private javax.swing.JMenu MenuHelp;
+    private javax.swing.JMenuItem MenuKeyCommands;
     private javax.swing.JMenu MenuNavigate;
     private javax.swing.JMenuItem MenuNavigateBack;
     private javax.swing.JMenuItem MenuNavigateBack25;
