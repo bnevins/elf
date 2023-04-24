@@ -13,7 +13,7 @@ import java.awt.event.*;
  *
  * @author bnevins
  */
-public class KeyDialog extends JPanel {
+public class KeyDialogTable extends JPanel {
 
     private UserPreferences prefs = UserPreferences.get();
     private final int FILE_OPERATION_COLUMN = 0;
@@ -22,7 +22,7 @@ public class KeyDialog extends JPanel {
     private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
     private final KeyCommandTableModel model;
 
-    public KeyDialog() {
+    public KeyDialogTable() {
         super(new GridLayout(1, 0));
         model = new KeyCommandTableModel();
         JTable table = new JTable(model);
@@ -108,7 +108,7 @@ public class KeyDialog extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
-        var newContentPane = new KeyDialog();
+        var newContentPane = new KeyDialogTable();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
         frame.setLocation(-3800, 275);
