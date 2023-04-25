@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
+import java.util.*;
 import java.util.prefs.Preferences;
 
 /**
@@ -39,6 +40,8 @@ public final class UserPreferences {
     private boolean debug;
     private int slideshowSeconds;
     private boolean maximized;
+    private final static String KEY_COMMAND_PREPEND = "KEY_COMMAND_ROW";
+    private ArrayList<String> keyCommands = new ArrayList<>();
 
     private UserPreferences() {
         node = Preferences.userNodeForPackage(this.getClass());
@@ -53,6 +56,10 @@ public final class UserPreferences {
         return INSTANCE;
     }
 
+    public ArrayList<String> getKeyCommands() {
+        return keyCommands;
+    }
+    
     public void read() {
         setDebug(node.getBoolean("debugMode", false));
         setMaximized(node.getBoolean("maximized", false));
@@ -63,10 +70,12 @@ public final class UserPreferences {
         setSlideshowSeconds(node.getInt("slideshowSeconds", 2));
         setSortType(node.get("sortType", "Name"));
         setSortAscending(node.getBoolean("sortAscending", true));
+        readKeyCommands();
     }
 
     public void write() {
         writeWindowBounds();
+        writeKeyCommands();
         node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
         node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
         node.putBoolean("stretch", fitToWindow);
@@ -81,10 +90,10 @@ public final class UserPreferences {
     private static UserPreferences INSTANCE;
 
     /**
-     * Let's be scrupulous to make sure the window doesn't disappear way off-screen
-     * somewhere. A maxed window may give a point slightly off screen.  We're going
-     * to use the default window bounds to be safe.  Tough!
-     * @return the bounds of the frame to create 
+     * Let's be scrupulous to make sure the window doesn't disappear way off-screen somewhere. A maxed window may give a point slightly off screen. We're going
+     * to use the default window bounds to be safe. Tough!
+     *
+     * @return the bounds of the frame to create
      */
     private Rectangle readWindowBounds() {
 
@@ -99,25 +108,45 @@ public final class UserPreferences {
         int y = node.getInt("window_top", defaultY);
         int width = node.getInt("window_width", defaultWidth);
         int height = node.getInt("window_height", defaultHeight);
-        
-        if(debug)
+
+        if (debug)
             System.out.println("Read in saved window position: " + new Rectangle(x, y, width, height));
 
-        if(Utils.isVisible(x, y))
+        if (Utils.isVisible(x, y))
             return new Rectangle(x, y, width, height);
         else
             return new Rectangle(defaultX, defaultY, defaultWidth, defaultHeight);
     }
 
     private void writeWindowBounds() {
-        if(debug)
+        if (debug)
             System.out.println("Writing window position: " + windowBounds);
-        
+
         node.putInt("window_left", windowBounds.x);
         node.putInt("window_top", windowBounds.y);
         node.putInt("window_width", windowBounds.width);
         node.putInt("window_height", windowBounds.height);
     }
+
+    private void readKeyCommands() {
+        for (int i = 0; i < 1000; i++) {
+            String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
+            String keycommand = node.get(name, "none");
+
+            if (keycommand.equals("none"))
+                break;
+            
+            keyCommands.add(keycommand);
+        }
+    }
+
+    private void writeKeyCommands() {
+        for(int i = 0; i < keyCommands.size(); i++) {
+            String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
+            node.put(name, keyCommands.get(i));
+        }
+    }
+    
     /////////////////////////////////////////////////////////////////////////////////
     //   Getters and Setters
     /////////////////////////////////////////////////////////////////////////////////

@@ -121,4 +121,8 @@ public class KeyDialogTable extends JPanel {
     void addRow() {
         model.addRow();
     }
+
+    void saveKeyCommands() {
+        model.saveToPrefs();
+    }
 }
