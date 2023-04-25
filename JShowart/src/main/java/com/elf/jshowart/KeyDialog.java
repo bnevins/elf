@@ -17,7 +17,7 @@ public class KeyDialog extends JDialog {
 
     private JPanel topPanel;
     private JButton addRowButton;
-    private KeyDialogTable keyTable;
+    private KeyDialogTablePanel keyTable;
     private JTextField rootDirField;
 
 
@@ -66,7 +66,7 @@ public class KeyDialog extends JDialog {
         topPanel.add(rootDirField);
         topPanel.add(rootDirButton);
         topPanel.add(addRowButton);
-        keyTable = new KeyDialogTable();
+        keyTable = new KeyDialogTablePanel();
 
         add(keyTable, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);

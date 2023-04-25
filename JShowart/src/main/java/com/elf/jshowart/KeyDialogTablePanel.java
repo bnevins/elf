@@ -13,32 +13,19 @@ import java.awt.event.*;
  *
  * @author bnevins
  */
-public class KeyDialogTable extends JPanel {
+public class KeyDialogTablePanel extends JPanel  {
 
     private UserPreferences prefs = UserPreferences.get();
     private final int FILE_OPERATION_COLUMN = 0;
     private final int RELATIVE_TO_COLUMN = 5;
     private final String FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
     private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
-    private final KeyCommandTableModel model;
+    private KeyCommandTableModel model;
 
-    public KeyDialogTable() {
+    public KeyDialogTablePanel() {
         super(new GridLayout(1, 0));
-        model = new KeyCommandTableModel();
-        JTable table = new JTable(model);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        table.setFillsViewportHeight(true);
+        initComponents();
 
-        //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        //Set up column sizes.
-        initColumnSizes(table);
-        //Fiddle with the Type column's cell editors/renderers.
-        setUpTypeColumn(table, table.getColumnModel().getColumn(FILE_OPERATION_COLUMN));
-        setUpRelativeToColumn(table, table.getColumnModel().getColumn(RELATIVE_TO_COLUMN));
-
-        add(scrollPane);
     }
 
     public void setUpTypeColumn(JTable table, TableColumn typeColumn) {
@@ -109,7 +96,7 @@ public class KeyDialogTable extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
-        var newContentPane = new KeyDialogTable();
+        var newContentPane = new KeyDialogTablePanel();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
         frame.setLocation(-3800, 275);
@@ -125,4 +112,49 @@ public class KeyDialogTable extends JPanel {
     void saveKeyCommands() {
         model.saveToPrefs();
     }
+
+    private void initComponents() {
+        model = new KeyCommandTableModel();
+        var table = new KeyCommandTable(model);
+        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        table.setFillsViewportHeight(true);
+        //setupPopup(table);
+        //Create the scroll pane and add the table to it.
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        //Set up column sizes.
+        initColumnSizes(table);
+        //Fiddle with the Type column's cell editors/renderers.
+        setUpTypeColumn(table, table.getColumnModel().getColumn(FILE_OPERATION_COLUMN));
+        setUpRelativeToColumn(table, table.getColumnModel().getColumn(RELATIVE_TO_COLUMN));
+
+        add(scrollPane);
+    }
+
+//    private void setupPopup(JTable table) {
+//        JPopupMenu popupMenu = new JPopupMenu();
+//        JMenuItem deleteMenuItem = new JMenuItem("Delete");
+//        popupMenu.add(deleteMenuItem);
+//
+//        table.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                if (e.getButton() == MouseEvent.BUTTON3) {
+//                    int row = table.rowAtPoint(e.getPoint());
+//                    
+//                    if (row >= 0) {
+//                        popupMenu.show(table, e.getX(), e.getY());
+//                    }
+//                }
+//            }
+//        });
+//
+//        deleteMenuItem.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("Delete menu item clicked.");
+//            }
+//        });
+//
+//    }
 }

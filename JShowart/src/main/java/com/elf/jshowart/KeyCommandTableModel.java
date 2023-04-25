@@ -43,6 +43,8 @@ class KeyCommandTableModel extends AbstractTableModel {
         for (KeyCommandItem item : items) {
             keyCommands.add(item.createUserPrefsString());
         }
+        // persist NOW!
+        prefs.write();
     }
 
     public int getColumnCount() {
@@ -65,6 +67,11 @@ class KeyCommandTableModel extends AbstractTableModel {
         items.add(new KeyCommandItem());
         int newRowNum = items.size() - 1;
         fireTableRowsInserted(newRowNum, newRowNum);
+    }
+    public void deleteRow(int row) {
+        items.remove(row);
+        int newRowNum = items.size() - 1;
+        fireTableRowsDeleted(newRowNum, newRowNum);
     }
 
     /*

@@ -8,6 +8,7 @@ CLEANUP the setEnable calls to menuitems.  Centralize them based on call to Mode
 Organize the file ext filters into one place
 Add a UI for setting slideshow time
 Info Dialog
+Kludgy code saving key commands
 *****************   FINISHED ITEMS   **********************
 Put one JFileChooser in globals for save and open ???
 BUG: Don't allow "save current size as" when scaling (makes no sense?)

@@ -42,9 +42,11 @@ public final class UserPreferences {
     private boolean maximized;
     private final static String KEY_COMMAND_PREPEND = "KEY_COMMAND_ROW";
     private ArrayList<String> keyCommands = new ArrayList<>();
+    private final Preferences mainNode;
+    private static UserPreferences INSTANCE;
 
     private UserPreferences() {
-        node = Preferences.userNodeForPackage(this.getClass());
+        mainNode = Preferences.userNodeForPackage(this.getClass());
         read();
         System.out.println("USER PREFS CTOR HERE!!!!");
     }
@@ -59,35 +61,32 @@ public final class UserPreferences {
     public ArrayList<String> getKeyCommands() {
         return keyCommands;
     }
-    
+
     public void read() {
-        setDebug(node.getBoolean("debugMode", false));
-        setMaximized(node.getBoolean("maximized", false));
+        setDebug(mainNode.getBoolean("debugMode", false));
+        setMaximized(mainNode.getBoolean("maximized", false));
         windowBounds = readWindowBounds();
-        previousOpenFileParent = new File(node.get("previousOpenFileParent", "."));
-        previousSaveAsFileParent = new File(node.get("previousSaveAsFileParent", "."));
-        fitToWindow = node.getBoolean("stretch", true);
-        setSlideshowSeconds(node.getInt("slideshowSeconds", 2));
-        setSortType(node.get("sortType", "Name"));
-        setSortAscending(node.getBoolean("sortAscending", true));
+        previousOpenFileParent = new File(mainNode.get("previousOpenFileParent", "."));
+        previousSaveAsFileParent = new File(mainNode.get("previousSaveAsFileParent", "."));
+        fitToWindow = mainNode.getBoolean("stretch", true);
+        setSlideshowSeconds(mainNode.getInt("slideshowSeconds", 2));
+        setSortType(mainNode.get("sortType", "Name"));
+        setSortAscending(mainNode.getBoolean("sortAscending", true));
         readKeyCommands();
     }
 
     public void write() {
         writeWindowBounds();
         writeKeyCommands();
-        node.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
-        node.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
-        node.putBoolean("stretch", fitToWindow);
-        node.putInt("slideshowSeconds", getSlideshowSeconds());
-        node.putBoolean("debugMode", isDebug());
-        node.put("sortType", getSortType());
-        node.putBoolean("sortAscending", isSortAscending());
-        node.putBoolean("maximized", isMaximized());
+        mainNode.put("previousOpenFileParent", previousOpenFileParent.getAbsolutePath());
+        mainNode.put("previousSaveAsFileParent", previousSaveAsFileParent.getAbsolutePath());
+        mainNode.putBoolean("stretch", fitToWindow);
+        mainNode.putInt("slideshowSeconds", getSlideshowSeconds());
+        mainNode.putBoolean("debugMode", isDebug());
+        mainNode.put("sortType", getSortType());
+        mainNode.putBoolean("sortAscending", isSortAscending());
+        mainNode.putBoolean("maximized", isMaximized());
     }
-
-    private final Preferences node;
-    private static UserPreferences INSTANCE;
 
     /**
      * Let's be scrupulous to make sure the window doesn't disappear way off-screen somewhere. A maxed window may give a point slightly off screen. We're going
@@ -104,10 +103,10 @@ public final class UserPreferences {
         int defaultX = defaultWidth / 2;
         int defaultY = defaultHeight / 2;
 
-        int x = node.getInt("window_left", defaultX);
-        int y = node.getInt("window_top", defaultY);
-        int width = node.getInt("window_width", defaultWidth);
-        int height = node.getInt("window_height", defaultHeight);
+        int x = mainNode.getInt("window_left", defaultX);
+        int y = mainNode.getInt("window_top", defaultY);
+        int width = mainNode.getInt("window_width", defaultWidth);
+        int height = mainNode.getInt("window_height", defaultHeight);
 
         if (debug)
             System.out.println("Read in saved window position: " + new Rectangle(x, y, width, height));
@@ -122,35 +121,58 @@ public final class UserPreferences {
         if (debug)
             System.out.println("Writing window position: " + windowBounds);
 
-        node.putInt("window_left", windowBounds.x);
-        node.putInt("window_top", windowBounds.y);
-        node.putInt("window_width", windowBounds.width);
-        node.putInt("window_height", windowBounds.height);
+        mainNode.putInt("window_left", windowBounds.x);
+        mainNode.putInt("window_top", windowBounds.y);
+        mainNode.putInt("window_width", windowBounds.width);
+        mainNode.putInt("window_height", windowBounds.height);
     }
 
+    // TODO - KLUDGY!!
     private void readKeyCommands() {
+        keyCommands.clear();
         for (int i = 0; i < 1000; i++) {
             String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
-            String keycommand = node.get(name, "none");
+            String keycommand = mainNode.get(name, "none");
+
+            if (keycommand.equals("none")) {
+                // get rid of the key we just added!
+                mainNode.remove(name);
+                break;
+            }
+
+            keyCommands.add(keycommand);
+        }
+        if(debug)
+            System.out.printf("Read in %d Key Commands\n", keyCommands.size());
+    }
+
+    // TODO - KLUDGY!!
+    private void writeKeyCommands() {
+        if(debug)
+            System.out.printf("Writing %d Key Commands\n", keyCommands.size());
+        
+        clearKeyCommands();
+        for (int i = 0; i < keyCommands.size(); i++) {
+            String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
+            mainNode.put(name, keyCommands.get(i));
+        }
+    }
+
+    // TODO - KLUDGY!!
+    private void clearKeyCommands() {
+        for (int i = 0; i < 1000; i++) {
+            String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
+            String keycommand = mainNode.get(name, "none");
+            mainNode.remove(name);
 
             if (keycommand.equals("none"))
                 break;
-            
-            keyCommands.add(keycommand);
         }
     }
 
-    private void writeKeyCommands() {
-        for(int i = 0; i < keyCommands.size(); i++) {
-            String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
-            node.put(name, keyCommands.get(i));
-        }
-    }
-    
     /////////////////////////////////////////////////////////////////////////////////
     //   Getters and Setters
     /////////////////////////////////////////////////////////////////////////////////
-
     /**
      * @return the sortType
      */
@@ -206,4 +228,5 @@ public final class UserPreferences {
     public void setSlideshowSeconds(int slideshowSeconds) {
         this.slideshowSeconds = slideshowSeconds;
     }
+
 }
