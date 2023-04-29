@@ -21,6 +21,7 @@ public class KeyDialogTablePanel extends JPanel  {
     private final String FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
     private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
     private KeyCommandTableModel model;
+    private KeyCommandTable table;
 
     public KeyDialogTablePanel() {
         super(new GridLayout(1, 0));
@@ -115,7 +116,7 @@ public class KeyDialogTablePanel extends JPanel  {
 
     private void initComponents() {
         model = new KeyCommandTableModel();
-        var table = new KeyCommandTable(model);
+        table = new KeyCommandTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
         //setupPopup(table);
@@ -131,30 +132,15 @@ public class KeyDialogTablePanel extends JPanel  {
         add(scrollPane);
     }
 
-//    private void setupPopup(JTable table) {
-//        JPopupMenu popupMenu = new JPopupMenu();
-//        JMenuItem deleteMenuItem = new JMenuItem("Delete");
-//        popupMenu.add(deleteMenuItem);
-//
-//        table.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                if (e.getButton() == MouseEvent.BUTTON3) {
-//                    int row = table.rowAtPoint(e.getPoint());
-//                    
-//                    if (row >= 0) {
-//                        popupMenu.show(table, e.getX(), e.getY());
-//                    }
-//                }
-//            }
-//        });
-//
-//        deleteMenuItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("Delete menu item clicked.");
-//            }
-//        });
-//
-//    }
+    ListSelectionModel getSelectionModel() {
+        return table.getSelectionModel();
+    }
+
+    int[] getSelectedRows() {
+        return table.getSelectedRows();
+    }
+
+    void deleteSelectedRows() {
+            table.deleteSelectedRows();
+    }
 }

@@ -26,14 +26,14 @@ public class Controller extends JFrame {
     /**
      * Creates new form JShowartFrame
      */
-
     public Controller() {
         prefs = UserPreferences.get();
         initComponents();
         clearAllSortButtons();
         clearAllScaleButtons();
         MenuSlideshow.setSelected(false);
-
+        initSlider();
+        
         switch (prefs.getSortType()) {
             case "Name" ->
                 MenuSortName.setSelected(true);
@@ -67,12 +67,12 @@ public class Controller extends JFrame {
         shrinkGroup.add(MenuExpand150);
         shrinkGroup.add(MenuExpand200);
         MenuFitToWindow.setSelected(prefs.fitToWindow);
-        
+
         setBounds(prefs.windowBounds);
-        
-        if(prefs.isMaximized())
+
+        if (prefs.isMaximized())
             setExtendedState(MAXIMIZED_BOTH);
-        
+
         MenuDebugMode.setSelected(prefs.isDebug());
 
         // note: they get keystrokes in the order that they're added!  View first, then Controller, then KeyHandler
@@ -135,6 +135,7 @@ public class Controller extends JFrame {
         sortTypeGroup = new javax.swing.ButtonGroup();
         sortDirectionGroup = new javax.swing.ButtonGroup();
         shrinkGroup = new javax.swing.ButtonGroup();
+        jMenuItem1 = new javax.swing.JMenuItem();
         MenuBar = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuOpenFiles = new javax.swing.JMenuItem();
@@ -180,6 +181,9 @@ public class Controller extends JFrame {
         MenuKeyCommands = new javax.swing.JMenuItem();
         MenuHelp = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
+        MenuScaler = new javax.swing.JMenu();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JShowArt");
@@ -555,6 +559,14 @@ public class Controller extends JFrame {
 
         MenuBar.add(MenuHelp);
 
+        MenuScaler.setText("Scaler");
+        MenuScaler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuScalerActionPerformed(evt);
+            }
+        });
+        MenuBar.add(MenuScaler);
+
         setJMenuBar(MenuBar);
 
         pack();
@@ -769,6 +781,10 @@ public class Controller extends JFrame {
         new KeyDialog(this, true);
     }//GEN-LAST:event_MenuKeyCommandsActionPerformed
 
+    private void MenuScalerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuScalerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MenuScalerActionPerformed
+
     private void menuSortHelper(java.awt.event.ActionEvent evt) {
         String type = evt.getActionCommand();
         prefs.setSortType(type);
@@ -843,6 +859,7 @@ public class Controller extends JFrame {
     private javax.swing.JMenuItem MenuSaveAs;
     private javax.swing.JMenuItem MenuSaveCurrentSizeAs;
     private javax.swing.JMenu MenuScale;
+    private javax.swing.JMenu MenuScaler;
     private javax.swing.JRadioButtonMenuItem MenuShrinkEighth;
     private javax.swing.JRadioButtonMenuItem MenuShrinkFourth;
     private javax.swing.JRadioButtonMenuItem MenuShrinkHalf;
@@ -857,6 +874,7 @@ public class Controller extends JFrame {
     private javax.swing.JMenu MenuUtilities;
     private javax.swing.JMenu MenuView;
     private javax.swing.JMenuItem about;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator7;
@@ -889,5 +907,38 @@ public class Controller extends JFrame {
         MenuExpand125.setSelected(false);
         MenuExpand150.setSelected(false);
         MenuExpand200.setSelected(false);
+    }
+
+    private void initSlider() {
+        JSlider slider = new JSlider();
+        slider.setMajorTickSpacing(50);
+        slider.setValue(100);
+        slider.setMaximum(500);
+        slider.setMinimum(0);
+        slider.setMinorTickSpacing(10);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setSnapToTicks(true);
+        slider.setPreferredSize(new Dimension(700, 65));
+        slider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                
+//                if(slider.getValueIsAdjusting())
+//                    return;
+                var val =slider.getValue();
+                
+                if(val %5 != 0)
+                    return;
+                
+                if(val < 10)
+                    val = 10;
+                
+                double value = val;
+                
+                view.setScaleFactor(value/100.0);
+                System.out.println(slider.getBounds());
+            }
+        });
+        MenuScaler.add(slider);
     }
 }

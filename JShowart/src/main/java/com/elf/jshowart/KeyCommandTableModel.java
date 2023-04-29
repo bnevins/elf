@@ -68,12 +68,11 @@ class KeyCommandTableModel extends AbstractTableModel {
         int newRowNum = items.size() - 1;
         fireTableRowsInserted(newRowNum, newRowNum);
     }
-    public void deleteRow(int row) {
-        items.remove(row);
-        int newRowNum = items.size() - 1;
-        fireTableRowsDeleted(newRowNum, newRowNum);
-    }
 
+    public void deleteRow(int row) {
+        fireTableRowsDeleted(row, row);
+        items.remove(row);
+    }
     /*
      * JTable uses this method to determine the default renderer/
      * editor for each cell.  If we didn't implement this method,
@@ -124,6 +123,8 @@ class KeyCommandTableModel extends AbstractTableModel {
         }
         System.out.println("--------------------------");
     }
+
+    
 
     class KeyCommandItem {
         //    private final String[] COLUMN_NAMES = {"Type", "Ctrl", "Shift", "Alt", "Key", "Relative To", "Target"};

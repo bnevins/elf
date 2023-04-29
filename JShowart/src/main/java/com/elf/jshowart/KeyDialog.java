@@ -7,6 +7,7 @@ package com.elf.jshowart;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.*;
 
 /**
@@ -14,12 +15,13 @@ import javax.swing.table.*;
  * @author bnevins
  */
 public class KeyDialog extends JDialog {
-
+    
     private JPanel topPanel;
     private JButton addRowButton;
     private KeyDialogTablePanel keyTable;
     private JTextField rootDirField;
-
+    private JButton rootDirButton;
+    private JButton deleteSelectedRowsButton;
 
 // for testing...
     public static void main(String[] args) {
@@ -29,7 +31,7 @@ public class KeyDialog extends JDialog {
             }
         });
     }
-    private JButton rootDirButton;
+
     public KeyDialog(JFrame frame, boolean modal) {
         super(frame, modal);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -49,15 +51,15 @@ public class KeyDialog extends JDialog {
         // Add the WindowAdapter object to the frame.
         addWindowListener(adapter);
         
-        
-        
         setVisible(true);
         System.out.println("root button: " + rootDirButton.getBounds());
     }
-
+    
     private void initComponents() {
         topPanel = new JPanel();
-        addRowButton = new JButton("Add New Key Binding");
+        addRowButton = new JButton("Add");
+        deleteSelectedRowsButton = new JButton("Delete Rows");
+        deleteSelectedRowsButton.setEnabled(false);
         //topPanel.setPreferredSize(new Dimension(500, 50));
         rootDirField = new JTextField(30);
         rootDirButton = new JButton("...");
@@ -66,15 +68,31 @@ public class KeyDialog extends JDialog {
         topPanel.add(rootDirField);
         topPanel.add(rootDirButton);
         topPanel.add(addRowButton);
+        topPanel.add(deleteSelectedRowsButton);
         keyTable = new KeyDialogTablePanel();
-
+        
         add(keyTable, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        keyTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int[] selectedRows = keyTable.getSelectedRows();
+                
+                if (selectedRows.length <= 0)
+                    deleteSelectedRowsButton.setEnabled(false);
+                else
+                    deleteSelectedRowsButton.setEnabled(true);
+                //for (int i = 0; i < selectedRows.length; i++) {
+                    //System.out.println("Selected row: " + selectedRows[i]);
+            }
+        });
         //setLocation(-3800, 275);
     }
-
+    
     private void initEvents() {
         addRowButton.addActionListener(event -> keyTable.addRow());
+        deleteSelectedRowsButton.addActionListener(event -> keyTable.deleteSelectedRows());
     }
 }

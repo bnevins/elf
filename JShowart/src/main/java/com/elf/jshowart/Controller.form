@@ -8,6 +8,11 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="shrinkGroup">
     </Component>
+    <Component class="javax.swing.JMenuItem" name="jMenuItem1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jMenuItem1"/>
+      </Properties>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="MenuBar">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="MenuFile">
@@ -401,6 +406,14 @@
               </Events>
             </MenuItem>
           </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="MenuScaler">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Scaler"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuScalerActionPerformed"/>
+          </Events>
         </Menu>
       </SubComponents>
     </Menu>

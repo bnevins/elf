@@ -5,6 +5,7 @@
 package com.elf.jshowart;
 
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 
 /**
@@ -63,5 +64,15 @@ public class KeyCommandTable extends JTable implements MouseListener, ActionList
         System.out.println("DELETE SELECTED for row# " + currentPopupRow);
         model.deleteRow(currentPopupRow);
         invalidate();
+    }
+
+    void deleteSelectedRows() {
+        // CRITICAL: Must delete in reverse order!  Otherwise row numbers may be invalid!
+        int[] rows = getSelectedRows();
+        //Arrays.sort(rows, Collections.reverseOrder());  This does not work for some reason?!?  Screw it.
+        Arrays.sort(rows);
+
+        for(int i = rows.length - 1; i >= 0; i--)
+            model.deleteRow(rows[i]);
     }
 }
