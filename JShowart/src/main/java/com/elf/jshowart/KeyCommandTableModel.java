@@ -199,7 +199,7 @@ class KeyCommandTableModel extends AbstractTableModel {
                 case 3 ->
                     alt = (Boolean) value;
                 case 4 ->
-                    key = (String) value;
+                    key = value.toString();
                 case 5 ->
                     relativeTo = (String) value;
                 case 6 ->

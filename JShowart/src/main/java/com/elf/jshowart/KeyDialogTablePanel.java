@@ -13,13 +13,16 @@ import java.awt.event.*;
  *
  * @author bnevins
  */
-public class KeyDialogTablePanel extends JPanel  {
+public class KeyDialogTablePanel extends JPanel {
 
     private UserPreferences prefs = UserPreferences.get();
     private final int FILE_OPERATION_COLUMN = 0;
+    private final int KEY_COLUMN = 4;
     private final int RELATIVE_TO_COLUMN = 5;
     private final String FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
     private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
+    private final KeyCode KEY_CODES[] = KeyCode.getKeyCodes();
+
     private KeyCommandTableModel model;
     private KeyCommandTable table;
 
@@ -37,6 +40,16 @@ public class KeyDialogTablePanel extends JPanel  {
 
     public void setUpRelativeToColumn(JTable table, TableColumn typeColumn) {
         var comboBox = new JComboBox(RELATIVE_TO_ITEMS);
+        typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
+        typeColumn.setCellRenderer(getToolTipRenderer());
+    }
+
+    public void setUpKeyColumn(JTable table, TableColumn typeColumn) {
+        var comboBox = new JComboBox(KEY_CODES);
+        comboBox.addActionListener(event -> {
+            int row = table.getSelectedRow();
+            System.out.println("COMBO BOX ACTION!!!!! ROW = " + row);
+        });
         typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
         typeColumn.setCellRenderer(getToolTipRenderer());
     }
@@ -128,7 +141,7 @@ public class KeyDialogTablePanel extends JPanel  {
         //Fiddle with the Type column's cell editors/renderers.
         setUpTypeColumn(table, table.getColumnModel().getColumn(FILE_OPERATION_COLUMN));
         setUpRelativeToColumn(table, table.getColumnModel().getColumn(RELATIVE_TO_COLUMN));
-
+        setUpKeyColumn(table, table.getColumnModel().getColumn(KEY_COLUMN));
         add(scrollPane);
     }
 
@@ -141,6 +154,6 @@ public class KeyDialogTablePanel extends JPanel  {
     }
 
     void deleteSelectedRows() {
-            table.deleteSelectedRows();
+        table.deleteSelectedRows();
     }
 }

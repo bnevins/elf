@@ -61,7 +61,8 @@ public class KeyCommandTable extends JTable implements MouseListener, ActionList
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("DELETE SELECTED for row# " + currentPopupRow);
+        if(UserPreferences.get().isDebug())
+            System.out.println("DELETE SELECTED for row# " + currentPopupRow);
         model.deleteRow(currentPopupRow);
         invalidate();
     }

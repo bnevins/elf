@@ -20,6 +20,17 @@ public class KeyCodes {
         int F_int = (int) 'A';
         System.out.printf("F -- %d -- %d\n", F_int, KeyEvent.VK_Z);
     }
+    
+    class KeyCode {
+        
+    }
+    
+    
+    
+    
+    
+    
+    
 /** Constant for the ENTER virtual key. */
     public static final int VK_ENTER          = '\n';
 

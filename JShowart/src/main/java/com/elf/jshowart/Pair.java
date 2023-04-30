@@ -42,6 +42,10 @@ public class Pair<K, V> {
         return getKey().equals(p.getKey()) &&
                getValue().equals(p.getValue());
     }
+    @Override
+    public String toString() {
+        return key.toString();
+    }
     public static void main(String[] args) {
         Pair<Double,String> pair = new Pair<>();
         pair.setKey(1.2);
