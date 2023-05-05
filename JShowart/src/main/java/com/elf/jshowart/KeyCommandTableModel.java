@@ -18,7 +18,7 @@ class KeyCommandTableModel extends AbstractTableModel {
     private final String[] COLUMN_NAMES = {"Type", "Ctrl", "Shift", "Alt", "Key", "Relative To", "Target"};
     // static final int KEY_COLUMN = 4;
     private ArrayList<KeyCommandItem> items = new ArrayList<>();
-    final Object[] longValues = {"Index", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, "W", "Current File", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"};
+    final Object[] longValues = {"Index", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, "Page Down", "Current File", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"};
 
     KeyCommandTableModel() {
         // populate from saved preferences...
