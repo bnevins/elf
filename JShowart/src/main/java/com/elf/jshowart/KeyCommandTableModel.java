@@ -17,7 +17,7 @@ class KeyCommandTableModel extends AbstractTableModel {
     private UserPreferences prefs = UserPreferences.get();
     private final String[] COLUMN_NAMES = {"Type", "Ctrl", "Shift", "Alt", "Key", "Relative To", "Target"};
     // static final int KEY_COLUMN = 4;
-    private ArrayList<KeyCommandItem> items = new ArrayList<>();
+    private ArrayList<KeyCommand> items = new ArrayList<>();
     final Object[] longValues = {"Index", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, "Page Down", "Current File", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"};
 
     KeyCommandTableModel() {
@@ -25,11 +25,11 @@ class KeyCommandTableModel extends AbstractTableModel {
         ArrayList<String> keyCommands = prefs.getKeyCommands();
 
         if (keyCommands.size() <= 0) {
-            items.add(new KeyCommandItem("Index", Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, "W", "Root", "_best"));
+            items.add(new KeyCommand("Index", Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, "W", "Root", "_best"));
 
         } else {
             for (String keyCommand : keyCommands) {
-                items.add(new KeyCommandItem(keyCommand));
+                items.add(new KeyCommand(keyCommand));
             }
         }
     }
@@ -37,7 +37,7 @@ class KeyCommandTableModel extends AbstractTableModel {
     public void saveToPrefs() {
         ArrayList<String> keyCommands = prefs.getKeyCommands();
         keyCommands.clear();
-        for (KeyCommandItem item : items) {
+        for (KeyCommand item : items) {
             keyCommands.add(item.createUserPrefsString());
         }
         // persist NOW!
@@ -61,7 +61,7 @@ class KeyCommandTableModel extends AbstractTableModel {
     }
 
     public void addRow() {
-        items.add(new KeyCommandItem());
+        items.add(new KeyCommand("Copy", false, false, false, "P", "Root", "foof"));
         int newRowNum = items.size() - 1;
         fireTableRowsInserted(newRowNum, newRowNum);
     }
@@ -115,114 +115,9 @@ class KeyCommandTableModel extends AbstractTableModel {
         int numCols = getColumnCount();
         for (int row = 0; row < numRows; row++) {
             System.out.print("    row " + row + ":");
-            System.out.println(items.get(row).getPrintString());
+            System.out.println(items.get(row).toString());
             System.out.println();
         }
         System.out.println("--------------------------");
-    }
-
-    
-
-    class KeyCommandItem {
-        //    private final String[] COLUMN_NAMES = {"Type", "Ctrl", "Shift", "Alt", "Key", "Relative To", "Target"};
-
-        String type;
-        boolean ctrl;
-        boolean shift;
-        boolean alt;
-        String key;
-        String relativeTo;
-        String target;
-        static char USER_PREFS_DELIMITER = ':';
-
-        public KeyCommandItem() {
-            this("Copy", false, false, false, "P", "Root", "foof");
-        }
-
-        public KeyCommandItem(String userPrefsString) {
-            String[] ss = userPrefsString.split(":");
-
-            if (ss.length != 7)
-                throw new IllegalArgumentException("Bad User Prefs Key Command String: " + userPrefsString);
-
-            type = ss[0];
-            ctrl = Boolean.valueOf(ss[1]);
-            shift = Boolean.valueOf(ss[2]);
-            alt = Boolean.valueOf(ss[3]);
-            key = ss[4];
-            relativeTo = ss[5];
-            target = ss[6];
-        }
-
-        public KeyCommandItem(String type, boolean ctrl, boolean shift, boolean alt, String key, String relativeTo, String target) {
-            this.type = type;
-            this.ctrl = ctrl;
-            this.shift = shift;
-            this.alt = alt;
-            this.key = key;
-            this.relativeTo = relativeTo;
-            this.target = target;
-        }
-
-        private Object getColumn(int col) {
-            return switch (col) {
-                case 0:
-                    yield type;
-                case 1:
-                    yield ctrl;
-                case 2:
-                    yield shift;
-                case 3:
-                    yield alt;
-                case 4:
-                    yield key;
-                case 5:
-                    yield relativeTo;
-                case 6:
-                    yield target;
-                default:
-                    throw new IllegalStateException("Illegal column number: " + col);
-            };
-        }
-
-        private void setColumn(int col, Object value) {
-            switch (col) {
-                case 0 ->
-                    type = (String) value;
-                case 1 ->
-                    ctrl = (Boolean) value;
-                case 2 ->
-                    shift = (Boolean) value;
-                case 3 ->
-                    alt = (Boolean) value;
-                case 4 ->
-                    key = value.toString();
-                case 5 ->
-                    relativeTo = (String) value;
-                case 6 ->
-                    target = (String) value;
-                default ->
-                    throw new IllegalStateException("Illegal column number: " + col);
-            }
-        }
-
-        private String getPrintString() {
-            //return String.format("%10s", longValues)
-            return "    " + type + "  " + ctrl + "  " + shift + "  " + alt + "   " + key + "  " + relativeTo + "   " + target;
-        }
-
-        private String createUserPrefsString() {
-            // to save to User Preferences
-            StringBuilder sb = new StringBuilder();
-            sb.append(type).append(USER_PREFS_DELIMITER);
-            sb.append(ctrl).append(USER_PREFS_DELIMITER);
-            sb.append(shift).append(USER_PREFS_DELIMITER);
-            sb.append(alt).append(USER_PREFS_DELIMITER);
-            sb.append(key).append(USER_PREFS_DELIMITER);
-            sb.append(relativeTo).append(USER_PREFS_DELIMITER);
-            sb.append(target);
-            return sb.toString();
-        }
-
     }
 }
