@@ -21,7 +21,7 @@ public class KeyDialogTablePanel extends JPanel {
     private final int RELATIVE_TO_COLUMN = 5;
     private final String FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
     private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
-    private final KeyCode KEY_CODES[] = KeyCode.getKeyCodes();
+    private final Key KEY_CODES[] = Key.getKeys();
 
     private KeyCommandTableModel model;
     private KeyCommandTable table;
