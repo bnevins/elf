@@ -41,16 +41,13 @@ public class KeyDialog extends JDialog {
         pack();
         setLocationRelativeTo(frame);
         
-        WindowAdapter adapter = new WindowAdapter() {
+        addWindowListener( new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 keyTable.saveKeyCommands();
             }
-        };
+        });
 
-        // Add the WindowAdapter object to the frame.
-        addWindowListener(adapter);
-        
         setVisible(true);
         System.out.println("root button: " + rootDirButton.getBounds());
     }

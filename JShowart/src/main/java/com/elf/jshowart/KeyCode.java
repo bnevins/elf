@@ -48,7 +48,6 @@ public class KeyCode {
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
     private static KeyCode[] allKeys = new KeyCode[]{
-        new KeyCode(VK_ENTER, "Enter"),
         new KeyCode(VK_A, "A"),
         new KeyCode(VK_B, "B"),
         new KeyCode(VK_C, "C"),
@@ -85,7 +84,6 @@ public class KeyCode {
         new KeyCode(VK_7, "7"),
         new KeyCode(VK_8, "8"),
         new KeyCode(VK_9, "9"),
-
         new KeyCode(VK_F1, "F1"),
         new KeyCode(VK_F2, "F2"),
         new KeyCode(VK_F3, "F3"),
@@ -96,8 +94,18 @@ public class KeyCode {
         new KeyCode(VK_F8, "F8"),
         new KeyCode(VK_F9, "F9"),
         new KeyCode(VK_F10, "F10"),
-
         new KeyCode(VK_PAGE_UP, "Page Up"),
-        new KeyCode(VK_PAGE_DOWN, "Page Down"),};
+        new KeyCode(VK_PAGE_DOWN, "Page Down"),
+        new KeyCode(VK_SLASH, " / "),
+        new KeyCode(VK_COMMA, " , "),
+        new KeyCode(VK_PERIOD, " . "),
+        new KeyCode(VK_SEMICOLON, " ; "),
+        new KeyCode(VK_EQUALS, " = "),
+        new KeyCode(VK_OPEN_BRACKET, " [ "),
+        new KeyCode(VK_CLOSE_BRACKET, " ] "),
+        new KeyCode(VK_MINUS, " - "),
+        new KeyCode(VK_BACK_SLASH, " \\ "),
+        new KeyCode(VK_HOME, "Home"),
+        new KeyCode(VK_END, "End"),};
 
 }

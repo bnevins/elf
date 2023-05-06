@@ -136,7 +136,7 @@ class KeyCommandTableModel extends AbstractTableModel {
         String key;
         String relativeTo;
         String target;
-        char USER_PREFS_DELIMITER = ':';
+        static char USER_PREFS_DELIMITER = ':';
 
         public KeyCommandItem() {
             this("Copy", false, false, false, "P", "Root", "foof");
