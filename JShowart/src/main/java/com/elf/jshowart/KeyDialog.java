@@ -12,16 +12,18 @@ import javax.swing.table.*;
 
 /**
  *
- * @author bnevins
+ * @author bnevins TODO add cancel capability and button
  */
 public class KeyDialog extends JDialog {
-    
+
     private JPanel topPanel;
+    private JPanel bottomPanel;
     private JButton addRowButton;
-    private KeyDialogTablePanel keyTable;
+    private KeyDialogTablePanel keyTablePanel;
     private JTextField rootDirField;
     private JButton rootDirButton;
     private JButton deleteSelectedRowsButton;
+    private JButton okButton;
 
 // for testing...
     public static void main(String[] args) {
@@ -40,56 +42,69 @@ public class KeyDialog extends JDialog {
         setTitle("Key Commands");
         pack();
         setLocationRelativeTo(frame);
-        
-        addWindowListener( new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                keyTable.saveKeyCommands();
-            }
-        });
 
         setVisible(true);
         System.out.println("root button: " + rootDirButton.getBounds());
     }
-    
+
     private void initComponents() {
+        // panels
         topPanel = new JPanel();
+        bottomPanel = new JPanel();
+        keyTablePanel = new KeyDialogTablePanel();
+        
+        // buttons
         addRowButton = new JButton("Add");
         deleteSelectedRowsButton = new JButton("Delete Rows");
         deleteSelectedRowsButton.setEnabled(false);
-        //topPanel.setPreferredSize(new Dimension(500, 50));
-        rootDirField = new JTextField(30);
+        okButton = new JButton("OK");
         rootDirButton = new JButton("...");
-        //rootDirButton.setPreferredSize(new Dimension(20, 15));
+        
+        // textfields
+        rootDirField = new JTextField(30);
+        
+        // add items
         topPanel.add(new JLabel("Root Folder:"));
         topPanel.add(rootDirField);
         topPanel.add(rootDirButton);
         topPanel.add(addRowButton);
         topPanel.add(deleteSelectedRowsButton);
-        keyTable = new KeyDialogTablePanel();
-        
-        add(keyTable, BorderLayout.CENTER);
-        add(topPanel, BorderLayout.NORTH);
+        bottomPanel.add(okButton);
+        this.add(keyTablePanel, BorderLayout.CENTER);
+        this.add(topPanel, BorderLayout.NORTH);
+        this.add(bottomPanel, BorderLayout.SOUTH);
+
+        // misc
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        
-        keyTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    }
+
+    private void initEvents() {
+        addRowButton.addActionListener(event -> keyTablePanel.addRow());
+        deleteSelectedRowsButton.addActionListener(event -> keyTablePanel.deleteSelectedRows());
+        okButton.addActionListener(event -> 
+        {
+            // dispose does NOT cause windowClosing beloe to fire.  TODO make this more elegant
+            keyTablePanel.saveKeyCommands(); 
+            dispose();
+        });
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                keyTablePanel.saveKeyCommands();
+            }
+        });
+        keyTablePanel.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                int[] selectedRows = keyTable.getSelectedRows();
-                
+                int[] selectedRows = keyTablePanel.getSelectedRows();
+
                 if (selectedRows.length <= 0)
                     deleteSelectedRowsButton.setEnabled(false);
                 else
                     deleteSelectedRowsButton.setEnabled(true);
                 //for (int i = 0; i < selectedRows.length; i++) {
-                    //System.out.println("Selected row: " + selectedRows[i]);
+                //System.out.println("Selected row: " + selectedRows[i]);
             }
         });
-        //setLocation(-3800, 275);
-    }
-    
-    private void initEvents() {
-        addRowButton.addActionListener(event -> keyTable.addRow());
-        deleteSelectedRowsButton.addActionListener(event -> keyTable.deleteSelectedRows());
     }
 }
