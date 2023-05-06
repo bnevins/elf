@@ -24,6 +24,7 @@ public class KeyDialog extends JDialog {
     private JButton rootDirButton;
     private JButton deleteSelectedRowsButton;
     private JButton okButton;
+    private JButton cancelButton;
 
 // for testing...
     public static void main(String[] args) {
@@ -36,7 +37,6 @@ public class KeyDialog extends JDialog {
 
     public KeyDialog(JFrame frame, boolean modal) {
         super(frame, modal);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         initComponents();
         initEvents();
         setTitle("Key Commands");
@@ -58,6 +58,7 @@ public class KeyDialog extends JDialog {
         deleteSelectedRowsButton = new JButton("Delete Rows");
         deleteSelectedRowsButton.setEnabled(false);
         okButton = new JButton("OK");
+        cancelButton = new JButton("Cancel");
         rootDirButton = new JButton("...");
         
         // textfields
@@ -70,11 +71,13 @@ public class KeyDialog extends JDialog {
         topPanel.add(addRowButton);
         topPanel.add(deleteSelectedRowsButton);
         bottomPanel.add(okButton);
+        bottomPanel.add(cancelButton);
         this.add(keyTablePanel, BorderLayout.CENTER);
         this.add(topPanel, BorderLayout.NORTH);
         this.add(bottomPanel, BorderLayout.SOUTH);
 
         // misc
+        // Remove the close button from the dialog
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
@@ -83,15 +86,12 @@ public class KeyDialog extends JDialog {
         deleteSelectedRowsButton.addActionListener(event -> keyTablePanel.deleteSelectedRows());
         okButton.addActionListener(event -> 
         {
-            // dispose does NOT cause windowClosing beloe to fire.  TODO make this more elegant
             keyTablePanel.saveKeyCommands(); 
             dispose();
         });
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                keyTablePanel.saveKeyCommands();
-            }
+        cancelButton.addActionListener(event -> 
+        {
+            dispose();
         });
         keyTablePanel.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
