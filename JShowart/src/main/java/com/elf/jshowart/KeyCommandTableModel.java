@@ -32,9 +32,6 @@ class KeyCommandTableModel extends AbstractTableModel {
                 items.add(new KeyCommandItem(keyCommand));
             }
         }
-
-        //items.add(new KeyCommandItem("Index", Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, "F", "Root", "_best"));
-        //items.add(new KeyCommandItem("Index", Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, "X", "Root", "_best"));
     }
 
     public void saveToPrefs() {
