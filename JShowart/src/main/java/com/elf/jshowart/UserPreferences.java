@@ -48,7 +48,6 @@ public final class UserPreferences {
     private UserPreferences() {
         mainNode = Preferences.userNodeForPackage(this.getClass());
         read();
-        System.out.println("USER PREFS CTOR HERE!!!!");
     }
 
     public static synchronized UserPreferences get() {
@@ -109,7 +108,7 @@ public final class UserPreferences {
         int height = mainNode.getInt("window_height", defaultHeight);
 
         if (debug)
-            System.out.println("Read in saved window position: " + new Rectangle(x, y, width, height));
+            System.out.println("DEBUG:  Read in saved window position: " + new Rectangle(x, y, width, height));
 
         if (Utils.isVisible(x, y))
             return new Rectangle(x, y, width, height);
@@ -119,7 +118,7 @@ public final class UserPreferences {
 
     private void writeWindowBounds() {
         if (debug)
-            System.out.println("Writing window position: " + windowBounds);
+            System.out.println("DEBUG:  Writing window position: " + windowBounds);
 
         mainNode.putInt("window_left", windowBounds.x);
         mainNode.putInt("window_top", windowBounds.y);
@@ -143,13 +142,13 @@ public final class UserPreferences {
             keyCommands.add(keycommand);
         }
         if(debug)
-            System.out.printf("Read in %d Key Commands\n", keyCommands.size());
+            System.out.printf("DEBUG:  Read in %d Key Commands\n", keyCommands.size());
     }
 
     // TODO - KLUDGY!!
     private void writeKeyCommands() {
         if(debug)
-            System.out.printf("Writing %d Key Commands\n", keyCommands.size());
+            System.out.printf("DEBUG:  Writing %d Key Commands\n", keyCommands.size());
         
         clearKeyCommands();
         for (int i = 0; i < keyCommands.size(); i++) {

@@ -3,6 +3,9 @@
 BUG:  View/fit to screen ^T doesn't work until View menu is selected! Seems to be fixed?!?
 Window positioning on startup.  If it was maximized on second monitor it will startup maximized on first monitor - probably not worth the effort to fix
 *********************************************
+TODO:
+
+KeyDialog - calculate initial size based on #rows
 in KeyDialogTablePanel -- don't use hard-coded numbers for columns.  Do a getColumn with the name
 in KeyCommand -- have the correct item selected when combo box for key is dropped down
 CLEANUP the setEnable calls to menuitems.  Centralize them based on call to Model.replace()

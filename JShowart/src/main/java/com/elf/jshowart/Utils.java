@@ -18,6 +18,11 @@ import javax.swing.*;
  */
 public class Utils {
 
+    static public void debug(String format, Object ... args) {
+        if(UserPreferences.get().isDebug())
+            System.out.printf("DEBUG: " + format + "\n", args);
+    }
+    
     static public Rectangle fitToWindow(Dimension windowDim, Dimension imageDim) {
         var prefs = UserPreferences.get();
 
@@ -100,14 +105,6 @@ public class Utils {
         }
 
     }
-    static final Pattern artFilePattern;
-    static final String[] artFileExtensions = {"bmp", "gif", "tif", "png", "jpg", "jpeg"};
-
-    static {
-        //String regex = "([^\\s]+(\\.(?i)(bmp|gif|tif|png|jpg|jpeg))$)";
-        String regex = "(.+\\.(bmp|gif|tif|png|jpg|jpeg)$)";
-        artFilePattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-    }
 
     static Point centerImageInWindow(Dimension vpDimension, Dimension iDimension) {
 
@@ -152,17 +149,12 @@ public class Utils {
     private Utils() {
     }
 
-    /**
-     * ** CODE DUMP public static void foo() { GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); GraphicsDevice[] gs =
-     * ge.getScreenDevices(); for (GraphicsDevice curGs : gs) { GraphicsConfiguration gc = curGs.getDefaultConfiguration(); Rectangle bounds = gc.getBounds();
-     *
-     * System.out.println(bounds.getX() + "," + bounds.getY() + " " + bounds.getWidth() + "x" + bounds.getHeight()); } }
-     *
-     * public static void fooWorks() { var ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); GraphicsDevice[] gs = ge.getScreenDevices(); for
-     * (GraphicsDevice curGs : gs) { GraphicsConfiguration[] gc = curGs.getConfigurations(); for (GraphicsConfiguration curGc : gc) { Rectangle bounds =
-     * curGc.getBounds();
-     *
-     * System.out.println(bounds.getX() + "," + bounds.getY() + " " + bounds.getWidth() + "x" + bounds.getHeight()); } } }
-**
-     */
+    private static final Pattern artFilePattern;
+    private static final String[] artFileExtensions = {"bmp", "gif", "tif", "png", "jpg", "jpeg"};    
+    
+    static {
+        //String regex = "([^\\s]+(\\.(?i)(bmp|gif|tif|png|jpg|jpeg))$)";
+        String regex = "(.+\\.(bmp|gif|tif|png|jpg|jpeg)$)";
+        artFilePattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+    }
 }

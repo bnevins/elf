@@ -83,12 +83,8 @@ public class KeyDialogTablePanel extends JPanel {
             comp = table.getDefaultRenderer(clazz).getTableCellRendererComponent(table, longestValue, false, false, 0, i);
             cellWidth = comp.getPreferredSize().width;
 
-            if (prefs.isDebug()) {
-                System.out.println("Initializing width of column "
-                        + i + ". "
-                        + "headerWidth = " + headerWidth
-                        + "; cellWidth = " + cellWidth);
-            }
+            Utils.debug("Initializing width of column %d -- headerWidth = %d; cellWidth = %d", 
+                    i, headerWidth, cellWidth);
 
             column.setPreferredWidth(Math.max(headerWidth, cellWidth));
         }

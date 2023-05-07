@@ -40,11 +40,12 @@ public class KeyDialog extends JDialog {
         initComponents();
         initEvents();
         setTitle("Key Commands");
+        setPreferredSize(new Dimension(600, 600));
         pack();
         setLocationRelativeTo(frame);
-
+        Utils.debug("root button: " + rootDirButton.getBounds());
+        Utils.debug("Dialog: " + getBounds());
         setVisible(true);
-        System.out.println("root button: " + rootDirButton.getBounds());
     }
 
     private void initComponents() {
@@ -77,7 +78,7 @@ public class KeyDialog extends JDialog {
         this.add(bottomPanel, BorderLayout.SOUTH);
 
         // misc
-        // Remove the close button from the dialog
+        // Sadly -- it's impossible to remove the close button from the dialog
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 

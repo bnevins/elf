@@ -33,10 +33,10 @@ public class App {
             frame.setTitle("JShowArt");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
-            System.out.println("content pane == " + frame.getContentPane());
+            Utils.debug("content pane == " + frame.getContentPane());
             JScrollPane jsp = new JScrollPane(view);
             view.setContainer(jsp);
-            System.out.println("Frame Original Layout Manager:  " + frame.getLayout());
+            Utils.debug("Frame Original Layout Manager:  " + frame.getLayout());
             frame.setLayout(new BorderLayout());
             frame.add(jsp, BorderLayout.CENTER);
             frame.setView(view);

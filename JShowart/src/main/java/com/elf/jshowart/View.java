@@ -33,7 +33,7 @@ public class View extends JPanel {
      * Creates new form JShowartView
      */
     public View() {
-        System.out.println("JShowartView Layout Manager = " + getLayout());
+        Utils.debug("JShowartView Layout Manager = %s", getLayout());
         Globals.view = this;
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
