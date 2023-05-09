@@ -6,14 +6,21 @@ package com.elf.jshowart;
 
 import java.awt.event.*;
 import static java.awt.event.KeyEvent.*;
+import java.util.*;
 
 /**
  *
  * @author bnevins
  */
-public class KeyHandler implements KeyListener {
+public class KeyHandler implements KeyListener, PreferencesListener {
 
     private UserPreferences prefs = UserPreferences.get();
+    private ArrayList<KeyCommand> keyCommands = new ArrayList<>();
+    
+    public KeyHandler() {
+        prefs.addListener(this);
+        readKeyCommands();
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -95,5 +102,28 @@ public class KeyHandler implements KeyListener {
 
         String out = String.format("%s\n    %s\n    %s\n    %s\n    %s\n", keyStatus, keyString, modString, actionString, locationString);
         return out;
+    }
+
+    @Override
+    public void preferencesChanged() {
+        readKeyCommands();
+    }
+
+    private void readKeyCommands() {
+        keyCommands.clear();
+        ArrayList<String> keyCommandStrings = prefs.getKeyCommands();
+        
+        for(String s : keyCommandStrings) {
+            keyCommands.add(new KeyCommand(s));
+        }
+        
+        if(prefs.isDebug()) {
+            Utils.debug("KeyHandler read in these key commands: ***********\n");
+            for(KeyCommand kc : keyCommands)
+                Utils.debug(kc.toString());
+            
+            Utils.debug("KeyHandler end key commands: ***********\n");
+
+        }
     }
 }

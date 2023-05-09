@@ -17,20 +17,6 @@ import java.util.prefs.Preferences;
  */
 public final class UserPreferences {
 
-    /**
-     * @return the maximized
-     */
-    public boolean isMaximized() {
-        return maximized;
-    }
-
-    /**
-     * @param maximized the maximized to set
-     */
-    public void setMaximized(boolean maximized) {
-        this.maximized = maximized;
-    }
-
     public Rectangle windowBounds;
     public File previousOpenFileParent;
     public File previousSaveAsFileParent;
@@ -44,6 +30,7 @@ public final class UserPreferences {
     private ArrayList<String> keyCommands = new ArrayList<>();
     private final Preferences mainNode;
     private static UserPreferences INSTANCE;
+    private ArrayList<PreferencesListener> listeners = new ArrayList<>();
 
     private UserPreferences() {
         mainNode = Preferences.userNodeForPackage(this.getClass());
@@ -55,6 +42,14 @@ public final class UserPreferences {
             INSTANCE = new UserPreferences();
         }
         return INSTANCE;
+    }
+
+    public boolean isMaximized() {
+        return maximized;
+    }
+
+    public void setMaximized(boolean maximized) {
+        this.maximized = maximized;
     }
 
     public ArrayList<String> getKeyCommands() {
@@ -141,15 +136,15 @@ public final class UserPreferences {
 
             keyCommands.add(keycommand);
         }
-        if(debug)
+        if (debug)
             System.out.printf("DEBUG:  Read in %d Key Commands\n", keyCommands.size());
     }
 
     // TODO - KLUDGY!!
     private void writeKeyCommands() {
-        if(debug)
+        if (debug)
             System.out.printf("DEBUG:  Writing %d Key Commands\n", keyCommands.size());
-        
+
         clearKeyCommands();
         for (int i = 0; i < keyCommands.size(); i++) {
             String name = String.format("%s_%03d", KEY_COMMAND_PREPEND, i);
@@ -228,4 +223,12 @@ public final class UserPreferences {
         this.slideshowSeconds = slideshowSeconds;
     }
 
+    public void addListener(PreferencesListener listener) {
+        listeners.add(listener);
+    }
+
+    public void fireNotify() {
+        for (PreferencesListener listener : listeners)
+            listener.preferencesChanged();
+    }
 }

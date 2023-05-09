@@ -6,6 +6,7 @@ Window positioning on startup.  If it was maximized on second monitor it will st
 TODO:
 
 KeyDialog - calculate initial size based on #rows
+Key Commands - don't allow duplicates (in UserPrefs?)
 in KeyDialogTablePanel -- don't use hard-coded numbers for columns.  Do a getColumn with the name
 in KeyCommand -- have the correct item selected when combo box for key is dropped down
 CLEANUP the setEnable calls to menuitems.  Centralize them based on call to Model.replace()

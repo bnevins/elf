@@ -42,6 +42,7 @@ class KeyCommandTableModel extends AbstractTableModel {
         }
         // persist NOW!
         prefs.write();
+        prefs.fireNotify();
     }
 
     public int getColumnCount() {
