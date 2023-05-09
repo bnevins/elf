@@ -52,7 +52,7 @@ public final class UserPreferences {
         this.maximized = maximized;
     }
 
-    public ArrayList<String> getKeyCommands() {
+    public ArrayList<String> getKeyCommandsAsStrings() {
         return keyCommands;
     }
 

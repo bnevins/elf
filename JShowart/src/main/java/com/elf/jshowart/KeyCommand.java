@@ -95,13 +95,23 @@ public class KeyCommand implements Comparable<KeyCommand>{
          @Override
          public boolean equals(Object o) {
              KeyCommand other = (KeyCommand) o;
-             return type.equals(other.type) &&
-                     ctrl == other.ctrl &&
+             
+             if(this == other)
+                 return true;
+             
+             // uniqueness is ONLY based on Ctrl-Shift-Alt-Key combinations!!
+             return ctrl == other.ctrl &&
                      shift == other.shift &&
                      alt == other.alt &&
-                     key.equals(other.key) &&
-                     relativeTo.equals(other.relativeTo) &&
-                     target.equals(other.target);
+                     key.equals(other.key);
+             
+//             return type.equals(other.type) &&
+//                     ctrl == other.ctrl &&
+//                     shift == other.shift &&
+//                     alt == other.alt &&
+//                     key.equals(other.key) &&
+//                     relativeTo.equals(other.relativeTo) &&
+//                     target.equals(other.target);
          }
          
     public String createUserPrefsString() {
@@ -119,7 +129,6 @@ public class KeyCommand implements Comparable<KeyCommand>{
 
     @Override
     public int compareTo(KeyCommand other) {
-        // should NOT happen!
         if(equals(other))
             return 0;
         
@@ -127,20 +136,21 @@ public class KeyCommand implements Comparable<KeyCommand>{
         if(compare != 0)
             return compare;
         
+        // ignore all but the Alt-Ctrl-Shift-Key combination
         // keys are the same -- next compare target
-        compare = target.compareTo(other.target);
-        if(compare != 0)
-            return compare;
-        // key and target are the same -- next check relativeTo
-        compare = relativeTo.compareTo(other.relativeTo);
-        if(compare != 0)
-            return compare;
-        // now sort by type...
-        compare = type.compareTo(other.type);
-        if(compare != 0)
-            return compare;
+//        compare = target.compareTo(other.target);
+//        if(compare != 0)
+//            return compare;
+//        // key and target are the same -- next check relativeTo
+//        compare = relativeTo.compareTo(other.relativeTo);
+//        if(compare != 0)
+//            return compare;
+//        // now sort by type...
+//        compare = type.compareTo(other.type);
+//        if(compare != 0)
+//            return compare;
         
-        // Getting obscure now.  sort the 8 combinations of ctrl-alt-shift!
+        // Sort the 8 combinations of ctrl-alt-shift!
         int sum = alt ? 1 : 0;
         sum += ctrl ? 2 : 0;
         sum += shift ? 4 : 0;

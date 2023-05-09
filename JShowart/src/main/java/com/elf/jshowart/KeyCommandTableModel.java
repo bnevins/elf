@@ -22,7 +22,7 @@ class KeyCommandTableModel extends AbstractTableModel {
 
     KeyCommandTableModel() {
         // populate from saved preferences...
-        ArrayList<String> keyCommands = prefs.getKeyCommands();
+        ArrayList<String> keyCommands = prefs.getKeyCommandsAsStrings();
 
         if (keyCommands.size() <= 0) {
             items.add(new KeyCommand("Index", Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, "W", "Root", "_best"));
@@ -35,9 +35,11 @@ class KeyCommandTableModel extends AbstractTableModel {
     }
 
     public void saveToPrefs() {
-        ArrayList<String> keyCommands = prefs.getKeyCommands();
+        ArrayList<String> keyCommands = prefs.getKeyCommandsAsStrings();
         keyCommands.clear();
-        for (KeyCommand item : items) {
+        TreeSet<KeyCommand> tree = removeDuplicates();
+        
+        for (KeyCommand item : tree) {
             keyCommands.add(item.createUserPrefsString());
         }
         // persist NOW!
@@ -45,6 +47,20 @@ class KeyCommandTableModel extends AbstractTableModel {
         prefs.fireNotify();
     }
 
+    public TreeSet<KeyCommand> removeDuplicates() {
+        // User may have illegally added or modified the list to create duplicates.  Let's wipe them out
+        // AND sort them
+        TreeSet<KeyCommand> treeSet = new TreeSet<KeyCommand>(items);
+        
+        int treeNum = treeSet.size();
+        int itemsNum = items.size(); 
+        
+        if(treeNum < itemsNum) {
+            // found duplicates
+            Utils.warningMessage("Deleted " + (itemsNum - treeNum) + " duplicates.\nThe combination of Ctrl-Shift-Alt-Key must be unique.", "Duplicate Key Commands");
+        }
+        return treeSet;
+    }
     public int getColumnCount() {
         return COLUMN_NAMES.length;
     }

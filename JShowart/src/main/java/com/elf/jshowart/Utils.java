@@ -134,6 +134,18 @@ public class Utils {
         JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    static void warningMessage(String msg) {
+        warningMessage(msg, "JShowArt");
+    }
+
+    static void warningMessage(String msg, String title) {
+        JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.WARNING_MESSAGE);
+    }
+
+    static void warningMessage(Component owner, String msg, String title) {
+        JOptionPane.showMessageDialog(Globals.controller, msg, title, JOptionPane.WARNING_MESSAGE);
+    }
+
     // Is this point visible on any monitor?
     public static boolean isVisible(int x, int y) {
 

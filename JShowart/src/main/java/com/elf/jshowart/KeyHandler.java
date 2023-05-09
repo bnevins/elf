@@ -15,7 +15,8 @@ import java.util.*;
 public class KeyHandler implements KeyListener, PreferencesListener {
 
     private UserPreferences prefs = UserPreferences.get();
-    private ArrayList<KeyCommand> keyCommands = new ArrayList<>();
+    private TreeSet<KeyCommand> keyCommands = new TreeSet<>();
+    //private ArrayList<KeyCommand> keyCommands = new ArrayList<>();
     
     public KeyHandler() {
         prefs.addListener(this);
@@ -111,7 +112,7 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
     private void readKeyCommands() {
         keyCommands.clear();
-        ArrayList<String> keyCommandStrings = prefs.getKeyCommands();
+        ArrayList<String> keyCommandStrings = prefs.getKeyCommandsAsStrings();
         
         for(String s : keyCommandStrings) {
             keyCommands.add(new KeyCommand(s));
