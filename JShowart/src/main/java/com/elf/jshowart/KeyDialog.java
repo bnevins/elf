@@ -6,6 +6,7 @@ package com.elf.jshowart;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -64,7 +65,7 @@ public class KeyDialog extends JDialog {
         
         // textfields
         rootDirField = new JTextField(30);
-        
+        rootDirField.setText(UserPreferences.get().getKeyCommandsRootDir());
         // add items
         topPanel.add(new JLabel("Root Folder:"));
         topPanel.add(rootDirField);
@@ -88,6 +89,7 @@ public class KeyDialog extends JDialog {
         okButton.addActionListener(event -> 
         {
             keyTablePanel.saveKeyCommands(); 
+            UserPreferences.get().setKeyCommandsRootDir(rootDirField.getText());
             dispose();
         });
         cancelButton.addActionListener(event -> 

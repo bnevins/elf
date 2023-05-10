@@ -83,7 +83,7 @@ public class View extends JPanel {
         var iDimension = new Dimension(image.getWidth(), image.getHeight());
 
 //        System.out.println("COLOR is: " + g.getColor());
-        if (prefs.fitToWindow) {
+        if (prefs.isFitToWindow()) {
             Rectangle r = Utils.fitToWindow(vpDimension, iDimension);
             setBounds(r.getBounds());
             preferredSize = new Dimension(r.width, r.height);
@@ -237,7 +237,7 @@ public class View extends JPanel {
             Utils.errorMessage("The image file extension must be one of these: " + Utils.getArtFileExtensionsAsString(), "Unknown Image Type");
             return;
         }
-        prefs.previousSaveAsFileParent = outfile.getParentFile();
+        prefs.setPreviousSaveAsFileParent(outfile.getParentFile());
 
         if (outfile.exists() && !isOkToOverwrite(outfile))
             return;
@@ -322,7 +322,7 @@ public class View extends JPanel {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     void saveCurrentSizeAs() {
-        if (!prefs.fitToWindow || image == null) {
+        if (!prefs.isFitToWindow() || image == null) {
             // can't happen!  The menu item is supposed to be disabled
             Utils.errorMessage("Image is full size -- or there is no image loaded", "Save Current Size");
             return;

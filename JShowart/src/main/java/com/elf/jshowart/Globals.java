@@ -24,7 +24,7 @@ public class Globals {
 
     public static JFileChooser setupAndGetOpenFileChooser() {
         
-        fileChooser.setCurrentDirectory(UserPreferences.get().previousOpenFileParent);
+        fileChooser.setCurrentDirectory(UserPreferences.get().getPreviousOpenFileParent());
         fileChooser.setSelectedFile(new File(""));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fileChooser.setMultiSelectionEnabled(true);
@@ -33,7 +33,7 @@ public class Globals {
     }
     public static JFileChooser setupAndGetSaveAsFileChooser() {
         
-        fileChooser.setCurrentDirectory(UserPreferences.get().previousSaveAsFileParent);
+        fileChooser.setCurrentDirectory(UserPreferences.get().getPreviousSaveAsFileParent());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setMultiSelectionEnabled(false);
         

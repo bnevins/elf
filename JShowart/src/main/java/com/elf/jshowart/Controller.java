@@ -66,9 +66,9 @@ public class Controller extends JFrame {
         shrinkGroup.add(MenuExpand125);
         shrinkGroup.add(MenuExpand150);
         shrinkGroup.add(MenuExpand200);
-        MenuFitToWindow.setSelected(prefs.fitToWindow);
+        MenuFitToWindow.setSelected(prefs.isFitToWindow());
 
-        setBounds(prefs.windowBounds);
+        setBounds(prefs.getWindowBounds());
 
         if (prefs.isMaximized())
             setExtendedState(MAXIMIZED_BOTH);
@@ -111,7 +111,7 @@ public class Controller extends JFrame {
             setUndecorated(false);
             setResizable(true);
             setExtendedState(JFrame.NORMAL);
-            setBounds(prefs.windowBounds);
+            setBounds(prefs.getWindowBounds());
             setAlwaysOnTop(false);
             setVisible(true);
         }
@@ -589,7 +589,7 @@ public class Controller extends JFrame {
                 enableSaveImages(false);
             else {
                 enableSaveImages(true);
-                prefs.previousOpenFileParent = chooser.getCurrentDirectory();
+                prefs.setPreviousOpenFileParent(chooser.getCurrentDirectory());
             }
         }
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
@@ -612,13 +612,13 @@ public class Controller extends JFrame {
 //        System.out.println("WINDOW CLOSING -- State is " + stateString);
 
         prefs.setMaximized(getExtendedState() == MAXIMIZED_BOTH);
-        prefs.windowBounds = getBounds();
+        prefs.setWindowBounds(getBounds());
         prefs.write();
     }//GEN-LAST:event_onWindowClosing
 
     private void MenuFitToWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuFitToWindowActionPerformed
         System.out.println("FitToWindow: isSelected: " + MenuFitToWindow.isSelected() + "   " + evt);
-        prefs.fitToWindow = MenuFitToWindow.isSelected();
+        prefs.setFitToWindow(MenuFitToWindow.isSelected());
         repaint();
     }//GEN-LAST:event_MenuFitToWindowActionPerformed
 
@@ -648,7 +648,7 @@ public class Controller extends JFrame {
         boolean hasImage = view.hasImageLoaded();
         MenuSave.setEnabled(hasImage);
         MenuSaveAs.setEnabled(hasImage);
-        MenuSaveCurrentSizeAs.setEnabled(hasImage && prefs.fitToWindow && view.getScaleFactor() == 1.0);
+        MenuSaveCurrentSizeAs.setEnabled(hasImage && prefs.isFitToWindow() && view.getScaleFactor() == 1.0);
     }//GEN-LAST:event_MenuFileMenuSelected
 
     private void MenuViewMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MenuViewMenuSelected
