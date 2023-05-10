@@ -17,7 +17,7 @@ public class KeyHandler implements KeyListener, PreferencesListener {
     private UserPreferences prefs = UserPreferences.get();
     private TreeSet<KeyCommand> keyCommands = new TreeSet<>();
     //private ArrayList<KeyCommand> keyCommands = new ArrayList<>();
-    
+
     public KeyHandler() {
         prefs.addListener(this);
         readKeyCommands();
@@ -25,8 +25,8 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (prefs.isDebug())
-            System.out.print(getKeyInfo(e, "KeyHandler KEY_TYPED"));
+//        if (prefs.isDebug())
+//            System.out.print(getKeyInfo(e, "KeyHandler KEY_TYPED"));
 
         char key = e.getKeyChar();
         switch (key) {
@@ -37,22 +37,67 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (prefs.isDebug())
-            System.out.print(getKeyInfo(e, "KeyHandler KEY_PRESSED"));
+//        if (prefs.isDebug())
+//            System.out.print(getKeyInfo(e, "KeyHandler KEY_PRESSED"));
+
         int key = e.getKeyCode();
+
         int mods = e.getModifiersEx();
-        if (mods == SHIFT_DOWN_MASK + CTRL_DOWN_MASK)
-            if (prefs.isDebug())
-                System.out.println("SHIFT+CONTROL!!!!!");
+
         switch (key) {
             case VK_SPACE ->
                 Globals.view.nextImage();
         }
+
+        handleKeyCommand(key, mods);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
+    @Override
+    public void preferencesChanged() {
+        readKeyCommands();
+    }
+
+    private void readKeyCommands() {
+        keyCommands.clear();
+        ArrayList<String> keyCommandStrings = prefs.getKeyCommandsAsStrings();
+
+        for (String s : keyCommandStrings) {
+            keyCommands.add(new KeyCommand(s));
+        }
+
+        if (prefs.isDebug()) {
+            Utils.debug("KeyHandler read in these key commands: ***********\n");
+            for (KeyCommand kc : keyCommands)
+                Utils.debug(kc.toString());
+
+            Utils.debug("KeyHandler end key commands: ***********\n");
+
+        }
+    }
+
+    private void handleKeyCommand(int keyCode, int mods) {
+        for (KeyCommand keyCommand : keyCommands) {
+            if (keyCode == keyCommand.getKeyCode() && mods == keyCommand.getMods()) {
+                handleKeyCommand(keyCommand);
+                return;
+            }
+        }
+    }
+
+    private void handleKeyCommand(KeyCommand keyCommand) {
+        System.out.println("   ********  Handle Key Command -- got a match for " + keyCommand);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // stolen code ONLY used for debugging
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private String getKeyInfo(KeyEvent e, String keyStatus) {
 
@@ -103,28 +148,5 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
         String out = String.format("%s\n    %s\n    %s\n    %s\n    %s\n", keyStatus, keyString, modString, actionString, locationString);
         return out;
-    }
-
-    @Override
-    public void preferencesChanged() {
-        readKeyCommands();
-    }
-
-    private void readKeyCommands() {
-        keyCommands.clear();
-        ArrayList<String> keyCommandStrings = prefs.getKeyCommandsAsStrings();
-        
-        for(String s : keyCommandStrings) {
-            keyCommands.add(new KeyCommand(s));
-        }
-        
-        if(prefs.isDebug()) {
-            Utils.debug("KeyHandler read in these key commands: ***********\n");
-            for(KeyCommand kc : keyCommands)
-                Utils.debug(kc.toString());
-            
-            Utils.debug("KeyHandler end key commands: ***********\n");
-
-        }
     }
 }

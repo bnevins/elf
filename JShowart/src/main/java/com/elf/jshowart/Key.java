@@ -15,6 +15,17 @@ public class Key {
     private int code;
     private String display;
 
+    public static int getKeyCode(String keyString) {
+        // e.g. VK_END key is persisted as a plain string -- "End"
+        // VK_COMMA is " , "
+        // small array, do a brainless search
+        for(Key key : allKeys) 
+            if(key.display.equals(keyString))
+                return key.code;
+        
+        throw new IllegalArgumentException("Invalid keystring: " + keyString);
+    }
+    
     public static Key[] getKeys() {
         return allKeys;
     }
