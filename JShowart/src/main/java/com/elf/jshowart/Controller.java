@@ -36,7 +36,7 @@ public class Controller extends JFrame {
         clearAllScaleButtons();
         MenuSlideshow.setSelected(false);
         initSlider();
-        initDND();
+        initDragAndDrop();
 
         switch (prefs.getSortType()) {
             case "Name" ->
@@ -946,7 +946,7 @@ public class Controller extends JFrame {
         MenuScaler.add(slider);
     }
 
-    private void initDND() {
+    private void initDragAndDrop() {
         new DropTarget(this, new DropTargetAdapter() {
             @Override
             public void drop(DropTargetDropEvent event) {
