@@ -19,8 +19,19 @@ public class KeyDialogTablePanel extends JPanel {
     private final int FILE_OPERATION_COLUMN = 0;
     private final int KEY_COLUMN = 4;
     private final int RELATIVE_TO_COLUMN = 5;
-    private final String FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
-    private final String RELATIVE_TO_ITEMS[] = {"Root", "Current File", "Absolute",};
+
+    private final String FILE_OPERATION_TYPES[] = {
+        //    "Copy", "Move", "List", "Index",};
+        KeyCommand.FileOperationTypes.COPY.toString(),
+        KeyCommand.FileOperationTypes.MOVE.toString(),
+        KeyCommand.FileOperationTypes.LIST.toString(),
+        KeyCommand.FileOperationTypes.INDEX.toString(),};
+
+    private final String RELATIVE_TO_ITEMS[] = {
+        KeyCommand.RelativeToChoices.ROOT.toString(),
+        KeyCommand.RelativeToChoices.CURRENT_FILE.toString(),
+        KeyCommand.RelativeToChoices.ABSOLUTE.toString(),};
+
     private final Key KEY_CODES[] = Key.getKeys();
 
     private KeyCommandTableModel model;
@@ -83,7 +94,7 @@ public class KeyDialogTablePanel extends JPanel {
             comp = table.getDefaultRenderer(clazz).getTableCellRendererComponent(table, longestValue, false, false, 0, i);
             cellWidth = comp.getPreferredSize().width;
 
-            Utils.debug("Initializing width of column %d -- headerWidth = %d; cellWidth = %d", 
+            Utils.debug("Initializing width of column %d -- headerWidth = %d; cellWidth = %d",
                     i, headerWidth, cellWidth);
 
             column.setPreferredWidth(Math.max(headerWidth, cellWidth));

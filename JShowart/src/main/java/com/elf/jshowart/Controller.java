@@ -5,8 +5,11 @@
 package com.elf.jshowart;
 
 import java.awt.*;
+import java.awt.datatransfer.*;
+import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.*;
 import javax.swing.*;
 
 /**
@@ -33,7 +36,8 @@ public class Controller extends JFrame {
         clearAllScaleButtons();
         MenuSlideshow.setSelected(false);
         initSlider();
-        
+        initDND();
+
         switch (prefs.getSortType()) {
             case "Name" ->
                 MenuSortName.setSelected(true);
@@ -583,14 +587,14 @@ public class Controller extends JFrame {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] files = chooser.getSelectedFiles();
-            int numFilesAdded = Model.get().replace(files);
 
-            if (numFilesAdded <= 0)
+            if (files == null || files.length <= 0) {
                 enableSaveImages(false);
-            else {
-                enableSaveImages(true);
-                prefs.setPreviousOpenFileParent(chooser.getCurrentDirectory());
+                return;
             }
+
+            replaceFilesInModel(Arrays.asList(files));
+            prefs.setPreviousOpenFileParent(chooser.getCurrentDirectory());
         }
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
 
@@ -922,23 +926,56 @@ public class Controller extends JFrame {
         slider.setPreferredSize(new Dimension(700, 65));
         slider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                
+
 //                if(slider.getValueIsAdjusting())
 //                    return;
-                var val =slider.getValue();
-                
-                if(val %5 != 0)
+                var val = slider.getValue();
+
+                if (val % 5 != 0)
                     return;
-                
-                if(val < 10)
+
+                if (val < 10)
                     val = 10;
-                
+
                 double value = val;
-                
-                view.setScaleFactor(value/100.0);
+
+                view.setScaleFactor(value / 100.0);
                 System.out.println(slider.getBounds());
             }
         });
         MenuScaler.add(slider);
+    }
+
+    private void initDND() {
+        new DropTarget(this, new DropTargetAdapter() {
+            @Override
+            public void drop(DropTargetDropEvent event) {
+                try {
+                    event.acceptDrop(DnDConstants.ACTION_COPY);
+                    Transferable transferable = event.getTransferable();
+                    java.util.List<File> files = (java.util.List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+                    for (File file : files) {
+                        System.out.println("File dropped: " + file.getAbsolutePath());
+                    }
+                    replaceFilesInModel(files);
+                    
+                } catch (Exception e) {
+                    Utils.errorMessage(e.toString());
+                }
+            }
+        });
+    }
+
+    private void replaceFilesInModel(java.util.List<File> files) {
+        if (files.isEmpty())
+            return;
+        
+        int numFilesAdded = Model.get().replace(files);
+
+        if (numFilesAdded <= 0)
+            enableSaveImages(false);
+        else {
+            enableSaveImages(true);
+        }
     }
 }

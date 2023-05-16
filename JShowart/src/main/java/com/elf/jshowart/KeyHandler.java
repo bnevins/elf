@@ -6,6 +6,7 @@ package com.elf.jshowart;
 
 import java.awt.event.*;
 import static java.awt.event.KeyEvent.*;
+import java.nio.file.*;
 import java.util.*;
 
 /**
@@ -37,8 +38,8 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-//        if (prefs.isDebug())
-//            System.out.print(getKeyInfo(e, "KeyHandler KEY_PRESSED"));
+        if (prefs.isDebug())
+            System.out.println(getKeyInfo(e, ""));
 
         int key = e.getKeyCode();
 
@@ -90,6 +91,8 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
     private void handleKeyCommand(KeyCommand keyCommand) {
         System.out.println("   ********  Handle Key Command -- got a match for " + keyCommand);
+        Path root = Path.of(prefs.getKeyCommandsRootDir());
+        
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +149,7 @@ public class KeyHandler implements KeyListener, PreferencesListener {
             locationString += "unknown";
         }
 
-        String out = String.format("%s\n    %s\n    %s\n    %s\n    %s\n", keyStatus, keyString, modString, actionString, locationString);
+        String out = String.format("%s    %s    %s    %s    %s", keyStatus, keyString, modString, actionString, locationString);
         return out;
     }
 }

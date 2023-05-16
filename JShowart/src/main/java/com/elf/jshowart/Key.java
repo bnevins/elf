@@ -107,5 +107,6 @@ public class Key {
         new Key(VK_MINUS, " - "),
         new Key(VK_BACK_SLASH, " \\ "),
         new Key(VK_HOME, "Home"),
-        new Key(VK_END, "End"),};
+        new Key(VK_END, "End"),
+        new Key(VK_DELETE, "Delete"),};
 }

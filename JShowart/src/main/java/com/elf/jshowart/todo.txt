@@ -5,6 +5,7 @@ Window positioning on startup.  If it was maximized on second monitor it will st
 *********************************************
 TODO:
 
+DROP FILES with Ctrl key pressed, append instead of replace
 KeyDialog - calculate initial size based on #rows
 KeyCommands -- don't allow any 'builtins'  e.g. ctrl-shift-R, space, etc
 in KeyDialogTablePanel -- don't use hard-coded numbers for columns.  Do a getColumn with the name

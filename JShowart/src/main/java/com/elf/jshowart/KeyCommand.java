@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.elf.jshowart;
+
 import static java.awt.event.InputEvent.*;
+
 /**
  *
  * @author bnevins
@@ -20,22 +22,34 @@ public class KeyCommand implements Comparable<KeyCommand> {
     private String target;
     private final static char USER_PREFS_DELIMITER = ':';
 
-    public String getType() {
-        return type;
+    public RelativeToChoices getRelativeTo() {
+        return RelativeToChoices.fromString(relativeTo);
     }
+    
+    public FileOperationTypes getType() {
+        return FileOperationTypes.fromString(type);
+    }
+
     public int getMods() {
         int mods = 0;
-        if(ctrl)
+        if (ctrl)
             mods += CTRL_DOWN_MASK;
-        if(shift)
+        if (shift)
             mods += SHIFT_DOWN_MASK;
-        if(alt)
+        if (alt)
             mods += ALT_DOWN_MASK;
-        
+
         return mods;
     }
-    public int getKeyCode() { return keyCode; }
-    
+
+    public int getKeyCode() {
+        return keyCode;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
     public KeyCommand(String userPrefsString) {
         String[] ss = userPrefsString.split(":");
 
@@ -183,5 +197,56 @@ public class KeyCommand implements Comparable<KeyCommand> {
 
         // should NOT happen!
         return 0;
+    }
+
+    enum RelativeToChoices {
+        ROOT("Root"),
+        CURRENT_FILE("Current File"),
+        ABSOLUTE("Absolute");
+
+        private final String name;
+
+        RelativeToChoices(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return name;
+        }
+
+        public static RelativeToChoices fromString(String aName) {
+            for (RelativeToChoices rtc : RelativeToChoices.values()) {
+                if (rtc.name.equalsIgnoreCase(aName)) {
+                    return rtc;
+                }
+            }
+            return null;
+        }
+    }
+    // FILE_OPERATION_TYPES[] = {"Copy", "Move", "List", "Index",};
+    enum FileOperationTypes {
+        COPY("Copy"),
+        MOVE("Move"),
+        LIST("List"),
+        INDEX("Index");
+
+        private final String name;
+
+        FileOperationTypes(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return name;
+        }
+
+        public static FileOperationTypes fromString(String aName) {
+            for (FileOperationTypes tc : FileOperationTypes.values()) {
+                if (tc.name.equalsIgnoreCase(aName)) {
+                    return tc;
+                }
+            }
+            return null;
+        }
     }
 }
