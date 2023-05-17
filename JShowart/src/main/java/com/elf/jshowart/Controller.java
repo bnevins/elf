@@ -958,7 +958,7 @@ public class Controller extends JFrame {
                         System.out.println("File dropped: " + file.getAbsolutePath());
                     }
                     replaceFilesInModel(files);
-                    
+
                 } catch (Exception e) {
                     Utils.errorMessage(e.toString());
                 }
@@ -969,7 +969,7 @@ public class Controller extends JFrame {
     private void replaceFilesInModel(java.util.List<File> files) {
         if (files.isEmpty())
             return;
-        
+
         int numFilesAdded = Model.get().replace(files);
 
         if (numFilesAdded <= 0)

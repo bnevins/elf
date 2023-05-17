@@ -106,7 +106,7 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
         //You should only rely on the key char if the event
         //is a key typed event.
-        int id = e.getID();
+         int id = e.getID();
         String keyString;
         if (id == KeyEvent.KEY_TYPED) {
             char c = e.getKeyChar();
