@@ -131,7 +131,7 @@ public class Model {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     void sort() {
-        System.out.println("BEFORE SORT:");
+        Utils.debug("BEFORE SORT:");
 
         if (prevSortType != null)
             Utils.debug("PREFS OLD SORT TYPE: " + prevSortType + "   PREFS DIRECTION: " + (prevSortAscending ? "ascending" : "descending"));
@@ -142,7 +142,7 @@ public class Model {
         boolean sortAscending = prefs.isSortAscending();
 
         if (prevSortType != null && sortType.equals(prevSortType) && prevSortAscending == sortAscending) {
-            System.out.println("SORT TYPES DID NOT ACTUALLY CHANGE!");
+            Utils.debug("SORT TYPES DID NOT ACTUALLY CHANGE!");
             return;
         }
 
@@ -150,9 +150,9 @@ public class Model {
         prevSortType = sortType;
         prevSortAscending = sortAscending;
 
-        System.out.println("BEFORE SORT");
+        Utils.debug("BEFORE SORT");
         files.forEach(file -> {
-            System.out.println("      " + file.getName() + "   Date: " + file.lastModified() + "    SIZE: " + file.length());
+            Utils.debug("      " + file.getName() + "   Date: " + file.lastModified() + "    SIZE: " + file.length());
         });
 
         switch (sortType) {
@@ -190,9 +190,9 @@ public class Model {
                 Collections.shuffle(files);
         }
 
-        System.out.println("AFTER SORT:");
+        Utils.debug("AFTER SORT:");
         files.forEach(file -> {
-            System.out.println("      " + file.getName() + "   Date: " + file.lastModified() + "    SIZE: " + file.length());
+            Utils.debug("      " + file.getName() + "   Date: " + file.lastModified() + "    SIZE: " + file.length());
         });
 
         // TODO resets to first image.  Caller needs to call view.next() -- or just leave it and the next call to next() or prev() will start at begin or end
