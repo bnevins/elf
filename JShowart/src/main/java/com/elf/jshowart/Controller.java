@@ -593,7 +593,7 @@ public class Controller extends JFrame {
                 return;
             }
 
-            replaceFilesInModel(Arrays.asList(files));
+            replaceFilesInModel(Arrays.asList(files), false);
             prefs.setPreviousOpenFileParent(chooser.getCurrentDirectory());
         }
     }//GEN-LAST:event_MenuOpenFilesActionPerformed
@@ -946,6 +946,7 @@ public class Controller extends JFrame {
         MenuScaler.add(slider);
     }
 
+    // Pressing the Ctrl key when dropping causes a recursive loading of files
     private void initDragAndDrop() {
         new DropTarget(this, new DropTargetAdapter() {
             @Override
@@ -957,7 +958,7 @@ public class Controller extends JFrame {
                     for (File file : files) {
                         System.out.println("File dropped: " + file.getAbsolutePath());
                     }
-                    replaceFilesInModel(files);
+                    replaceFilesInModel(files, event.getDropAction() == DnDConstants.ACTION_COPY);
 
                 } catch (Exception e) {
                     Utils.errorMessage(e.toString());
@@ -966,11 +967,11 @@ public class Controller extends JFrame {
         });
     }
 
-    private void replaceFilesInModel(java.util.List<File> files) {
+    private void replaceFilesInModel(java.util.List<File> files, boolean recursive) {
         if (files.isEmpty())
             return;
 
-        int numFilesAdded = Model.get().replace(files);
+        int numFilesAdded = Model.get().replace(files, recursive);
 
         if (numFilesAdded <= 0)
             enableSaveImages(false);

@@ -71,12 +71,16 @@ public class Model {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public int replace(List<File> files) {
+    public int replace(List<File> files, boolean recursive) {
+
+        if (recursive)
+            Utils.debug("Recursive Add Files");
+
         clear();
         int numFiles = 0;
 
         for (File f : files) {
-            numFiles += add(f.toPath());
+            numFiles += add(f.toPath(), recursive);
         }
         sort();
         Globals.view.imagesReplaced();
@@ -86,16 +90,15 @@ public class Model {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     //public int replace(File[] files) {
-      //  return replace(Arrays.asList(files));
+    //  return replace(Arrays.asList(files));
     //}
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     //  private below
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    private int add(Path path) {
+    private int add(Path path, boolean recursive) {
         int numFilesAdded = 0;
         if (Files.isDirectory(path)) {
-            try (Stream<Path> stream = Files.list(path)) {
+            try (Stream<Path> stream = Files.walk(path, (recursive ? Integer.MAX_VALUE : 1))) {
                 stream.forEach(p -> {
                     File f = p.toFile();
                     if (Utils.isArtFile(f))
@@ -131,9 +134,9 @@ public class Model {
         System.out.println("BEFORE SORT:");
 
         if (prevSortType != null)
-            System.out.println("PREFS OLD SORT TYPE: " + prevSortType + "   PREFS DIRECTION: " + (prevSortAscending ? "ascending" : "descending"));
+            Utils.debug("PREFS OLD SORT TYPE: " + prevSortType + "   PREFS DIRECTION: " + (prevSortAscending ? "ascending" : "descending"));
 
-        System.out.println("PREFS NEW SORT TYPE: " + prefs.getSortType() + "   PREFS DIRECTION: " + (prefs.isSortAscending() ? "ascending" : "descending"));
+        Utils.debug("PREFS NEW SORT TYPE: " + prefs.getSortType() + "   PREFS DIRECTION: " + (prefs.isSortAscending() ? "ascending" : "descending"));
 
         String sortType = prefs.getSortType();
         boolean sortAscending = prefs.isSortAscending();
@@ -180,7 +183,7 @@ public class Model {
                     });
                 else
                     Collections.sort(files, (f1, f2) -> {
-                        return Utils.compare(f2.lastModified(), f1.lastModified());
+                        return Utils.compare(f2.length(), f1.length());
                     });
             }
             case "Random" ->
