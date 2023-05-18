@@ -6,8 +6,10 @@ package com.elf.jshowart;
 
 import java.awt.event.*;
 import static java.awt.event.KeyEvent.*;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  *
@@ -90,9 +92,63 @@ public class KeyHandler implements KeyListener, PreferencesListener {
     }
 
     private void handleKeyCommand(KeyCommand keyCommand) {
+        File currFile = Model.get().curr();
+        
+        if(currFile == null)
+            return;
+        
         System.out.println("   ********  Handle Key Command -- got a match for " + keyCommand);
         Path root = Path.of(prefs.getKeyCommandsRootDir());
-        
+        //keyCommand.getRelativeTo();
+        File finalTargetDir = getFinalTarget(keyCommand, currFile);
+        Utils.debug("Final Target == %s", finalTargetDir);
+
+        if (!finalTargetDir.exists())
+            finalTargetDir.mkdir();
+        File finalFile = new File(finalTargetDir, currFile.getName());
+
+        switch (keyCommand.getType()) {
+            case COPY -> {
+                try {
+                    Files.copy(currFile.toPath(), finalFile.toPath());
+                } catch (IOException ex) {
+                    Utils.debug(ex.toString());
+                }
+            }
+            case MOVE -> {
+                try {
+                    Files.move(currFile.toPath(), finalFile.toPath());
+                    Model.get().delete();
+                    Globals.view.refresh();
+                } catch (IOException ex) {
+                    Utils.debug(ex.toString());
+                }
+            }
+            case INDEX -> {
+                throw new UnsupportedOperationException("Not finished yet!");
+            }
+            case LIST -> {
+                throw new UnsupportedOperationException("Not finished yet!");
+            }
+        }
+    }
+
+    private File getFinalTarget(KeyCommand keyCommand, File currFile) {
+        String target = keyCommand.getTarget();
+        if (target == null || target.isBlank())
+            throw new IllegalArgumentException("no target set");
+
+        switch (keyCommand.getRelativeTo()) {
+            case PARENT -> {
+                File parent = currFile.getParentFile();
+                return new File(parent, target);
+            }
+            case ABSOLUTE -> {
+            }
+            case ROOT -> {
+            }
+        }
+        return null;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +162,7 @@ public class KeyHandler implements KeyListener, PreferencesListener {
 
         //You should only rely on the key char if the event
         //is a key typed event.
-         int id = e.getID();
+        int id = e.getID();
         String keyString;
         if (id == KeyEvent.KEY_TYPED) {
             char c = e.getKeyChar();

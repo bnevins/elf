@@ -117,6 +117,9 @@ public class View extends JPanel {
         setupImage(model.prev(numBack));
     }
 
+    void refresh() {
+        setupImage(model.curr());
+    }
     private void setupImage(File imageFile) {
         if (imageFile == null) {
             image = null;

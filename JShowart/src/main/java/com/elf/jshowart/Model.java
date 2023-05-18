@@ -27,6 +27,11 @@ public class Model {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public File next() {
+        return next(1);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
     public File next(int numForward) {
         if (isEmpty())
             return null;
@@ -58,8 +63,26 @@ public class Model {
     public File curr() {
         if (currentImageNum < 0)
             return null;
+        
 
         return files.get(currentImageNum);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void delete() {
+        if (currentImageNum >= 0)
+            files.remove(currentImageNum);
+        
+        // Important Edge Case:
+        // say you have 3 pics p0, p1, p2.  If you remove p0 or p1 no problem.  currentImageNum will still be valid.
+        // but if you delete p2 -- currentImageNum will be 2 -- which is invalid!
+        
+        if(currentImageNum >= files.size())
+            currentImageNum = 0;
+        
+        // next edge case.  You just deleted the last picture
+        if(files.size() <= 0)
+            currentImageNum = -1;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////

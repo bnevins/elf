@@ -201,7 +201,7 @@ public class KeyCommand implements Comparable<KeyCommand> {
 
     enum RelativeToChoices {
         ROOT("Root"),
-        CURRENT_FILE("Current File"),
+        PARENT("File Parent"),
         ABSOLUTE("Absolute");
 
         private final String name;
