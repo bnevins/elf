@@ -4,8 +4,6 @@ BUG:  View/fit to screen ^T doesn't work until View menu is selected! Seems to b
 Window positioning on startup.  If it was maximized on second monitor it will startup maximized on first monitor - probably not worth the effort to fix
 *********************************************
 TODO:
-
-
 KeyDialog - calculate initial size based on #rows
 KeyCommands -- don't allow any 'builtins'  e.g. ctrl-shift-R, space, etc
 in KeyDialogTablePanel -- don't use hard-coded numbers for columns.  Do a getColumn with the name
@@ -16,6 +14,7 @@ Add a UI for setting slideshow time
 Info Dialog
 Kludgy code saving key commands
 *****************   FINISHED ITEMS   **********************
+KeyDialogTablePanel -- read in enums instead of duplicating
 Recursive Option for Files
 DROP FILES with Ctrl key pressed, append instead of replaceKey Commands - don't allow duplicates (in UserPrefs?) 
 BUG: check location from prefs and make sure it isn't off-screen!  E.g. going from 2 monitors to 1
