@@ -30,6 +30,7 @@ public class KeyDialogTablePanel extends JPanel {
     private final String RELATIVE_TO_ITEMS[] = {
         KeyCommand.RelativeToChoices.ROOT.toString(),
         KeyCommand.RelativeToChoices.PARENT.toString(),
+        KeyCommand.RelativeToChoices.GRANDPARENT.toString(),
         KeyCommand.RelativeToChoices.ABSOLUTE.toString(),};
 
     private final Key KEY_CODES[] = Key.getKeys();
