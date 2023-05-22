@@ -4,6 +4,8 @@ BUG:  View/fit to screen ^T doesn't work until View menu is selected! Seems to b
 Window positioning on startup.  If it was maximized on second monitor it will startup maximized on first monitor - probably not worth the effort to fix
 *********************************************
 TODO:
+Add a status Bar
+Add a "Info" dialog
 KeyDialog - calculate initial size based on #rows
 KeyCommands -- don't allow any 'builtins'  e.g. ctrl-shift-R, space, etc
 in KeyDialogTablePanel -- don't use hard-coded numbers for columns.  Do a getColumn with the name
