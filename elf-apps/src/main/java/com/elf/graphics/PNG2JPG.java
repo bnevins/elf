@@ -1,7 +1,9 @@
 package com.elf.graphics;
 
+import com.elf.io.FileExtFinder;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,13 +15,19 @@ import java.util.logging.Logger;
 class PNG2JPG {
 
     public static void main(String[] args) {
-        File dir = null;
-        if (args.length != 0) {
+        File dir;
+        boolean recursive = false;
+
+        if (args.length > 1) {
             usage();
         }
+        if (args.length == 1 && args[0].equalsIgnoreCase("-r")) {
+            recursive = true;
+        }
+
         try {
             dir = new File(".").getCanonicalFile();
-            File[] files = dir.listFiles();
+            File[] files = getFileList(dir, recursive);
             for (File png : files) {
                 if (png.isDirectory()) {
                     continue;
@@ -39,8 +47,21 @@ class PNG2JPG {
     }
 
     //////////////////////////////////////////////////////////////	
+    public static File[] getFileList(File root, boolean recursive) throws IOException{
+        if (recursive) {
+            FileExtFinder jf = new FileExtFinder(root.getAbsolutePath(), "png");
+            List files = jf.getFiles();
+            // Convert the list to an array of File objects
+            return (File[]) files.toArray(new File[files.size()]);
+
+        } else {
+            return root.listFiles();
+        }
+    }
+
+    //////////////////////////////////////////////////////////////	
     public static void usage() {
-        System.out.println("\n\nUsage:\njava com.elf.graphics.PNG2JPG");
+        System.out.println("\n\nUsage:\njava com.elf.graphics.PNG2JPG [-r]");
         System.out.println("\n PNG2JPG reads in all the png files in the current directory and writes out converted jpg files with the same root name.");
         System.exit(0);
     }

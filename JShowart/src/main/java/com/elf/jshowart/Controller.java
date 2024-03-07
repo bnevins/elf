@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 /**
  *
@@ -783,6 +784,7 @@ public class Controller extends JFrame {
 
     private void MenuKeyCommandsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuKeyCommandsActionPerformed
         new KeyDialog(this, true);
+        
     }//GEN-LAST:event_MenuKeyCommandsActionPerformed
 
     private void MenuScalerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuScalerActionPerformed
@@ -978,5 +980,22 @@ public class Controller extends JFrame {
         else {
             enableSaveImages(true);
         }
+    }
+    
+    public JComponent showJDialogAsSheet (JDialog dialog) {
+        JComponent sheet = (JComponent) dialog.getContentPane();
+        JPanel glass = (JPanel)getGlassPane();
+        sheet.setBackground (Color.red);
+        glass.setLayout (new GridBagLayout());
+        sheet.setBorder (new LineBorder(Color.black, 1));
+        glass.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTH;
+        glass.add (sheet, gbc);
+        gbc.gridy=1;
+        gbc.weighty = Integer.MAX_VALUE;
+        glass.add (Box.createGlue(), gbc);
+        glass.setVisible(true);
+        return sheet;
     }
 }

@@ -17,7 +17,6 @@
     	<module>elf-jfx</module>
     	<module>elf-external</module>
               <module>JShowart</module>
-              <module>Calc</module>
        </modules>
 
     <build>
@@ -44,6 +43,12 @@
             <version>4.3.1</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+		  <groupId>com.drewnoakes</groupId>
+		  <artifactId>metadata-extractor</artifactId>
+		  <version>2.18.0</version>
+		</dependency>
+
     </dependencies>
     <reporting>
         <plugins>
