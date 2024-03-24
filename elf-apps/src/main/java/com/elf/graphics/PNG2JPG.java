@@ -62,7 +62,8 @@ class PNG2JPG {
     //////////////////////////////////////////////////////////////	
     public static void usage() {
         System.out.println("\n\nUsage:\njava com.elf.graphics.PNG2JPG [-r]");
-        System.out.println("\n PNG2JPG reads in all the png files in the current directory and writes out converted jpg files with the same root name.");
+        System.out.println("\n PNG2JPG reads in all the png files in the current directory and writes out \nconverted jpg files with the same root name.");
+        System.out.println("-r recursively converts files in all subdirectories as well.");
         System.exit(0);
     }
 
